@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ことばのヒミツ基地｜順番をおぼえよう</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 20px;
+  font-family: sans-serif;
+  background: #fff8e9; color: #39445a;
+  text-align: center;
+}
+main {
+  max-width: 520px; margin: 0 auto;
+  background: white; padding: 24px 18px;
+  border-radius: 24px;
+  box-shadow: 0 5px 18px #00000012;
+}
+h1 { font-size: 25px; color: #ed8b43; margin: 5px 0 8px; }
+.sub { color: #68758a; margin-bottom: 20px; }
+.info {
+  background: #fff1d8; border-radius: 14px;
+  padding: 12px; margin: 15px 0;
+  font-weight: bold;
+}
+button {
+  border: 0; border-radius: 15px;
+  padding: 14px 20px; font-size: 18px;
+  font-weight: bold; cursor: pointer;
+  touch-action: manipulation;
+}
+.start { background: #ffb85c; color: #49351d; width: 100%; }
+.items {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; margin: 22px 0;
+}
+.item {
+  background: #eaf4ff; border: 3px solid #d5e8fa;
+  min-height: 88px; font-size: 38px;
+  display: flex; align-items: center; justify-content: center;
+}
+.item:active { transform: scale(.96); }
+.item:disabled { opacity: .65; }
+.sequence {
+  min-height: 90px; display: flex;
+  justify-content: center; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-size: 38px; margin: 15px 0;
+}
+.message {
+  min-height: 52px; font-size: 18px;
+  font-weight: bold; line-height: 1.5;
+}
+.level { margin: 15px 0; }
+select {
+  font-size: 18px; padding: 9px;
+  border-radius: 10px; border: 2px solid #ddd;
+}
+.hidden { display: none; }
+.small { font-size: 14px; color: #778; }
+</style>
+</head>
+<body>
+<main>
+  <h1>ことばのヒミツ基地</h1>
+  <div class="sub">順番をおぼえよう！</div>
+
+  <div class="info">
+    👀 よく見ておぼえてね！<br>
+    あとから同じ順番にタップしよう。
+  </div>
+
+  <div class="level">
+    むずかしさ　
+    <select id="level">
+      <option value="2">レベル1（2つ）</option>
+      <option value="3" selected>レベル2（3つ）</option>
+      <option value="4">レベル3（4つ）</option>
+      <option value="5">レベル4（5つ）</option>
+      <option value="6">レベル5（6つ）</option>
+    </select>
+  </div>
+
+  <div id="message" class="message">
+    スタートを押してね！
+  </div>
+
+  <div id="sequence" class="sequence"></div>
+
+  <div id="items" class="items"></div>
+
+  <button id="start" class="start">ゲームスタート！</button>
+  <p class="small">まちがえても大丈夫。もう一度チャレンジできるよ！</p>
+</main>
+
+<script>
+const pictures = ["🍎","🐶","🚗","⚽","🐱","🍓",
+                  "🚀","🐰","🌸","🚌","🐻","🍌"];
+
+const itemsArea = document.getElementById("items");
+const message = document.getElementById("message");
+const sequenceArea = document.getElementById("sequence");
+const startButton = document.getElementById("start");
+const levelSelect = document.getElementById("level");
+
+let answer = [];
+let selected = [];
+let locked = true;
+
+function shuffle(array) {
+  return [...array].sort(() => Math.random() - 0.5);
+}
+
+function showItems() {
+  itemsArea.innerHTML = "";
+  shuffle(pictures).slice(0, 9).forEach(pic => {
+    const button = document.createElement("button");
+    button.className = "item";
+    button.textContent = pic;
+    button.disabled = locked;
+    button.addEventListener("click", () => choose(pic));
+    itemsArea.appendChild(button);
+  });
+}
+
+function showSequence() {
+  sequenceArea.textContent = "";
+  answer.forEach((pic, index) => {
+    const span = document.createElement("span");
+    span.textContent = pic;
+    span.style.animation = "none";
+    sequenceArea.appendChild(span);
+  });
+}
+
+function startGame() {
+  const count = Number(levelSelect.value);
+  answer = shuffle(pictures).slice(0, count);
+  selected = [];
+  locked = true;
+  startButton.disabled = true;
+  levelSelect.disabled = true;
+  message.textContent = "よく見ておぼえてね！";
+  showItems();
+  showSequence();
+
+  setTimeout(() => {
+    sequenceArea.textContent = "🙈";
+    message.textContent = "今度は順番にタップしよう！";
+    locked = false;
+    showItems();
+    startButton.disabled = false;
+    startButton.textContent = "もう一度はじめる";
+  }, 3000 + count * 500);
+}
+
+function choose(pic) {
+  if (locked) return;
+
+  const next = answer[selected.length];
+
+  if (pic === next) {
+    selected.push(pic);
+    sequenceArea.textContent = selected.join("　");
+
+    if (selected.length === answer.length) {
+      locked = true;
+      message.textContent = "🎉 せいかい！ぜんぶできたね！";
+      levelSelect.disabled = false;
+      startButton.textContent = "つぎにチャレンジ！";
+      return;
+    }
+
+    message.textContent = "いいね！つぎもおぼえているかな？";
+  } else {
+    message.textContent = "おしい！もう一度考えてみよう。";
+  }
+}
+
+startButton.addEventListener("click", startGame);
+showItems();
+</script>
+</body>
+</html>
