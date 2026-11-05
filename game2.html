@@ -5,360 +5,641 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>なかまわけゲーム</title>
+
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;padding:16px;
-  font-family:Arial,"Hiragino Kaku Gothic ProN",sans-serif;
-  background:#fff8ec;color:#444;text-align:center;
+* {
+  box-sizing: border-box;
 }
-.container{max-width:720px;margin:auto}
-h1{color:#e78343;font-size:26px}
-.panel{
-  background:#fff;border-radius:20px;
-  padding:18px 14px;margin-bottom:16px;
-  box-shadow:0 3px 10px #00000012;
+
+body {
+  margin: 0;
+  padding: 20px 12px;
+  background: #fff8ed;
+  font-family: sans-serif;
+  text-align: center;
+  color: #333;
 }
-button{font:inherit;cursor:pointer;border:0}
-.start-button,.action-button{
-  background:#f3a45d;color:#fff;
-  font-size:19px;font-weight:bold;
-  padding:15px 30px;border-radius:14px;
+
+h1 {
+  color: #f28a45;
+  margin: 5px 0 20px;
+  font-size: 28px;
 }
-.level-grid{display:grid;gap:12px;margin-top:18px}
-.level-button{
-  padding:17px 12px;border:3px solid #f3d2ae;
-  background:#fff9f1;border-radius:16px;color:#555;
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 18px 14px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
-.level-button strong{display:block;font-size:21px;margin-bottom:5px}
-.level-button span{font-size:15px}
-.level-button:active{background:#ffe7ca}
-.info{
-  display:flex;gap:8px;justify-content:space-between;
-  margin-bottom:14px;
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  font-weight: bold;
 }
-.info div{
-  flex:1;background:#fff1df;border-radius:10px;
-  padding:9px 4px;font-size:14px;font-weight:bold;
+
+.hidden {
+  display: none !important;
 }
-.category{
-  font-size:32px;font-weight:bold;
-  color:#e78343;margin:12px 0;
+
+/* 難易度選択画面 */
+
+.level-description {
+  font-size: 16px;
+  margin: 15px 0 25px;
+  line-height: 1.8;
 }
-.message{
-  min-height:36px;font-size:22px;
-  font-weight:bold;margin:12px 0;
+
+.level-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 400px;
+  margin: 0 auto;
 }
-.card-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
+
+.level-button {
+  padding: 18px;
+  border-radius: 15px;
+  background: #fff0df;
+  color: #333;
+  font-size: 19px;
+  border: 2px solid #ffd5ad;
 }
-.card{
-  background:#fff4e5;border:3px solid transparent;
-  border-radius:16px;padding:8px;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  min-height:155px;
+
+.level-button:hover {
+  background: #ffe2c4;
 }
-.card img{
-  width:100%;height:110px;object-fit:contain;
+
+/* ゲーム画面 */
+
+.status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
 }
-.card .word{font-size:18px;font-weight:bold;margin-top:5px}
-.card.correct{background:#eaffea;border-color:#43ad55}
-.card.incorrect{background:#ffeded;border-color:#d9534f}
-.card:disabled{cursor:default;opacity:1}
-.hidden{display:none!important}
-.audio-status{font-size:13px;color:#777;margin:8px}
-.replay-button{
-  background:#fff0df;color:#a85b24;
-  border:1px solid #f0c49e;border-radius:20px;
-  padding:8px 15px;font-size:14px;
+
+.status div {
+  background: #fff0df;
+  padding: 12px 5px;
+  border-radius: 12px;
+  font-weight: bold;
 }
-.progress{
-  font-size:15px;color:#777;margin:10px 0;
+
+.instruction {
+  font-size: 17px;
+  margin: 15px 0;
 }
-@media(min-width:600px){
-  .card-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .card{min-height:180px}
-  .card img{height:125px}
+
+.category {
+  color: #f28a45;
+  font-size: 30px;
+  font-weight: bold;
+  margin: 20px 0 10px;
+}
+
+.audio-status {
+  font-size: 13px;
+  color: #888;
+  margin: 10px 0;
+}
+
+.replay-button {
+  background: #fff0df;
+  color: #c66c31;
+  border: 1px solid #ffbd8b;
+  border-radius: 25px;
+  padding: 10px 18px;
+  font-size: 14px;
+}
+
+.progress {
+  margin: 12px 0;
+  color: #666;
+  font-size: 15px;
+}
+
+.message {
+  min-height: 38px;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+.message.correct {
+  color: #20a34a;
+}
+
+.message.wrong {
+  color: #e34b4b;
+}
+
+/* カード：常に2列 */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.card {
+  background: #fff2e2;
+  border: 3px solid transparent;
+  border-radius: 17px;
+  padding: 10px 5px;
+  min-width: 0;
+  transition: 0.2s;
+}
+
+.card img {
+  width: 100%;
+  max-width: 125px;
+  height: 125px;
+  object-fit: contain;
+  background: white;
+  display: block;
+  margin: 0 auto 8px;
+}
+
+.card-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+}
+
+.card.correct {
+  background: #e9ffeb;
+  border-color: #39b653;
+  opacity: 0.65;
+}
+
+.card.wrong {
+  background: #ffe8e8;
+  border-color: #e34b4b;
+  opacity: 0.65;
+}
+
+.card:disabled {
+  cursor: default;
+}
+
+.next-button {
+  display: block;
+  margin: 15px auto 10px;
+  padding: 17px 30px;
+  border-radius: 15px;
+  background: #f5a052;
+  color: white;
+  font-size: 18px;
+}
+
+.change-button {
+  margin: 15px auto 5px;
+  padding: 11px 20px;
+  border-radius: 25px;
+  background: #eee;
+  color: #555;
+  font-size: 14px;
+}
+
+/* 結果画面 */
+
+.result-title {
+  color: #f28a45;
+  font-size: 28px;
+}
+
+.result-score {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 25px 0;
+}
+
+.restart-button {
+  background: #f5a052;
+  color: white;
+  border-radius: 15px;
+  padding: 16px 25px;
+  font-size: 18px;
+}
+
+@media (max-width: 380px) {
+  .card img {
+    height: 105px;
+  }
+
+  .card-name {
+    font-size: 16px;
+  }
 }
 </style>
 </head>
-<body>
-<div class="container">
-  <h1>なかまわけゲーム</h1>
 
-  <!-- 難易度選択 -->
-  <div class="panel" id="startPanel">
-    <p>どのレベルにチャレンジする？</p>
-    <div class="level-grid">
+<body>
+
+<h1>なかまわけゲーム</h1>
+
+<div class="container">
+
+  <!-- 難易度選択画面 -->
+  <section id="startScreen">
+    <h2>むずかしさをえらんでね！</h2>
+
+    <p class="level-description">
+      どのレベルにちょうせんする？
+    </p>
+
+    <div class="level-buttons">
       <button class="level-button" onclick="startGame(1)">
-        <strong>🌱 レベル1・かんたん</strong>
-        <span>4枚の中から1枚選ぼう！</span>
+        レベル1<br>
+        <small>4まいから 1まい みつけよう</small>
       </button>
+
       <button class="level-button" onclick="startGame(2)">
-        <strong>🌼 レベル2・ふつう</strong>
-        <span>6枚の中から2枚選ぼう！</span>
+        レベル2<br>
+        <small>6まいから 2まい みつけよう</small>
       </button>
+
       <button class="level-button" onclick="startGame(3)">
-        <strong>🌟 レベル3・むずかしい</strong>
-        <span>9枚の中から3枚選ぼう！</span>
+        レベル3<br>
+        <small>9まいから 3まい みつけよう</small>
       </button>
     </div>
-  </div>
+  </section>
 
   <!-- ゲーム画面 -->
-  <div class="panel hidden" id="gamePanel">
-    <div class="info">
-      <div>もんだい <span id="count">1</span>/10</div>
-      <div>クリア <span id="score">0</span></div>
+  <section id="gameScreen" class="hidden">
+
+    <div class="status">
+      <div id="questionStatus">もんだい 1/10</div>
+      <div id="scoreStatus">クリア 0</div>
     </div>
 
-    <p>このなかまはどれかな？</p>
-    <div class="category" id="category"></div>
+    <p class="instruction">このなかまはどれかな？</p>
 
-    <div class="audio-status" id="audioStatus">カテゴリーの音声を再生します</div>
-    <button class="replay-button" onclick="playCategoryAudio()">🔊 もういちど聞く</button>
+    <div class="category" id="categoryName"></div>
 
-    <div class="progress" id="progress"></div>
+    <div class="audio-status" id="audioStatus">
+      カテゴリーの音声を再生中
+    </div>
+
+    <button class="replay-button" onclick="playCategoryAudio()">
+      🔊 もういちど聞く
+    </button>
+
+    <div class="progress" id="progress">
+      みつけた数：0 / 1
+    </div>
+
     <div class="message" id="message"></div>
-    <div class="card-grid" id="choices"></div>
 
-    <button class="action-button hidden" id="nextButton" onclick="nextQuestion()">
+    <div class="cards" id="cards"></div>
+
+    <button id="nextButton" class="next-button hidden"
+      onclick="nextQuestion()">
       つぎのもんだい
     </button>
-  </div>
+
+    <button class="change-button" onclick="backToStart()">
+      難易度を変更
+    </button>
+
+  </section>
 
   <!-- 結果画面 -->
-  <div class="panel hidden" id="resultPanel">
-    <h2>おしまい！</h2>
-    <p id="resultText"></p>
-    <button class="start-button" onclick="backToStart()">もういちどあそぶ</button>
-  </div>
+  <section id="resultScreen" class="hidden">
+    <h2 class="result-title">ゲームおわり！</h2>
+
+    <p>さいごまでよくがんばったね！</p>
+
+    <div class="result-score" id="resultScore"></div>
+
+    <button class="restart-button" onclick="backToStart()">
+      難易度を選びなおす
+    </button>
+  </section>
+
 </div>
 
 <script>
-const categories = [
-  {
-    name:"くだもの",
-    audio:"audio/fruits.m4a",
-    items:[
-      {name:"りんご",image:"images/apple.png"},
-      {name:"バナナ",image:"images/banana.png"},
-      {name:"ぶどう",image:"images/grapes.png"},
-      {name:"いちご",image:"images/strawberry.png"}
+
+/* カードのデータ */
+
+const categories = {
+  fruits: {
+    name: "くだもの",
+    audio: "audio/fruits.m4a",
+    items: [
+      { name: "りんご", image: "apple.png" },
+      { name: "ばなな", image: "banana.png" },
+      { name: "ぶどう", image: "grapes.png" },
+      { name: "いちご", image: "strawberry.png" }
     ]
   },
-  {
-    name:"どうぶつ",
-    audio:"audio/animals.m4a",
-    items:[
-      {name:"ねこ",image:"images/cat.png"},
-      {name:"いぬ",image:"images/dog.png"},
-      {name:"ぞう",image:"images/elephant.png"},
-      {name:"きりん",image:"images/giraffe.png"}
+
+  animals: {
+    name: "どうぶつ",
+    audio: "audio/animals.m4a",
+    items: [
+      { name: "ねこ", image: "cat.png" },
+      { name: "いぬ", image: "dog.png" },
+      { name: "ぞう", image: "elephant.png" },
+      { name: "きりん", image: "giraffe.png" }
     ]
   },
-  {
-    name:"のりもの",
-    audio:"audio/vehicles.m4a",
-    items:[
-      {name:"ひこうき",image:"images/airplane.png"},
-      {name:"バス",image:"images/bus.png"},
-      {name:"くるま",image:"images/car.png"},
-      {name:"ふね",image:"images/ship.png"}
+
+  vehicles: {
+    name: "のりもの",
+    audio: "audio/vehicles.m4a",
+    items: [
+      { name: "ひこうき", image: "airplane.png" },
+      { name: "ばす", image: "bus.png" },
+      { name: "くるま", image: "car.png" },
+      { name: "ふね", image: "ship.png" }
     ]
   }
-];
+};
 
-let questionNumber=0;
-let score=0;
-let currentCategory=null;
-let answered=false;
-let categorySound=null;
-let currentLevel=1;
-let correctItems=[];
-let foundItems=[];
-let totalCards=4;
-let requiredCorrect=1;
+/* ゲームの設定 */
 
-const totalQuestions=10;
+let difficulty = 1;
+let totalCards = 4;
+let requiredCorrect = 1;
 
-function backToStart(){
-  stopCategoryAudio();
-  document.getElementById("gamePanel").classList.add("hidden");
-  document.getElementById("resultPanel").classList.add("hidden");
-  document.getElementById("startPanel").classList.remove("hidden");
-}
+let questionNumber = 0;
+let score = 0;
 
-function stopCategoryAudio(){
-  if(categorySound){
-    categorySound.pause();
-    categorySound.currentTime=0;
-    categorySound=null;
-  }
-}
+let currentCategory = null;
+let correctItems = [];
+let foundItems = [];
+let answeredItems = [];
 
-function startGame(level){
-  currentLevel=level;
+let currentAudio = null;
 
-  if(level===1){
-    totalCards=4;
-    requiredCorrect=1;
-  }else if(level===2){
-    totalCards=6;
-    requiredCorrect=2;
-  }else{
-    totalCards=9;
-    requiredCorrect=3;
+const totalQuestions = 10;
+
+/* 配列をシャッフル */
+
+function shuffle(array) {
+  const result = [...array];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [result[i], result[j]] = [result[j], result[i]];
   }
 
-  questionNumber=0;
-  score=0;
+  return result;
+}
 
-  document.getElementById("startPanel").classList.add("hidden");
-  document.getElementById("resultPanel").classList.add("hidden");
-  document.getElementById("gamePanel").classList.remove("hidden");
+/* 難易度選択 */
+
+function startGame(level) {
+
+  difficulty = level;
+
+  if (level === 1) {
+    totalCards = 4;
+    requiredCorrect = 1;
+  } else if (level === 2) {
+    totalCards = 6;
+    requiredCorrect = 2;
+  } else {
+    totalCards = 9;
+    requiredCorrect = 3;
+  }
+
+  questionNumber = 0;
+  score = 0;
+
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
 
   nextQuestion();
 }
 
-function shuffle(array){
-  const result=[...array];
-  for(let i=result.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [result[i],result[j]]=[result[j],result[i]];
+/* 最初の画面に戻る */
+
+function backToStart() {
+
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
   }
-  return result;
+
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.add("hidden");
+  document.getElementById("startScreen").classList.remove("hidden");
+
+  questionNumber = 0;
+  score = 0;
 }
 
-function playCategoryAudio(){
-  if(!currentCategory)return;
+/* 次の問題 */
 
-  stopCategoryAudio();
+function nextQuestion() {
 
-  categorySound=new Audio(currentCategory.audio);
-  categorySound.play().then(()=>{
-    document.getElementById("audioStatus").textContent="カテゴリーの音声を再生中";
-  }).catch(()=>{
-    document.getElementById("audioStatus").textContent=
-      "音声を再生できません。もういちど聞くを押してください。";
-  });
-}
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
 
-function nextQuestion(){
-  if(questionNumber>=totalQuestions){
+  if (questionNumber >= totalQuestions) {
     showResult();
     return;
   }
 
-  stopCategoryAudio();
-
   questionNumber++;
-  answered=false;
-  foundItems=[];
 
-  document.getElementById("count").textContent=questionNumber;
-  document.getElementById("score").textContent=score;
-  document.getElementById("message").textContent="";
-  document.getElementById("nextButton").classList.add("hidden");
+  foundItems = [];
+  answeredItems = [];
 
-  currentCategory=categories[
-    Math.floor(Math.random()*categories.length)
-  ];
+  const keys = Object.keys(categories);
 
-  document.getElementById("category").textContent=currentCategory.name;
+  const randomKey = keys[Math.floor(Math.random() * keys.length)];
 
-  // 正解カードを必要枚数選ぶ
-  correctItems=shuffle(currentCategory.items).slice(0,requiredCorrect);
+  currentCategory = categories[randomKey];
 
-  // ほかのカテゴリーから不正解カードを選ぶ
-  const wrongItems=categories
-    .filter(c=>c!==currentCategory)
-    .flatMap(c=>c.items);
+  /* 正解カードを選ぶ */
 
-  const selectedWrong=shuffle(wrongItems).slice(
-    0,totalCards-requiredCorrect
-  );
+  correctItems = shuffle(currentCategory.items)
+    .slice(0, requiredCorrect);
 
-  // 正解と不正解を混ぜる
-  const choices=shuffle([...correctItems,...selectedWrong]);
+  /* まちがいカードを選ぶ */
 
-  const choiceArea=document.getElementById("choices");
-  choiceArea.innerHTML="";
+  const otherItems = [];
 
-  choices.forEach(item=>{
-    const button=document.createElement("button");
-    button.className="card";
-
-    const img=document.createElement("img");
-    img.src=item.image;
-    img.alt=item.name;
-
-    const word=document.createElement("span");
-    word.className="word";
-    word.textContent=item.name;
-
-    button.appendChild(img);
-    button.appendChild(word);
-
-    button.onclick=()=>checkAnswer(button,item);
-    choiceArea.appendChild(button);
+  keys.forEach(key => {
+    if (key !== randomKey) {
+      otherItems.push(...categories[key].items);
+    }
   });
 
-  updateProgress();
+  const wrongCount = totalCards - requiredCorrect;
 
-  // 問題表示時にカテゴリー音声だけを再生
+  const wrongItems = shuffle(otherItems)
+    .slice(0, wrongCount);
+
+  /* カードを混ぜる */
+
+  const allCards = shuffle([
+    ...correctItems,
+    ...wrongItems
+  ]);
+
+  /* 画面の表示 */
+
+  document.getElementById("questionStatus").textContent =
+    `もんだい ${questionNumber}/${totalQuestions}`;
+
+  document.getElementById("scoreStatus").textContent =
+    `クリア ${score}`;
+
+  document.getElementById("categoryName").textContent =
+    `く ${currentCategory.name}`;
+
+  document.getElementById("progress").textContent =
+    `みつけた数：0 / ${requiredCorrect}`;
+
+  const message = document.getElementById("message");
+
+  message.textContent = "";
+  message.className = "message";
+
+  document.getElementById("nextButton").classList.add("hidden");
+
+  /* カードを作る */
+
+  const cardsArea = document.getElementById("cards");
+
+  cardsArea.innerHTML = "";
+
+  allCards.forEach(item => {
+
+    const card = document.createElement("button");
+
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="images/${item.image}" alt="${item.name}">
+      <div class="card-name">${item.name}</div>
+    `;
+
+    card.onclick = () => checkAnswer(card, item);
+
+    cardsArea.appendChild(card);
+  });
+
+  /* 音声を再生 */
+
   playCategoryAudio();
 }
 
-function updateProgress(){
-  document.getElementById("progress").textContent=
-    "みつけた数："+foundItems.length+" / "+requiredCorrect;
+/* カテゴリー音声 */
+
+function playCategoryAudio() {
+
+  if (!currentCategory) return;
+
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+  }
+
+  currentAudio = new Audio(currentCategory.audio);
+
+  const audioStatus = document.getElementById("audioStatus");
+
+  audioStatus.textContent = "カテゴリーの音声を再生中";
+
+  currentAudio.play()
+    .then(() => {
+      audioStatus.textContent = "カテゴリーの音声を再生中";
+    })
+    .catch(() => {
+      audioStatus.textContent =
+        "音声が再生されないときは、もういちど聞くを押してね";
+    });
+
+  currentAudio.onended = () => {
+    audioStatus.textContent = "音声を聞きおわりました";
+  };
 }
 
-function checkAnswer(button,item){
-  if(button.disabled || answered)return;
+/* カードを選んだとき */
 
-  if(correctItems.includes(item)){
-    button.classList.add("correct");
-    button.disabled=true;
+function checkAnswer(card, item) {
+
+  if (answeredItems.includes(item)) return;
+
+  answeredItems.push(item);
+
+  const message = document.getElementById("message");
+
+  if (correctItems.includes(item)) {
+
     foundItems.push(item);
 
-    document.getElementById("message").textContent="○ せいかい！";
-    document.getElementById("message").style.color="#269b4a";
+    card.classList.add("correct");
+    card.disabled = true;
 
-    updateProgress();
+    message.textContent = "○ せいかい！";
+    message.className = "message correct";
 
-    if(foundItems.length===requiredCorrect){
-      answered=true;
+    document.getElementById("progress").textContent =
+      `みつけた数：${foundItems.length} / ${requiredCorrect}`;
+
+    /* 必要な正解数を見つけたら次へ */
+
+    if (foundItems.length === requiredCorrect) {
+
       score++;
-      document.getElementById("score").textContent=score;
 
-      document.getElementById("message").textContent=
-        "○ ぜんぶみつけたね！";
+      document.getElementById("scoreStatus").textContent =
+        `クリア ${score}`;
+
+      message.textContent = "○ ぜんぶみつけたね！";
+
       document.getElementById("nextButton").classList.remove("hidden");
     }
-  }else{
-    button.classList.add("incorrect");
-    button.disabled=true;
 
-    document.getElementById("message").textContent=
-      "× ちがうよ。ほかをさがしてみよう！";
-    document.getElementById("message").style.color="#d9534f";
+  } else {
+
+    card.classList.add("wrong");
+    card.disabled = true;
+
+    message.textContent = "× ちがうよ！ほかをさがしてみよう";
+    message.className = "message wrong";
   }
 }
 
-function showResult(){
-  stopCategoryAudio();
+/* 結果画面 */
 
-  document.getElementById("gamePanel").classList.add("hidden");
-  document.getElementById("resultPanel").classList.remove("hidden");
+function showResult() {
 
-  document.getElementById("resultText").textContent=
-    totalQuestions+"もん中 "+score+"もん クリア！";
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+
+  document.getElementById("resultScore").textContent =
+    `${totalQuestions}問中 ${score}問クリア！`;
 }
+
 </script>
+
 </body>
 </html>
