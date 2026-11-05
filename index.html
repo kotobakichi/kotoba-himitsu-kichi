@@ -1,70 +1,139 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ことばのヒミツ基地｜順番をおぼえよう</title>
+
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
 body {
-  margin: 0; padding: 20px;
+  margin: 0;
+  padding: 20px;
   font-family: sans-serif;
-  background: #fff8e9; color: #39445a;
+  background: #fff8e9;
+  color: #39445a;
   text-align: center;
 }
+
 main {
-  max-width: 520px; margin: 0 auto;
-  background: white; padding: 24px 18px;
+  max-width: 520px;
+  margin: 0 auto;
+  background: white;
+  padding: 24px 18px;
   border-radius: 24px;
   box-shadow: 0 5px 18px #00000012;
 }
-h1 { font-size: 25px; color: #ed8b43; margin: 5px 0 8px; }
-.sub { color: #68758a; margin-bottom: 20px; }
+
+h1 {
+  font-size: 25px;
+  color: #ed8b43;
+  margin: 5px 0 8px;
+}
+
+.sub {
+  color: #68758a;
+  margin-bottom: 20px;
+}
+
 .info {
-  background: #fff1d8; border-radius: 14px;
-  padding: 12px; margin: 15px 0;
+  background: #fff1d8;
+  border-radius: 14px;
+  padding: 12px;
+  margin: 15px 0;
   font-weight: bold;
 }
+
 button {
-  border: 0; border-radius: 15px;
-  padding: 14px 20px; font-size: 18px;
-  font-weight: bold; cursor: pointer;
+  border: 0;
+  border-radius: 15px;
+  padding: 14px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
   touch-action: manipulation;
 }
-.start { background: #ffb85c; color: #49351d; width: 100%; }
+
+.start {
+  background: #ffb85c;
+  color: #49351d;
+  width: 100%;
+}
+
 .items {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 12px; margin: 22px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 22px 0;
 }
+
 .item {
-  background: #eaf4ff; border: 3px solid #d5e8fa;
-  min-height: 88px; font-size: 38px;
-  display: flex; align-items: center; justify-content: center;
+  background: #eaf4ff;
+  border: 3px solid #d5e8fa;
+  min-height: 88px;
+  font-size: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.item:active { transform: scale(.96); }
-.item:disabled { opacity: .65; }
+
+.item:active {
+  transform: scale(.96);
+}
+
+.item:disabled {
+  opacity: .65;
+}
+
 .sequence {
-  min-height: 90px; display: flex;
-  justify-content: center; align-items: center;
-  flex-wrap: wrap; gap: 10px;
-  font-size: 38px; margin: 15px 0;
+  min-height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 38px;
+  margin: 15px 0;
 }
+
 .message {
-  min-height: 52px; font-size: 18px;
-  font-weight: bold; line-height: 1.5;
+  min-height: 52px;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.5;
 }
-.level { margin: 15px 0; }
+
+.level {
+  margin: 15px 0;
+}
+
 select {
-  font-size: 18px; padding: 9px;
-  border-radius: 10px; border: 2px solid #ddd;
+  font-size: 18px;
+  padding: 9px;
+  border-radius: 10px;
+  border: 2px solid #ddd;
 }
-.hidden { display: none; }
-.small { font-size: 14px; color: #778; }
+
+.hidden {
+  display: none;
+}
+
+.small {
+  font-size: 14px;
+  color: #778;
+}
 </style>
 </head>
+
 <body>
+
 <main>
   <h1>ことばのヒミツ基地</h1>
+
   <div class="sub">順番をおぼえよう！</div>
 
   <div class="info">
@@ -91,13 +160,20 @@ select {
 
   <div id="items" class="items"></div>
 
-  <button id="start" class="start">ゲームスタート！</button>
-  <p class="small">まちがえても大丈夫。もう一度チャレンジできるよ！</p>
+  <button id="start" class="start">
+    ゲームスタート！
+  </button>
+
+  <p class="small">
+    まちがえても大丈夫。もう一度チャレンジできるよ！
+  </p>
 </main>
 
 <script>
-const pictures = ["🍎","🐶","🚗","⚽","🐱","🍓",
-                  "🚀","🐰","🌸","🚌","🐻","🍌"];
+const pictures = [
+  "🍎", "🐶", "🚗", "⚽", "🐱", "🍓",
+  "🚀", "🐰", "🌸", "🚌", "🐻", "🍌"
+];
 
 const itemsArea = document.getElementById("items");
 const message = document.getElementById("message");
@@ -113,49 +189,86 @@ function shuffle(array) {
   return [...array].sort(() => Math.random() - 0.5);
 }
 
-function showItems() {
+// 選択肢を表示する
+function showItems(includeAnswer = false) {
   itemsArea.innerHTML = "";
-  shuffle(pictures).slice(0, 9).forEach(pic => {
+
+  let choices;
+
+  if (includeAnswer) {
+    // 正解の絵文字を必ず選択肢に含める
+    const distractors = pictures.filter(
+      pic => !answer.includes(pic)
+    );
+
+    choices = shuffle([
+      ...answer,
+      ...shuffle(distractors).slice(0, 9 - answer.length)
+    ]);
+
+  } else {
+    // ゲーム開始前の初期表示
+    choices = shuffle(pictures).slice(0, 9);
+  }
+
+  choices.forEach(pic => {
     const button = document.createElement("button");
+
     button.className = "item";
     button.textContent = pic;
     button.disabled = locked;
+
     button.addEventListener("click", () => choose(pic));
+
     itemsArea.appendChild(button);
   });
 }
 
+// 覚える順番を表示する
 function showSequence() {
   sequenceArea.textContent = "";
-  answer.forEach((pic, index) => {
+
+  answer.forEach(pic => {
     const span = document.createElement("span");
     span.textContent = pic;
-    span.style.animation = "none";
     sequenceArea.appendChild(span);
   });
 }
 
+// ゲームを開始する
 function startGame() {
   const count = Number(levelSelect.value);
+
   answer = shuffle(pictures).slice(0, count);
   selected = [];
+
   locked = true;
+
   startButton.disabled = true;
   levelSelect.disabled = true;
+
   message.textContent = "よく見ておぼえてね！";
+
   showItems();
   showSequence();
 
   setTimeout(() => {
     sequenceArea.textContent = "🙈";
+
     message.textContent = "今度は順番にタップしよう！";
+
     locked = false;
-    showItems();
+
+    // 覚えた絵文字を必ず選択肢に含める
+    showItems(true);
+
     startButton.disabled = false;
     startButton.textContent = "もう一度はじめる";
+
   }, 3000 + count * 500);
 }
 
+// 絵文字を選択する
 function choose(pic) {
   if (locked) return;
 
@@ -163,24 +276,33 @@ function choose(pic) {
 
   if (pic === next) {
     selected.push(pic);
+
     sequenceArea.textContent = selected.join("　");
 
     if (selected.length === answer.length) {
       locked = true;
+
       message.textContent = "🎉 せいかい！ぜんぶできたね！";
+
       levelSelect.disabled = false;
       startButton.textContent = "つぎにチャレンジ！";
+
       return;
     }
 
     message.textContent = "いいね！つぎもおぼえているかな？";
+
   } else {
     message.textContent = "おしい！もう一度考えてみよう。";
   }
 }
 
 startButton.addEventListener("click", startGame);
+
+// 最初の画面を表示
 showItems();
+
 </script>
+
 </body>
 </html>
