@@ -2,63 +2,51 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#fff7e8">
 <title>ことばのヒミツ基地｜ルールチェンジ！</title>
 <style>
-:root{
-  --ink:#344054;--muted:#667085;--cream:#fff7e8;--paper:#fff;
-  --orange:#ff9b54;--yellow:#ffd66b;--blue:#8ecae6;--green:#8bd3a8;
-  --pink:#f6a6c1;--line:#f0dfc8;--shadow:0 5px 0 rgba(94,69,43,.10);
-}
+:root{--ink:#344054;--muted:#667085;--cream:#fff7e8;--orange:#ff9b54;--line:#f0dfc8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
 button{font:inherit;touch-action:manipulation;cursor:pointer}
-.app{max-width:850px;margin:0 auto;min-height:100svh;padding:16px 16px 28px}
-header{text-align:center;padding:8px 0 14px}
+.app{max-width:850px;margin:auto;min-height:100svh;padding:14px}
+header{text-align:center;padding:8px 0 16px}
 .brand{font-size:13px;font-weight:900;letter-spacing:.12em;color:#a77b52}
-h1{font-size:clamp(29px,6vw,42px);margin:7px 0 3px;color:#5a4939;font-weight:900}
-.subtitle{margin:0;color:var(--muted);font-size:clamp(14px,3.8vw,18px);font-weight:700}
-.panel{background:var(--paper);border:2px solid var(--line);border-radius:26px;padding:clamp(16px,4vw,28px);box-shadow:var(--shadow)}
+h1{font-size:clamp(29px,6vw,42px);margin:7px 0 3px;color:#5a4939}
+.subtitle{margin:0;color:var(--muted);font-weight:700}
+.panel{background:#fff;border:2px solid var(--line);border-radius:25px;padding:clamp(15px,4vw,28px);box-shadow:0 5px 0 #eadfce}
 .screen{display:none}.screen.active{display:block}
 .section-title{text-align:center;font-size:21px;margin:0 0 17px}
-.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.level-btn{border:2px solid var(--line);border-radius:18px;background:#fff;padding:14px 7px;min-height:116px;color:var(--ink);font-weight:900;box-shadow:0 4px 0 rgba(94,69,43,.08)}
-.level-btn:active,.primary:active,.secondary:active,.card:active{transform:translateY(2px);box-shadow:none}
-.level-btn .num{display:block;font-size:25px;margin-bottom:5px}
-.level-btn small{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-top:5px}
-.level-btn:nth-child(1){background:#fff5d8;border-color:#f6d98d}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.level-btn{border:2px solid var(--line);border-radius:18px;padding:13px 5px;min-height:110px;font-weight:900;color:var(--ink);background:#fff5d8}
 .level-btn:nth-child(2){background:#eaf7ff;border-color:#b8e0f2}
 .level-btn:nth-child(3){background:#fcecf3;border-color:#f2c2d5}
-.howto{margin:18px 0 0;padding:14px 16px;background:#fffaf1;border-radius:16px;font-size:14px;line-height:1.9}
-.howto strong{color:#bd6a2d}
-.game-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px;font-weight:900;flex-wrap:wrap}
-.pill{background:#fff3d4;border-radius:999px;padding:9px 14px;font-size:14px;white-space:nowrap}
+.level-btn .num{display:block;font-size:24px;margin-bottom:5px}
+.level-btn small{display:block;font-size:11px;color:var(--muted);margin-top:5px}
+.howto{margin-top:18px;padding:14px;background:#fffaf1;border-radius:16px;font-size:14px;line-height:1.9}
+.game-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;font-weight:900}
+.pill{background:#fff3d4;border-radius:999px;padding:9px 13px;font-size:14px}
 .timer-pill{background:#eaf7ff;color:#286887;font-variant-numeric:tabular-nums}
-.progress{height:10px;background:#f1e8dc;border-radius:99px;overflow:hidden;margin:0 0 18px}
-.progress>div{height:100%;width:0;background:linear-gradient(90deg,#ffbd67,#ff8e62);border-radius:99px;transition:width .25s}
+.progress{height:10px;background:#f1e8dc;border-radius:99px;overflow:hidden;margin-bottom:18px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,#ffbd67,#ff8e62);transition:width .25s}
 .instruction{background:#fff8e8;border:2px dashed #f3c66c;border-radius:20px;text-align:center;padding:15px 10px;margin-bottom:16px}
-.instruction .ear{font-size:31px}
-.instruction .say{font-size:clamp(23px,5vw,31px);font-weight:900;margin:3px 0;color:#a65e2d}
-.instruction .hint{font-size:13px;color:var(--muted);margin:0;font-weight:700}
+.ear{font-size:31px}.say{font-size:clamp(23px,5vw,31px);font-weight:900;color:#a65e2d;margin:3px 0}
+.hint{font-size:13px;color:var(--muted);margin:0;font-weight:700}
 .board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card{border:2px solid #eadfce;border-radius:18px;background:#fff;min-height:clamp(100px,23vw,145px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 0 rgba(94,69,43,.08);color:var(--ink);padding:8px}
+.card{border:2px solid #eadfce;border-radius:18px;background:#fff;min-height:clamp(100px,23vw,145px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 0 #eee7de;color:var(--ink);padding:8px}
 .card .emoji{font-size:clamp(38px,9vw,60px);line-height:1.15}
 .card .name{font-size:clamp(14px,3vw,17px);font-weight:900}
-.card.selected{border:3px solid #68a9d0;background:#eaf7ff;box-shadow:0 4px 0 rgba(70,137,180,.18)}
-.card.selected::after{content:"✓ えらんだよ";font-size:11px;font-weight:900;color:#286887;margin-top:1px}
-.card:disabled{opacity:.72}
-.feedback{min-height:38px;text-align:center;font-weight:900;font-size:17px;padding:10px 0 2px;color:#368b5a}
-.selection-count{text-align:center;color:var(--muted);font-size:13px;font-weight:800;margin:5px 0 10px}
+.card.selected{border:3px solid #68a9d0;background:#eaf7ff;box-shadow:0 4px 0 #d4eaf6}
+.card.selected:after{content:"✓ えらんだよ";font-size:11px;font-weight:900;color:#286887}
+.card:disabled{opacity:.7}
+.feedback{min-height:42px;text-align:center;font-weight:900;font-size:17px;padding:11px 0 2px;color:#368b5a}
 .actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px}
-.primary,.secondary{border:0;border-radius:999px;padding:14px 23px;font-weight:900;min-height:52px}
-.primary{background:var(--orange);color:#fff;box-shadow:0 4px 0 #dc7b39}
-.primary:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+.primary,.secondary,.listen{border:0;border-radius:999px;padding:13px 22px;font-weight:900;min-height:50px}
+.primary{background:var(--orange);color:white;box-shadow:0 4px 0 #dc7b39}
 .secondary{background:#f3eee7;color:#665747}
-.listen{border:0;background:#eaf5fb;color:#286887;border-radius:999px;padding:12px 18px;font-weight:900}
-.result{text-align:center}
-.result-emoji{font-size:64px}
-.result h2{font-size:27px;margin:4px 0 8px}
+.listen{background:#eaf5fb;color:#286887}
+.result{text-align:center}.result-emoji{font-size:64px}.result h2{font-size:27px;margin:4px 0 8px}
 .score{font-size:23px;font-weight:900;color:#b96d2d;margin:12px 0}
 .result p{line-height:1.8;color:var(--muted);font-weight:700}
 .result-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
@@ -66,14 +54,7 @@ h1{font-size:clamp(29px,6vw,42px);margin:7px 0 3px;color:#5a4939;font-weight:900
 .stat-label{font-size:12px;color:var(--muted);font-weight:800}
 .stat-value{font-size:25px;font-weight:900;color:#5a4939;margin-top:4px;font-variant-numeric:tabular-nums}
 .note{font-size:12px;color:var(--muted);text-align:center;margin:14px 0 0}
-@media(max-width:520px){
- .app{padding:10px 10px 22px}
- .panel{padding:15px 12px;border-radius:22px}
- .levels{gap:7px}
- .level-btn{min-height:108px;padding:10px 3px}
- .board{gap:8px}
- .card{border-radius:15px;min-height:105px}
-}
+@media(max-width:520px){.app{padding:10px}.panel{padding:15px 12px}.levels{gap:6px}.level-btn{padding:10px 2px;min-height:105px}.board{gap:8px}.card{min-height:105px;border-radius:15px}}
 @media(min-width:700px){.board{gap:14px}.card{min-height:145px}}
 </style>
 </head>
@@ -84,7 +65,6 @@ h1{font-size:clamp(29px,6vw,42px);margin:7px 0 3px;color:#5a4939;font-weight:900
   <h1>ルールチェンジ！</h1>
   <p class="subtitle">きいて、きりかえて、タップしよう！</p>
 </header>
-
 <main class="panel">
   <section id="startScreen" class="screen active">
     <h2 class="section-title">あそぶレベルをえらんでね</h2>
@@ -93,11 +73,11 @@ h1{font-size:clamp(29px,6vw,42px);margin:7px 0 3px;color:#5a4939;font-weight:900
       <button class="level-btn" onclick="startGame(2)"><span class="num">⭐⭐</span>レベル2<small>カード6まい・8もん</small></button>
       <button class="level-btn" onclick="startGame(3)"><span class="num">⭐⭐⭐</span>レベル3<small>カード9まい・10もん</small></button>
     </div>
-    <div class="howto">
-      <strong>あそびかた</strong><br>
+    <div class="howto"><strong>あそびかた</strong><br>
       ① おとをよくきこう。<br>
-      ② あてはまるカードを1まいか2まいえらぼう。<br>
-      ③「こたえをきめる」をおしてね。つぎはルールがかわるよ！
+      ② あてはまるカードをすべてタップしよう。<br>
+      ③ ぜんぶ正しくえらべたら、つぎの問題へすすむよ。<br>
+      ※ まちがえたら、最初の問題からやりなおし！
     </div>
     <p class="note">※ はじめるボタンを押すと音声が流れます。音量を確認してね。</p>
   </section>
@@ -112,17 +92,11 @@ h1{font-size:clamp(29px,6vw,42px);margin:7px 0 3px;color:#5a4939;font-weight:900
     <div class="instruction" aria-live="polite">
       <div class="ear">👂</div>
       <div class="say" id="instructionText">どうぶつをタップ！</div>
-      <p class="hint">あてはまるカードを1まいか2まいえらぼう</p>
+      <p class="hint">あてはまるカードをすべてえらんでね</p>
     </div>
     <div id="board" class="board"></div>
-    <div class="selection-count" id="selectionCount">0 / 2 まい えらんでいます</div>
     <div id="feedback" class="feedback" aria-live="polite"></div>
-    <div class="actions">
-      <button class="primary" id="submitButton" onclick="checkAnswer()" disabled>こたえをきめる</button>
-    </div>
-    <div class="game-actions actions">
-      <button class="listen" onclick="repeatInstruction()">🔊 もういちど きく</button>
-    </div>
+    <div class="actions"><button class="listen" onclick="repeatInstruction()">🔊 もういちど きく</button></div>
   </section>
 
   <section id="resultScreen" class="screen result">
@@ -175,10 +149,10 @@ let score=0;
 let currentType="animal";
 let currentBoard=[];
 let selectedItems=[];
-let locked=false;
 let startTime=0;
 let timerInterval=null;
 let finalElapsed=0;
+let isRestarting=false;
 
 const $ = id => document.getElementById(id);
 
@@ -218,16 +192,7 @@ function formatTime(ms){
 }
 
 function updateTimer(){
-  if(!startTime) return;
-  $("timerLabel").textContent="⏱ "+formatTime(Date.now()-startTime);
-}
-
-function startTimer(){
-  stopTimer();
-  startTime=Date.now();
-  finalElapsed=0;
-  updateTimer();
-  timerInterval=setInterval(updateTimer,1000);
+  if(startTime) $("timerLabel").textContent="⏱ "+formatTime(Date.now()-startTime);
 }
 
 function stopTimer(){
@@ -238,14 +203,19 @@ function stopTimer(){
 }
 
 function startGame(level){
+  stopTimer();
   currentLevel=level;
   questionIndex=0;
   score=0;
-  locked=false;
   selectedItems=[];
-  startTimer();
-  showScreen("gameScreen");
+  isRestarting=false;
+  startTime=Date.now();
+  finalElapsed=0;
+  updateTimer();
+  timerInterval=setInterval(updateTimer,1000);
   $("levelLabel").textContent="レベル"+level;
+  $("progressBar").style.width="0%";
+  showScreen("gameScreen");
   nextQuestion();
 }
 
@@ -255,7 +225,6 @@ function nextQuestion(){
     return;
   }
 
-  locked=false;
   selectedItems=[];
   currentType=(questionIndex%2===0)?"animal":"food";
 
@@ -273,11 +242,8 @@ function nextQuestion(){
   $("progressBar").style.width=(questionIndex/cfg.questions*100)+"%";
   $("instructionText").textContent=typeLabel(currentType)+"をタップ！";
   $("feedback").textContent="";
-  $("selectionCount").textContent="0 / 2 まい えらんでいます";
-  $("submitButton").disabled=true;
-
   renderBoard();
-  setTimeout(()=>speak("「"+typeLabel(currentType)+"」を1まいか2まい、えらんでね。"),180);
+  setTimeout(()=>speak("「"+typeLabel(currentType)+"」のカードを、ぜんぶえらんでね。"),180);
 }
 
 function renderBoard(){
@@ -301,122 +267,78 @@ function renderBoard(){
     name.textContent=item.name;
 
     button.append(emoji,name);
-    button.addEventListener("click",()=>toggleCard(item,button));
+    button.addEventListener("click",()=>selectCard(item,button));
     board.appendChild(button);
   });
 }
 
-function toggleCard(item,button){
-  if(locked) return;
+function selectCard(item,button){
+  if(isRestarting || button.disabled) return;
 
-  const existingIndex=selectedItems.findIndex(x=>x.name===item.name);
-
-  if(existingIndex>=0){
-    selectedItems.splice(existingIndex,1);
-    button.classList.remove("selected");
-  }else{
-    if(selectedItems.length>=2){
-      $("feedback").textContent="えらべるのは2まいまでだよ";
-      speak("2まいまでだよ。");
-      return;
-    }
-    selectedItems.push(item);
-    button.classList.add("selected");
+  // 正解カード以外をタップしたら、ゲーム全体を最初からやり直す
+  if(item.type!==currentType){
+    restartAfterMistake();
+    return;
   }
 
-  $("selectionCount").textContent=selectedItems.length+" / 2 まい えらんでいます";
-  $("submitButton").disabled=selectedItems.length===0;
-  $("feedback").textContent="";
+  // 正解カードを選択済みなら何もしない
+  if(selectedItems.some(x=>x.name===item.name)) return;
+
+  selectedItems.push(item);
+  button.classList.add("selected");
+
+  const requiredCount=currentBoard.filter(x=>x.type===currentType).length;
+
+  // この問題の正解カードをすべて選んだら、自動で次へ
+  if(selectedItems.length===requiredCount){
+    score++;
+    questionIndex++;
+    $("feedback").textContent="せいかい！ ぜんぶえらべたよ！ ✨";
+    $("progressBar").style.width=(questionIndex/levels[currentLevel].questions*100)+"%";
+    document.querySelectorAll(".card").forEach(card=>card.disabled=true);
+    speak("せいかい！ ぜんぶえらべたよ！");
+    setTimeout(nextQuestion,1000);
+  }else{
+    $("feedback").textContent="いいね！ あと"+(requiredCount-selectedItems.length)+"まい！";
+  }
 }
 
-function checkAnswer(){
-  if(locked || selectedItems.length===0) return;
+function restartAfterMistake(){
+  if(isRestarting) return;
+  isRestarting=true;
+  $("feedback").textContent="ちがうカードだよ。さいしょからやりなおし！";
+  speak("ちがうカードだよ。さいしょからやりなおし。");
+  document.querySelectorAll(".card").forEach(card=>card.disabled=true);
 
-  const correctSelected=selectedItems.filter(item=>item.type===currentType);
-  const isCorrect=correctSelected.length>0;
-
-  if(isCorrect){
-    locked=true;
-    score++;
-
-    $("feedback").textContent=
-      correctSelected.length===2
-        ?"せいかい！ 2つとも正解！ ✨"
-        :"せいかい！ ✨";
-
-    speak(
-      correctSelected.length===2
-        ?"せいかい！ 2つとも正解！"
-        :"せいかい！"
-    );
-
-    document.querySelectorAll(".card").forEach(button=>button.disabled=true);
-    $("submitButton").disabled=true;
-
-    questionIndex++;
-    $("progressBar").style.width=
-      (questionIndex/levels[currentLevel].questions*100)+"%";
-
-    setTimeout(nextQuestion,1100);
-
-  }else{
-    $("feedback").textContent="おしい！ おとをもういちどきこう";
-    speak("おしい。もういちど、きいてみよう。");
-
-    selectedItems.forEach(item=>{
-      const button=[...document.querySelectorAll(".card")]
-        .find(b=>b.getAttribute("aria-label")===item.name);
-
-      if(button) button.classList.remove("selected");
-    });
-
-    selectedItems=[];
-    $("selectionCount").textContent="0 / 2 まい えらんでいます";
-    $("submitButton").disabled=true;
-  }
+  setTimeout(()=>{
+    startGame(currentLevel);
+    speak("もういちど、さいしょからはじめよう！");
+  },1400);
 }
 
 function repeatInstruction(){
-  speak("「"+typeLabel(currentType)+"」を1まいか2まい、えらんでね。");
+  speak("「"+typeLabel(currentType)+"」のカードを、ぜんぶえらんでね。");
 }
 
 function finishGame(){
   stopTimer();
   finalElapsed=Date.now()-startTime;
-
   $("timerLabel").textContent="⏱ "+formatTime(finalElapsed);
   showScreen("resultScreen");
 
   const total=levels[currentLevel].questions;
-
   $("scoreText").textContent=score+" / "+total+" もん せいかい！";
-  $("progressBar").style.width="100%";
   $("resultLevel").textContent="レベル"+currentLevel;
   $("resultTime").textContent=formatTime(finalElapsed);
-
-  let message="",emoji="🎉";
-
-  if(score===total){
-    message="すべてもんだいせいかい！ ルールのきりかえがじょうずにできたね。";
-    emoji="🏆";
-  }else if(score>=Math.ceil(total*0.7)){
-    message="よくできたね！ きくルールをかえながら、さいごまでがんばったね。";
-    emoji="🌟";
-  }else{
-    message="さいごまでチャレンジできたね！ おとをよくきいて、またちょうせんしてみよう。";
-    emoji="🌱";
-  }
-
-  $("resultMessage").textContent=message;
-  $("resultEmoji").textContent=emoji;
+  $("progressBar").style.width="100%";
+  $("resultEmoji").textContent="🏆";
+  $("resultMessage").textContent="すべての問題をクリア！ さいごまでよくがんばったね。";
   $("copyFeedback").textContent="";
-
-  speak("おしまい！ "+score+"もん、せいかい！");
+  speak("おしまい！ ぜんぶのもんだいをクリアしたよ！");
 }
 
 async function copyResults(){
   const total=levels[currentLevel].questions;
-
   const text=[
     "ルールチェンジ！",
     "レベル："+currentLevel,
@@ -434,15 +356,11 @@ async function copyResults(){
       textarea.style.opacity="0";
       document.body.appendChild(textarea);
       textarea.select();
-
       const succeeded=document.execCommand("copy");
       textarea.remove();
-
       if(!succeeded) throw new Error("copy failed");
     }
-
     $("copyFeedback").textContent="けっかをコピーしたよ！";
-
   }catch(error){
     $("copyFeedback").textContent="コピーできませんでした。画面の結果を確認してください。";
   }
