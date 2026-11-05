@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#fff7e8">
+<title>ことばのヒミツ基地｜ルールチェンジ！</title>
+<style>
+:root{
+  --ink:#344054;--muted:#667085;--cream:#fff7e8;--paper:#fff;
+  --orange:#ff9b54;--yellow:#ffd66b;--blue:#8ecae6;--green:#8bd3a8;
+  --pink:#f6a6c1;--line:#f0dfc8;--shadow:0 5px 0 rgba(94,69,43,.10);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
+button{font:inherit;touch-action:manipulation}
+.app{max-width:850px;margin:0 auto;min-height:100svh;padding:16px 16px 28px}
+header{text-align:center;padding:8px 0 14px}
+.brand{font-size:12px;font-weight:800;letter-spacing:.12em;color:#a77b52}
+h1{font-size:clamp(27px,6vw,40px);margin:5px 0 2px;color:#5a4939}
+.subtitle{margin:0;color:var(--muted);font-size:14px}
+.panel{background:var(--paper);border:2px solid var(--line);border-radius:24px;padding:clamp(16px,4vw,26px);box-shadow:var(--shadow)}
+.screen{display:none}.screen.active{display:block}
+.section-title{text-align:center;font-size:21px;margin:0 0 16px}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.level-btn{border:2px solid var(--line);border-radius:18px;background:#fff;padding:14px 7px;min-height:116px;color:var(--ink);font-weight:800;box-shadow:0 4px 0 rgba(94,69,43,.08)}
+.level-btn:active,.primary:active,.secondary:active,.card:active{transform:translateY(2px);box-shadow:none}
+.level-btn .num{display:block;font-size:25px;margin-bottom:5px}
+.level-btn small{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-top:5px}
+.level-btn:nth-child(1){background:#fff5d8;border-color:#f6d98d}
+.level-btn:nth-child(2){background:#eaf7ff;border-color:#b8e0f2}
+.level-btn:nth-child(3){background:#fcecf3;border-color:#f2c2d5}
+.howto{margin:18px 0 0;padding:14px 16px;background:#fffaf1;border-radius:16px;font-size:14px;line-height:1.8}
+.howto strong{color:#bd6a2d}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.primary,.secondary{border:0;border-radius:999px;padding:14px 24px;font-weight:800;min-height:52px}
+.primary{background:var(--orange);color:#fff;box-shadow:0 4px 0 #dc7b39}
+.secondary{background:#f3eee7;color:#665747}
+.game-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;font-weight:800}
+.pill{background:#fff3d4;border-radius:999px;padding:8px 13px;font-size:13px}
+.progress{height:10px;background:#f1e8dc;border-radius:99px;overflow:hidden;margin:0 0 18px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,#ffbd67,#ff8e62);border-radius:99px;transition:width .25s}
+.instruction{background:#fff8e8;border:2px dashed #f3c66c;border-radius:20px;text-align:center;padding:14px 10px;margin-bottom:16px}
+.instruction .ear{font-size:27px}
+.instruction .say{font-size:clamp(22px,5vw,30px);font-weight:900;margin:3px 0;color:#a65e2d}
+.instruction .hint{font-size:12px;color:var(--muted);margin:0}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.card{border:2px solid #eadfce;border-radius:18px;background:#fff;min-height:clamp(90px,20vw,145px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 4px 0 rgba(94,69,43,.08);color:var(--ink);padding:8px}
+.card .emoji{font-size:clamp(36px,8vw,58px);line-height:1.15}
+.card .name{font-size:clamp(12px,2.8vw,15px);font-weight:800}
+.card:disabled{opacity:.65}
+.card.correct{border-color:#64bd88;background:#eafff0}
+.card.wrong{border-color:#ed8d8d;background:#fff0f0;animation:shake .25s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.feedback{min-height:35px;text-align:center;font-weight:900;font-size:18px;padding:9px 0 0;color:#368b5a}
+.game-actions{display:flex;justify-content:center;margin-top:8px}
+.listen{border:0;background:#eaf5fb;color:#286887;border-radius:999px;padding:11px 17px;font-weight:800}
+.result{text-align:center}
+.result-emoji{font-size:64px}
+.result h2{font-size:27px;margin:4px 0 8px}
+.score{font-size:22px;font-weight:900;color:#b96d2d;margin:12px 0}
+.result p{line-height:1.8;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);text-align:center;margin:14px 0 0}
+@media(max-width:520px){
+ .app{padding:10px 10px 22px}
+ .panel{padding:15px 12px;border-radius:20px}
+ .levels{gap:7px}
+ .level-btn{min-height:108px;padding:10px 3px}
+ .board{gap:7px}
+ .card{border-radius:14px;min-height:92px}
+}
+@media(min-width:700px){.board{gap:14px}.card{min-height:145px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">ことばのヒミツ基地</div>
+  <h1>ルールチェンジ！</h1>
+  <p class="subtitle">きいて、きりかえて、タップしよう！</p>
+</header>
+
+<main class="panel">
+  <section id="startScreen" class="screen active">
+    <h2 class="section-title">あそぶレベルをえらんでね</h2>
+    <div class="levels">
+      <button class="level-btn" onclick="startGame(1)"><span class="num">⭐</span>レベル1<small>カード4まい・6もん</small></button>
+      <button class="level-btn" onclick="startGame(2)"><span class="num">⭐⭐</span>レベル2<small>カード6まい・8もん</small></button>
+      <button class="level-btn" onclick="startGame(3)"><span class="num">⭐⭐⭐</span>レベル3<small>カード9まい・10もん</small></button>
+    </div>
+    <div class="howto">
+      <strong>あそびかた</strong><br>
+      ① おとをよくきこう。<br>
+      ②「どうぶつ」か「たべもの」をタップ！<br>
+      ③ つぎはルールがかわるよ。さっきのルールにまちがえないようにね！
+    </div>
+    <p class="note">※ はじめるボタンを押すと音声が流れます。音量を確認してね。</p>
+  </section>
+
+  <section id="gameScreen" class="screen">
+    <div class="game-top">
+      <span class="pill" id="levelLabel">レベル1</span>
+      <span class="pill" id="questionLabel">1 / 6 もん</span>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div class="instruction" aria-live="polite">
+      <div class="ear">👂</div>
+      <div class="say" id="instructionText">どうぶつをタップ！</div>
+      <p class="hint">おとをきいて、あてはまるカードをえらぼう</p>
+    </div>
+    <div id="board" class="board"></div>
+    <div id="feedback" class="feedback" aria-live="polite"></div>
+    <div class="game-actions">
+      <button class="listen" onclick="repeatInstruction()">🔊 もういちど きく</button>
+    </div>
+  </section>
+
+  <section id="resultScreen" class="screen result">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <h2>よくがんばったね！</h2>
+    <div class="score" id="scoreText">6もんせいかい！</div>
+    <p id="resultMessage">ルールをきりかえながら、さいごまでできたね。</p>
+    <div class="actions">
+      <button class="primary" onclick="startGame(currentLevel)">もういちど</button>
+      <button class="secondary" onclick="showScreen('startScreen')">レベルをえらぶ</button>
+    </div>
+  </section>
+</main>
+<footer class="note">ことばのヒミツ基地｜注意の切り替えゲーム</footer>
+</div>
+
+<script>
+const items = [
+  {name:"いぬ",emoji:"🐶",type:"animal"},
+  {name:"ねこ",emoji:"🐱",type:"animal"},
+  {name:"うさぎ",emoji:"🐰",type:"animal"},
+  {name:"ぞう",emoji:"🐘",type:"animal"},
+  {name:"さる",emoji:"🐵",type:"animal"},
+  {name:"くま",emoji:"🐻",type:"animal"},
+  {name:"りんご",emoji:"🍎",type:"food"},
+  {name:"バナナ",emoji:"🍌",type:"food"},
+  {name:"いちご",emoji:"🍓",type:"food"},
+  {name:"にんじん",emoji:"🥕",type:"food"},
+  {name:"パン",emoji:"🍞",type:"food"},
+  {name:"おにぎり",emoji:"🍙",type:"food"}
+];
+const levels = {
+  1:{cards:4,questions:6,choices:2},
+  2:{cards:6,questions:8,choices:3},
+  3:{cards:9,questions:10,choices:4}
+};
+let currentLevel=1, questionIndex=0, score=0, currentType="animal";
+let questionOrder=[], currentBoard=[], locked=false, voiceReady=false;
+
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+function shuffle(array){
+  const a=[...array];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(text);
+  utterance.lang="ja-JP"; utterance.rate=0.88; utterance.pitch=1.08;
+  window.speechSynthesis.speak(utterance);
+}
+function typeLabel(type){return type==="animal"?"どうぶつ":"たべもの";}
+function startGame(level){
+  currentLevel=level; questionIndex=0; score=0; locked=false;
+  questionOrder=Array.from({length:levels[level].questions},(_,i)=>i%2===0?"animal":"food");
+  showScreen("gameScreen");
+  document.getElementById("levelLabel").textContent="レベル"+level;
+  nextQuestion();
+}
+function nextQuestion(){
+  if(questionIndex>=levels[currentLevel].questions){finishGame();return;}
+  locked=false;
+  currentType=questionOrder[questionIndex];
+  const cfg=levels[currentLevel];
+  const count=cfg.cards;
+  const targetPool=shuffle(items.filter(x=>x.type===currentType));
+  const otherPool=shuffle(items.filter(x=>x.type!==currentType));
+  const targetCount=Math.min(cfg.choices,targetPool.length,count);
+  currentBoard=shuffle([...targetPool.slice(0,targetCount),...otherPool.slice(0,count-targetCount)]);
+  document.getElementById("questionLabel").textContent=(questionIndex+1)+" / "+cfg.questions+" もん";
+  document.getElementById("progressBar").style.width=(questionIndex/cfg.questions*100)+"%";
+  const instruction="「"+typeLabel(currentType)+"」をタップしてね。";
+  document.getElementById("instructionText").textContent=typeLabel(currentType)+"をタップ！";
+  document.getElementById("feedback").textContent="";
+  renderBoard();
+  setTimeout(()=>speak(instruction),180);
+}
+function renderBoard(){
+  const board=document.getElementById("board");
+  board.innerHTML="";
+  const columns=currentBoard.length===4?2:3;
+  board.style.gridTemplateColumns=`repeat(${columns}, minmax(0, 1fr))`;
+  currentBoard.forEach((item,index)=>{
+    const button=document.createElement("button");
+    button.className="card";
+    button.type="button";
+    button.setAttribute("aria-label",item.name);
+    button.innerHTML=`<span class="emoji">${item.emoji}</span><span class="name">${item.name}</span>`;
+    button.addEventListener("click",()=>chooseCard(item,button));
+    board.appendChild(button);
+  });
+}
+function chooseCard(item,button){
+  if(locked)return;
+  if(item.type===currentType){
+    locked=true; score++;
+    button.classList.add("correct");
+    document.getElementById("feedback").textContent="せいかい！ ✨";
+    speak("せいかい！");
+    document.querySelectorAll(".card").forEach(b=>b.disabled=true);
+    questionIndex++;
+    document.getElementById("progressBar").style.width=(questionIndex/levels[currentLevel].questions*100)+"%";
+    setTimeout(nextQuestion,950);
+  }else{
+    button.classList.add("wrong");
+    document.getElementById("feedback").textContent="おしい！ おとをもういちどきこう";
+    speak("おしい。もういちど、きいてみよう。");
+    setTimeout(()=>button.classList.remove("wrong"),450);
+  }
+}
+function repeatInstruction(){
+  speak("「"+typeLabel(currentType)+"」をタップしてね。");
+}
+function finishGame(){
+  showScreen("resultScreen");
+  const total=levels[currentLevel].questions;
+  document.getElementById("scoreText").textContent=score+" / "+total+" もん せいかい！";
+  document.getElementById("progressBar").style.width="100%";
+  let message="",emoji="🎉";
+  if(score===total){message="すべてもんだいせいかい！ ルールのきりかえがじょうずにできたね。";emoji="🏆";}
+  else if(score>=Math.ceil(total*0.7)){message="よくできたね！ きくルールをかえながら、さいごまでがんばったね。";emoji="🌟";}
+  else{message="さいごまでチャレンジできたね！ おとをよくきいて、またちょうせんしてみよう。";emoji="🌱";}
+  document.getElementById("resultMessage").textContent=message;
+  document.getElementById("resultEmoji").textContent=emoji;
+  speak("おしまい！ "+score+"もん、せいかい！");
+}
+</script>
+</body>
+</html>
