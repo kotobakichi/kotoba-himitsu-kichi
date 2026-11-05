@@ -25,6 +25,14 @@ button{font:inherit;cursor:pointer;border:0}
   font-size:19px;font-weight:bold;
   padding:15px 30px;border-radius:14px;
 }
+.level-grid{display:grid;gap:12px;margin-top:18px}
+.level-button{
+  padding:17px 12px;border:3px solid #f3d2ae;
+  background:#fff9f1;border-radius:16px;color:#555;
+}
+.level-button strong{display:block;font-size:21px;margin-bottom:5px}
+.level-button span{font-size:15px}
+.level-button:active{background:#ffe7ca}
 .info{
   display:flex;gap:8px;justify-content:space-between;
   margin-bottom:14px;
@@ -67,8 +75,11 @@ button{font:inherit;cursor:pointer;border:0}
   border:1px solid #f0c49e;border-radius:20px;
   padding:8px 15px;font-size:14px;
 }
+.progress{
+  font-size:15px;color:#777;margin:10px 0;
+}
 @media(min-width:600px){
-  .card-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .card{min-height:180px}
   .card img{height:125px}
 }
@@ -78,15 +89,30 @@ button{font:inherit;cursor:pointer;border:0}
 <div class="container">
   <h1>なかまわけゲーム</h1>
 
+  <!-- 難易度選択 -->
   <div class="panel" id="startPanel">
-    <p>なかまのカテゴリーを見て、あてはまるものを選ぼう！</p>
-    <button class="start-button" onclick="startGame()">ゲームスタート</button>
+    <p>どのレベルにチャレンジする？</p>
+    <div class="level-grid">
+      <button class="level-button" onclick="startGame(1)">
+        <strong>🌱 レベル1・かんたん</strong>
+        <span>4枚の中から1枚選ぼう！</span>
+      </button>
+      <button class="level-button" onclick="startGame(2)">
+        <strong>🌼 レベル2・ふつう</strong>
+        <span>6枚の中から2枚選ぼう！</span>
+      </button>
+      <button class="level-button" onclick="startGame(3)">
+        <strong>🌟 レベル3・むずかしい</strong>
+        <span>9枚の中から3枚選ぼう！</span>
+      </button>
+    </div>
   </div>
 
+  <!-- ゲーム画面 -->
   <div class="panel hidden" id="gamePanel">
     <div class="info">
-      <div>もんだい <span id="count">1</span></div>
-      <div>せいかい <span id="score">0</span></div>
+      <div>もんだい <span id="count">1</span>/10</div>
+      <div>クリア <span id="score">0</span></div>
     </div>
 
     <p>このなかまはどれかな？</p>
@@ -95,6 +121,7 @@ button{font:inherit;cursor:pointer;border:0}
     <div class="audio-status" id="audioStatus">カテゴリーの音声を再生します</div>
     <button class="replay-button" onclick="playCategoryAudio()">🔊 もういちど聞く</button>
 
+    <div class="progress" id="progress"></div>
     <div class="message" id="message"></div>
     <div class="card-grid" id="choices"></div>
 
@@ -103,10 +130,11 @@ button{font:inherit;cursor:pointer;border:0}
     </button>
   </div>
 
+  <!-- 結果画面 -->
   <div class="panel hidden" id="resultPanel">
     <h2>おしまい！</h2>
     <p id="resultText"></p>
-    <button class="start-button" onclick="startGame()">もういちどあそぶ</button>
+    <button class="start-button" onclick="backToStart()">もういちどあそぶ</button>
   </div>
 </div>
 
@@ -149,32 +177,73 @@ let score=0;
 let currentCategory=null;
 let answered=false;
 let categorySound=null;
+let currentLevel=1;
+let correctItems=[];
+let foundItems=[];
+let totalCards=4;
+let requiredCorrect=1;
 
 const totalQuestions=10;
 
-function startGame(){
+function backToStart(){
+  stopCategoryAudio();
+  document.getElementById("gamePanel").classList.add("hidden");
+  document.getElementById("resultPanel").classList.add("hidden");
+  document.getElementById("startPanel").classList.remove("hidden");
+}
+
+function stopCategoryAudio(){
+  if(categorySound){
+    categorySound.pause();
+    categorySound.currentTime=0;
+    categorySound=null;
+  }
+}
+
+function startGame(level){
+  currentLevel=level;
+
+  if(level===1){
+    totalCards=4;
+    requiredCorrect=1;
+  }else if(level===2){
+    totalCards=6;
+    requiredCorrect=2;
+  }else{
+    totalCards=9;
+    requiredCorrect=3;
+  }
+
   questionNumber=0;
   score=0;
+
   document.getElementById("startPanel").classList.add("hidden");
   document.getElementById("resultPanel").classList.add("hidden");
   document.getElementById("gamePanel").classList.remove("hidden");
+
   nextQuestion();
+}
+
+function shuffle(array){
+  const result=[...array];
+  for(let i=result.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [result[i],result[j]]=[result[j],result[i]];
+  }
+  return result;
 }
 
 function playCategoryAudio(){
   if(!currentCategory)return;
 
-  if(categorySound){
-    categorySound.pause();
-    categorySound.currentTime=0;
-  }
+  stopCategoryAudio();
 
   categorySound=new Audio(currentCategory.audio);
   categorySound.play().then(()=>{
     document.getElementById("audioStatus").textContent="カテゴリーの音声を再生中";
   }).catch(()=>{
     document.getElementById("audioStatus").textContent=
-      "音声を再生できません。ボタンでもう一度お試しください。";
+      "音声を再生できません。もういちど聞くを押してください。";
   });
 }
 
@@ -184,34 +253,37 @@ function nextQuestion(){
     return;
   }
 
+  stopCategoryAudio();
+
   questionNumber++;
   answered=false;
+  foundItems=[];
 
   document.getElementById("count").textContent=questionNumber;
   document.getElementById("score").textContent=score;
   document.getElementById("message").textContent="";
   document.getElementById("nextButton").classList.add("hidden");
 
-  currentCategory=categories[Math.floor(Math.random()*categories.length)];
-  document.getElementById("category").textContent=currentCategory.name;
-
-  const otherCategories=categories.filter(c=>c!==currentCategory);
-  const correctItem=currentCategory.items[
-    Math.floor(Math.random()*currentCategory.items.length)
+  currentCategory=categories[
+    Math.floor(Math.random()*categories.length)
   ];
 
-  const wrongItems=otherCategories.flatMap(c=>c.items);
-  const choices=[correctItem];
+  document.getElementById("category").textContent=currentCategory.name;
 
-  while(choices.length<4){
-    const item=wrongItems[Math.floor(Math.random()*wrongItems.length)];
-    if(!choices.includes(item))choices.push(item);
-  }
+  // 正解カードを必要枚数選ぶ
+  correctItems=shuffle(currentCategory.items).slice(0,requiredCorrect);
 
-  for(let i=choices.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [choices[i],choices[j]]=[choices[j],choices[i]];
-  }
+  // ほかのカテゴリーから不正解カードを選ぶ
+  const wrongItems=categories
+    .filter(c=>c!==currentCategory)
+    .flatMap(c=>c.items);
+
+  const selectedWrong=shuffle(wrongItems).slice(
+    0,totalCards-requiredCorrect
+  );
+
+  // 正解と不正解を混ぜる
+  const choices=shuffle([...correctItems,...selectedWrong]);
 
   const choiceArea=document.getElementById("choices");
   choiceArea.innerHTML="";
@@ -219,51 +291,73 @@ function nextQuestion(){
   choices.forEach(item=>{
     const button=document.createElement("button");
     button.className="card";
-    button.innerHTML=
-      `<img src="${item.image}" alt="${item.name}">
-       <span class="word">${item.name}</span>`;
-    button.onclick=()=>checkAnswer(button,item,correctItem);
+
+    const img=document.createElement("img");
+    img.src=item.image;
+    img.alt=item.name;
+
+    const word=document.createElement("span");
+    word.className="word";
+    word.textContent=item.name;
+
+    button.appendChild(img);
+    button.appendChild(word);
+
+    button.onclick=()=>checkAnswer(button,item);
     choiceArea.appendChild(button);
   });
 
-  // 問題が表示されたタイミングでカテゴリー音声だけを再生
+  updateProgress();
+
+  // 問題表示時にカテゴリー音声だけを再生
   playCategoryAudio();
 }
 
-function checkAnswer(button,item,correctItem){
-  if(answered)return;
-  answered=true;
+function updateProgress(){
+  document.getElementById("progress").textContent=
+    "みつけた数："+foundItems.length+" / "+requiredCorrect;
+}
 
-  const buttons=document.querySelectorAll(".card");
-  buttons.forEach(b=>b.disabled=true);
+function checkAnswer(button,item){
+  if(button.disabled || answered)return;
 
-  if(item===correctItem){
+  if(correctItems.includes(item)){
     button.classList.add("correct");
+    button.disabled=true;
+    foundItems.push(item);
+
     document.getElementById("message").textContent="○ せいかい！";
     document.getElementById("message").style.color="#269b4a";
-    score++;
-    document.getElementById("score").textContent=score;
+
+    updateProgress();
+
+    if(foundItems.length===requiredCorrect){
+      answered=true;
+      score++;
+      document.getElementById("score").textContent=score;
+
+      document.getElementById("message").textContent=
+        "○ ぜんぶみつけたね！";
+      document.getElementById("nextButton").classList.remove("hidden");
+    }
   }else{
     button.classList.add("incorrect");
-    document.getElementById("message").textContent="× もういちどがんばろう！";
+    button.disabled=true;
+
+    document.getElementById("message").textContent=
+      "× ちがうよ。ほかをさがしてみよう！";
     document.getElementById("message").style.color="#d9534f";
-
-    buttons.forEach(b=>{
-      const img=b.querySelector("img");
-      if(img && img.getAttribute("src")===correctItem.image){
-        b.classList.add("correct");
-      }
-    });
   }
-
-  document.getElementById("nextButton").classList.remove("hidden");
 }
 
 function showResult(){
+  stopCategoryAudio();
+
   document.getElementById("gamePanel").classList.add("hidden");
   document.getElementById("resultPanel").classList.remove("hidden");
+
   document.getElementById("resultText").textContent=
-    totalQuestions+"もん中 "+score+"もん せいかい！";
+    totalQuestions+"もん中 "+score+"もん クリア！";
 }
 </script>
 </body>
