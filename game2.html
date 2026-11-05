@@ -1,370 +1,934 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#fff7e8">
-<title>ことばのヒミツ基地｜ルールチェンジ！</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>なかまわけゲーム</title>
+
 <style>
-:root{--ink:#344054;--muted:#667085;--cream:#fff7e8;--orange:#ff9b54;--line:#f0dfc8}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
-button{font:inherit;touch-action:manipulation;cursor:pointer}
-.app{max-width:850px;margin:auto;min-height:100svh;padding:14px}
-header{text-align:center;padding:8px 0 16px}
-.brand{font-size:13px;font-weight:900;letter-spacing:.12em;color:#a77b52}
-h1{font-size:clamp(29px,6vw,42px);margin:7px 0 3px;color:#5a4939}
-.subtitle{margin:0;color:var(--muted);font-weight:700}
-.panel{background:#fff;border:2px solid var(--line);border-radius:25px;padding:clamp(15px,4vw,28px);box-shadow:0 5px 0 #eadfce}
-.screen{display:none}.screen.active{display:block}
-.section-title{text-align:center;font-size:21px;margin:0 0 17px}
-.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.level-btn{border:2px solid var(--line);border-radius:18px;padding:13px 5px;min-height:110px;font-weight:900;color:var(--ink);background:#fff5d8}
-.level-btn:nth-child(2){background:#eaf7ff;border-color:#b8e0f2}
-.level-btn:nth-child(3){background:#fcecf3;border-color:#f2c2d5}
-.level-btn .num{display:block;font-size:24px;margin-bottom:5px}
-.level-btn small{display:block;font-size:11px;color:var(--muted);margin-top:5px}
-.howto{margin-top:18px;padding:14px;background:#fffaf1;border-radius:16px;font-size:14px;line-height:1.9}
-.game-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;font-weight:900}
-.pill{background:#fff3d4;border-radius:999px;padding:9px 13px;font-size:14px}
-.timer-pill{background:#eaf7ff;color:#286887;font-variant-numeric:tabular-nums}
-.progress{height:10px;background:#f1e8dc;border-radius:99px;overflow:hidden;margin-bottom:18px}
-.progress>div{height:100%;width:0;background:linear-gradient(90deg,#ffbd67,#ff8e62);transition:width .25s}
-.instruction{background:#fff8e8;border:2px dashed #f3c66c;border-radius:20px;text-align:center;padding:15px 10px;margin-bottom:16px}
-.ear{font-size:31px}.say{font-size:clamp(23px,5vw,31px);font-weight:900;color:#a65e2d;margin:3px 0}
-.hint{font-size:13px;color:var(--muted);margin:0;font-weight:700}
-.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card{border:2px solid #eadfce;border-radius:18px;background:#fff;min-height:clamp(100px,23vw,145px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 0 #eee7de;color:var(--ink);padding:8px}
-.card .emoji{font-size:clamp(38px,9vw,60px);line-height:1.15}
-.card .name{font-size:clamp(14px,3vw,17px);font-weight:900}
-.card.selected{border:3px solid #68a9d0;background:#eaf7ff;box-shadow:0 4px 0 #d4eaf6}
-.card.selected:after{content:"✓ えらんだよ";font-size:11px;font-weight:900;color:#286887}
-.card:disabled{opacity:.7}
-.feedback{min-height:42px;text-align:center;font-weight:900;font-size:17px;padding:11px 0 2px;color:#368b5a}
-.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px}
-.primary,.secondary,.listen{border:0;border-radius:999px;padding:13px 22px;font-weight:900;min-height:50px}
-.primary{background:var(--orange);color:white;box-shadow:0 4px 0 #dc7b39}
-.secondary{background:#f3eee7;color:#665747}
-.listen{background:#eaf5fb;color:#286887}
-.result{text-align:center}.result-emoji{font-size:64px}.result h2{font-size:27px;margin:4px 0 8px}
-.score{font-size:23px;font-weight:900;color:#b96d2d;margin:12px 0}
-.result p{line-height:1.8;color:var(--muted);font-weight:700}
-.result-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
-.stat{background:#fff8e8;border-radius:16px;padding:14px 8px}
-.stat-label{font-size:12px;color:var(--muted);font-weight:800}
-.stat-value{font-size:25px;font-weight:900;color:#5a4939;margin-top:4px;font-variant-numeric:tabular-nums}
-.note{font-size:12px;color:var(--muted);text-align:center;margin:14px 0 0}
-@media(max-width:520px){.app{padding:10px}.panel{padding:15px 12px}.levels{gap:6px}.level-btn{padding:10px 2px;min-height:105px}.board{gap:8px}.card{min-height:105px;border-radius:15px}}
-@media(min-width:700px){.board{gap:14px}.card{min-height:145px}}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: "Arial", "Hiragino Kaku Gothic ProN", sans-serif;
+  background: #fff8ec;
+  color: #444;
+  text-align: center;
+}
+
+.container {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #f08b55;
+  font-size: 27px;
+  margin: 12px 0 20px;
+}
+
+.panel {
+  background: white;
+  border-radius: 20px;
+  padding: 20px 14px;
+  box-shadow: 0 3px 10px #00000012;
+  margin-bottom: 16px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+}
+
+.level-button {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 12px auto;
+  padding: 17px;
+  border-radius: 15px;
+  background: #ffb66d;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.level-button:nth-of-type(2) {
+  background: #70c9a0;
+}
+
+.level-button:nth-of-type(3) {
+  background: #7ba9e8;
+}
+
+.level-button:active,
+.card:active {
+  transform: scale(.96);
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.info div {
+  flex: 1;
+  background: #fff1df;
+  border-radius: 10px;
+  padding: 10px 4px;
+}
+
+.category {
+  font-size: 36px;
+  font-weight: bold;
+  color: #f07842;
+  margin: 15px 0 20px;
+}
+
+.message {
+  min-height: 28px;
+  font-size: 17px;
+  font-weight: bold;
+  color: #e17c4c;
+  margin: 10px 0;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+}
+
+.card {
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  border-radius: 15px;
+  background: #fff0d9;
+  border: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  transition: .15s;
+}
+
+.card .emoji {
+  font-size: clamp(30px, 8vw, 46px);
+  line-height: 1.2;
+}
+
+.card .word {
+  font-size: clamp(11px, 3vw, 15px);
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.card.selected {
+  background: #c9f2d9;
+  border-color: #54b77b;
+  opacity: .65;
+}
+
+.card:disabled {
+  cursor: default;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.result-time {
+  font-size: 38px;
+  font-weight: bold;
+  color: #e88b4e;
+  margin: 15px 0;
+}
+
+.result-score {
+  font-size: 23px;
+  margin: 15px 0;
+}
+
+.action-button {
+  background: #75bd98;
+  color: white;
+  padding: 14px 25px;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: bold;
+  margin: 8px;
+}
+
+.back-button {
+  background: #aaa;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 15px;
+  margin-top: 15px;
+}
+
+.note {
+  font-size: 12px;
+  color: #999;
+  line-height: 1.6;
+  margin-top: 18px;
+}
+
+@media (max-width: 380px) {
+  body {
+    padding: 9px;
+  }
+
+  .card-grid {
+    gap: 6px;
+  }
+
+  .card {
+    border-radius: 11px;
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="app">
-<header>
-  <div class="brand">ことばのヒミツ基地</div>
-  <h1>ルールチェンジ！</h1>
-  <p class="subtitle">きいて、きりかえて、タップしよう！</p>
-</header>
-<main class="panel">
-  <section id="startScreen" class="screen active">
-    <h2 class="section-title">あそぶレベルをえらんでね</h2>
-    <div class="levels">
-      <button class="level-btn" onclick="startGame(1)"><span class="num">⭐</span>レベル1<small>カード4まい・6もん</small></button>
-      <button class="level-btn" onclick="startGame(2)"><span class="num">⭐⭐</span>レベル2<small>カード6まい・8もん</small></button>
-      <button class="level-btn" onclick="startGame(3)"><span class="num">⭐⭐⭐</span>レベル3<small>カード9まい・10もん</small></button>
-    </div>
-    <div class="howto"><strong>あそびかた</strong><br>
-      ① おとをよくきこう。<br>
-      ② あてはまるカードをすべてタップしよう。<br>
-      ③ ぜんぶ正しくえらべたら、つぎの問題へすすむよ。<br>
-      ※ まちがえたら、最初の問題からやりなおし！
-    </div>
-    <p class="note">※ はじめるボタンを押すと音声が流れます。音量を確認してね。</p>
+<div class="container">
+
+  <h1>🌟 なかまわけゲーム 🌟</h1>
+
+  <!-- スタート画面 -->
+  <section id="startScreen" class="panel">
+    <h2>レベルをえらんでね</h2>
+
+    <button class="level-button" onclick="startGame(1)">
+      初級
+      <div style="font-size:13px;font-weight:normal;">6カテゴリー・カード8枚</div>
+    </button>
+
+    <button class="level-button" onclick="startGame(2)">
+      中級
+      <div style="font-size:13px;font-weight:normal;">15カテゴリー・カード12枚</div>
+    </button>
+
+    <button class="level-button" onclick="startGame(3)">
+      上級
+      <div style="font-size:13px;font-weight:normal;">25カテゴリー・カード16枚</div>
+    </button>
+
+    <p class="note">
+      お題と同じなかまのカードを<br>
+      ぜんぶえらんでね！
+    </p>
   </section>
 
-  <section id="gameScreen" class="screen">
-    <div class="game-top">
-      <span class="pill" id="levelLabel">レベル1</span>
-      <span class="pill" id="questionLabel">1 / 6 もん</span>
-      <span class="pill timer-pill" id="timerLabel">⏱ 00:00</span>
+  <!-- ゲーム画面 -->
+  <section id="gameScreen" class="panel hidden">
+
+    <div class="info">
+      <div>もんだい<br><span id="questionCount">1 / 10</span></div>
+      <div>せいかい<br><span id="score">0</span></div>
+      <div>じかん<br><span id="timer">00:00</span></div>
     </div>
-    <div class="progress"><div id="progressBar"></div></div>
-    <div class="instruction" aria-live="polite">
-      <div class="ear">👂</div>
-      <div class="say" id="instructionText">どうぶつをタップ！</div>
-      <p class="hint">あてはまるカードをすべてえらんでね</p>
-    </div>
-    <div id="board" class="board"></div>
-    <div id="feedback" class="feedback" aria-live="polite"></div>
-    <div class="actions"><button class="listen" onclick="repeatInstruction()">🔊 もういちど きく</button></div>
+
+    <div>このなかまを えらぼう！</div>
+
+    <div id="category" class="category">くだもの</div>
+
+    <div id="message" class="message"></div>
+
+    <div id="cardGrid" class="card-grid"></div>
+
+    <p class="note">
+      ちがうカードをえらぶと、さいしょからになるよ。
+    </p>
   </section>
 
-  <section id="resultScreen" class="screen result">
-    <div class="result-emoji" id="resultEmoji">🎉</div>
-    <h2>よくがんばったね！</h2>
-    <div class="score" id="scoreText">6 / 6 もん せいかい！</div>
-    <p id="resultMessage">ルールをきりかえながら、さいごまでできたね。</p>
-    <div class="result-stats">
-      <div class="stat"><div class="stat-label">チャレンジしたレベル</div><div class="stat-value" id="resultLevel">レベル1</div></div>
-      <div class="stat"><div class="stat-label">かかった時間</div><div class="stat-value" id="resultTime">00:00</div></div>
-    </div>
-    <button class="secondary" onclick="copyResults()">📋 けっかをコピー</button>
-    <div class="actions">
-      <button class="primary" onclick="startGame(currentLevel)">もういちど</button>
-      <button class="secondary" onclick="showScreen('startScreen')">レベルをえらぶ</button>
-    </div>
-    <p class="note" id="copyFeedback" aria-live="polite"></p>
+  <!-- 結果画面 -->
+  <section id="resultScreen" class="panel hidden">
+    <h2>🎉 クリア！ 🎉</h2>
+
+    <div class="result-score" id="resultScore"></div>
+
+    <div>かかったじかん</div>
+    <div class="result-time" id="resultTime">00:00</div>
+
+    <button class="action-button" onclick="copyResults()">
+      結果をコピー
+    </button>
+
+    <br>
+
+    <button class="action-button" onclick="startGame(currentLevel)">
+      もういちど
+    </button>
+
+    <br>
+
+    <button class="back-button" onclick="backToStart()">
+      レベル選択にもどる
+    </button>
   </section>
-</main>
-<footer class="note">ことばのヒミツ基地｜注意の切り替えゲーム</footer>
+
 </div>
 
 <script>
-"use strict";
 
-const items = [
-  {name:"いぬ",emoji:"🐶",type:"animal"},
-  {name:"ねこ",emoji:"🐱",type:"animal"},
-  {name:"うさぎ",emoji:"🐰",type:"animal"},
-  {name:"ぞう",emoji:"🐘",type:"animal"},
-  {name:"さる",emoji:"🐵",type:"animal"},
-  {name:"くま",emoji:"🐻",type:"animal"},
-  {name:"りんご",emoji:"🍎",type:"food"},
-  {name:"バナナ",emoji:"🍌",type:"food"},
-  {name:"いちご",emoji:"🍓",type:"food"},
-  {name:"にんじん",emoji:"🥕",type:"food"},
-  {name:"パン",emoji:"🍞",type:"food"},
-  {name:"おにぎり",emoji:"🍙",type:"food"}
-];
+/* =====================================
+   カードデータ
+   1枚のカードに複数のカテゴリーを設定
+===================================== */
 
-const levels = {
-  1:{cards:4,questions:6,correctCards:2},
-  2:{cards:6,questions:8,correctCards:3},
-  3:{cards:9,questions:10,correctCards:4}
+const cards = [];
+
+function addCards(category, parent, items) {
+  items.forEach(item => {
+    const tags = [category];
+
+    if (parent) {
+      tags.push(parent);
+    }
+
+    cards.push({
+      name: item[0],
+      emoji: item[1],
+      categories: tags
+    });
+  });
+}
+
+/* 食べ物 */
+
+addCards("くだもの", "たべもの", [
+  ["りんご", "🍎"],
+  ["みかん", "🍊"],
+  ["ばなな", "🍌"],
+  ["ぶどう", "🍇"],
+  ["いちご", "🍓"],
+  ["もも", "🍑"],
+  ["すいか", "🍉"],
+  ["なし", "🍐"]
+]);
+
+addCards("やさい", "たべもの", [
+  ["にんじん", "🥕"],
+  ["だいこん", "🥬"],
+  ["とまと", "🍅"],
+  ["きゅうり", "🥒"],
+  ["なす", "🍆"],
+  ["とうもろこし", "🌽"],
+  ["たまねぎ", "🧅"],
+  ["じゃがいも", "🥔"]
+]);
+
+addCards("おかし", "たべもの", [
+  ["ケーキ", "🍰"],
+  ["クッキー", "🍪"],
+  ["プリン", "🍮"],
+  ["ドーナツ", "🍩"],
+  ["チョコレート", "🍫"],
+  ["アイス", "🍨"]
+]);
+
+addCards("のみもの", "たべもの", [
+  ["ぎゅうにゅう", "🥛"],
+  ["ジュース", "🧃"],
+  ["おちゃ", "🍵"],
+  ["コーヒー", "☕"],
+  ["みず", "💧"],
+  ["ココア", "🥤"]
+]);
+
+addCards("りょうり", "たべもの", [
+  ["カレー", "🍛"],
+  ["ラーメン", "🍜"],
+  ["すし", "🍣"],
+  ["おにぎり", "🍙"],
+  ["ハンバーグ", "🍖"],
+  ["ピザ", "🍕"]
+]);
+
+/* 生き物 */
+
+addCards("どうぶつ", "いきもの", [
+  ["いぬ", "🐶"],
+  ["ねこ", "🐱"],
+  ["ぞう", "🐘"],
+  ["うさぎ", "🐰"],
+  ["きりん", "🦒"],
+  ["らいおん", "🦁"],
+  ["くま", "🐻"],
+  ["さる", "🐵"]
+]);
+
+addCards("とり", "いきもの", [
+  ["にわとり", "🐔"],
+  ["すずめ", "🐦"],
+  ["はと", "🕊️"],
+  ["ふくろう", "🦉"],
+  ["ぺんぎん", "🐧"]
+]);
+
+addCards("むし", "いきもの", [
+  ["ちょう", "🦋"],
+  ["てんとうむし", "🐞"],
+  ["かぶとむし", "🪲"],
+  ["せみ", "🪰"],
+  ["とんぼ", "🪰"],
+  ["ばった", "🦗"]
+]);
+
+addCards("さかな", "いきもの", [
+  ["きんぎょ", "🐠"],
+  ["さけ", "🐟"],
+  ["まぐろ", "🐟"],
+  ["たい", "🐟"],
+  ["ふぐ", "🐡"]
+]);
+
+addCards("うみのいきもの", "いきもの", [
+  ["いるか", "🐬"],
+  ["くじら", "🐳"],
+  ["たこ", "🐙"],
+  ["かに", "🦀"],
+  ["えび", "🦐"],
+  ["くらげ", "🪼"]
+]);
+
+/* 身の回りのもの */
+
+addCards("のりもの", null, [
+  ["くるま", "🚗"],
+  ["でんしゃ", "🚃"],
+  ["ひこうき", "✈️"],
+  ["ふね", "🚢"],
+  ["じてんしゃ", "🚲"],
+  ["バス", "🚌"]
+]);
+
+addCards("がっき", null, [
+  ["ピアノ", "🎹"],
+  ["ギター", "🎸"],
+  ["たいこ", "🥁"],
+  ["ふえ", "🪈"],
+  ["バイオリン", "🎻"]
+]);
+
+addCards("おもちゃ", null, [
+  ["ボール", "⚽"],
+  ["つみき", "🧱"],
+  ["けんだま", "🪀"],
+  ["ぬいぐるみ", "🧸"],
+  ["パズル", "🧩"]
+]);
+
+addCards("ぶんぼうぐ", null, [
+  ["えんぴつ", "✏️"],
+  ["はさみ", "✂️"],
+  ["けしごむ", "🩷"],
+  ["のり", "🧴"],
+  ["ノート", "📓"]
+]);
+
+addCards("しょっき", null, [
+  ["おさら", "🍽️"],
+  ["コップ", "🥛"],
+  ["スプーン", "🥄"],
+  ["フォーク", "🍴"],
+  ["おはし", "🥢"]
+]);
+
+addCards("ようふく", null, [
+  ["シャツ", "👕"],
+  ["ズボン", "👖"],
+  ["ワンピース", "👗"],
+  ["ぼうし", "🧢"],
+  ["コート", "🧥"]
+]);
+
+addCards("くつ", null, [
+  ["スニーカー", "👟"],
+  ["ながぐつ", "🥾"],
+  ["サンダル", "🩴"],
+  ["くつした", "🧦"]
+]);
+
+addCards("かぐ", null, [
+  ["いす", "🪑"],
+  ["つくえ", "🪑"],
+  ["ベッド", "🛏️"],
+  ["たな", "🗄️"],
+  ["ソファ", "🛋️"]
+]);
+
+addCards("でんき", null, [
+  ["テレビ", "📺"],
+  ["れいぞうこ", "🧊"],
+  ["せんぷうき", "🌀"],
+  ["そうじき", "🧹"],
+  ["でんわ", "📱"]
+]);
+
+/* 自然 */
+
+addCards("はな", "しぜん", [
+  ["さくら", "🌸"],
+  ["ひまわり", "🌻"],
+  ["チューリップ", "🌷"],
+  ["ばら", "🌹"],
+  ["たんぽぽ", "🌼"]
+]);
+
+addCards("き", "しぜん", [
+  ["まつ", "🌲"],
+  ["さくらのき", "🌳"],
+  ["やしのき", "🌴"],
+  ["もみのき", "🎄"]
+]);
+
+addCards("しぜん", null, [
+  ["たいよう", "☀️"],
+  ["つき", "🌙"],
+  ["ほし", "⭐"],
+  ["くも", "☁️"],
+  ["にじ", "🌈"],
+  ["やま", "⛰️"]
+]);
+
+/* からだ・運動 */
+
+addCards("からだ", null, [
+  ["め", "👀"],
+  ["みみ", "👂"],
+  ["はな", "👃"],
+  ["くち", "👄"],
+  ["て", "✋"],
+  ["あし", "🦶"]
+]);
+
+addCards("スポーツ", null, [
+  ["サッカー", "⚽"],
+  ["やきゅう", "⚾"],
+  ["テニス", "🎾"],
+  ["バスケット", "🏀"],
+  ["すいえい", "🏊"],
+  ["ゴルフ", "⛳"]
+]);
+
+/* =====================================
+   カテゴリー設定
+===================================== */
+
+const categoryLevels = {
+  1: [
+    "くだもの",
+    "やさい",
+    "どうぶつ",
+    "むし",
+    "のりもの",
+    "たべもの"
+  ],
+
+  2: [
+    "くだもの",
+    "やさい",
+    "おかし",
+    "のみもの",
+    "どうぶつ",
+    "とり",
+    "むし",
+    "さかな",
+    "のりもの",
+    "がっき",
+    "おもちゃ",
+    "ぶんぼうぐ",
+    "しょっき",
+    "ようふく",
+    "はな"
+  ],
+
+  3: [
+    "たべもの",
+    "くだもの",
+    "やさい",
+    "おかし",
+    "のみもの",
+    "りょうり",
+    "いきもの",
+    "どうぶつ",
+    "とり",
+    "むし",
+    "さかな",
+    "うみのいきもの",
+    "のりもの",
+    "がっき",
+    "おもちゃ",
+    "ぶんぼうぐ",
+    "しょっき",
+    "ようふく",
+    "くつ",
+    "かぐ",
+    "でんき",
+    "はな",
+    "き",
+    "しぜん",
+    "からだ",
+    "スポーツ"
+  ]
 };
 
-let currentLevel=1;
-let questionIndex=0;
-let score=0;
-let currentType="animal";
-let currentBoard=[];
-let selectedItems=[];
-let startTime=0;
-let timerInterval=null;
-let finalElapsed=0;
-let isRestarting=false;
+/* =====================================
+   ゲーム設定
+===================================== */
 
-const $ = id => document.getElementById(id);
+const QUESTION_TOTAL = 10;
 
-function showScreen(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  $(id).classList.add("active");
-}
+const levelSettings = {
+  1: { boardSize: 8, correctCount: 4 },
+  2: { boardSize: 12, correctCount: 4 },
+  3: { boardSize: 16, correctCount: 4 }
+};
 
-function shuffle(array){
-  const a=[...array];
-  for(let i=a.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
+let currentLevel = 1;
+let questionIndex = 0;
+let score = 0;
+let selectedCards = [];
+let currentCorrectCards = [];
+let startTime = 0;
+let timerInterval = null;
+let gameLocked = false;
+let elapsedSeconds = 0;
+
+/* =====================================
+   共通処理
+===================================== */
+
+function shuffle(array) {
+  const result = [...array];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
   }
-  return a;
+
+  return result;
 }
 
-function speak(text){
-  if(!("speechSynthesis" in window)) return;
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+
+  return String(minutes).padStart(2, "0") +
+    ":" +
+    String(secs).padStart(2, "0");
+}
+
+function speak(text) {
+  if (!("speechSynthesis" in window)) return;
+
   window.speechSynthesis.cancel();
-  const utterance=new SpeechSynthesisUtterance(text);
-  utterance.lang="ja-JP";
-  utterance.rate=0.88;
-  utterance.pitch=1.08;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "ja-JP";
+  utterance.rate = 0.85;
+
   window.speechSynthesis.speak(utterance);
 }
 
-function typeLabel(type){
-  return type==="animal"?"どうぶつ":"たべもの";
+function updateTimer() {
+  elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+
+  document.getElementById("timer").textContent =
+    formatTime(elapsedSeconds);
 }
 
-function formatTime(ms){
-  const totalSeconds=Math.floor(ms/1000);
-  const minutes=Math.floor(totalSeconds/60);
-  const seconds=totalSeconds%60;
-  return String(minutes).padStart(2,"0")+":"+String(seconds).padStart(2,"0");
-}
+/* =====================================
+   ゲーム開始
+===================================== */
 
-function updateTimer(){
-  if(startTime) $("timerLabel").textContent="⏱ "+formatTime(Date.now()-startTime);
-}
+function startGame(level) {
 
-function stopTimer(){
-  if(timerInterval!==null){
-    clearInterval(timerInterval);
-    timerInterval=null;
-  }
-}
+  currentLevel = level;
+  questionIndex = 0;
+  score = 0;
+  elapsedSeconds = 0;
+  selectedCards = [];
+  currentCorrectCards = [];
+  gameLocked = false;
 
-function startGame(level){
-  stopTimer();
-  currentLevel=level;
-  questionIndex=0;
-  score=0;
-  selectedItems=[];
-  isRestarting=false;
-  startTime=Date.now();
-  finalElapsed=0;
-  updateTimer();
-  timerInterval=setInterval(updateTimer,1000);
-  $("levelLabel").textContent="レベル"+level;
-  $("progressBar").style.width="0%";
-  showScreen("gameScreen");
+  clearInterval(timerInterval);
+  window.speechSynthesis?.cancel();
+
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+
+  document.getElementById("score").textContent = "0";
+  document.getElementById("timer").textContent = "00:00";
+
+  startTime = Date.now();
+
+  timerInterval = setInterval(updateTimer, 500);
+
   nextQuestion();
 }
 
-function nextQuestion(){
-  if(questionIndex>=levels[currentLevel].questions){
+/* =====================================
+   次の問題を作る
+===================================== */
+
+function nextQuestion() {
+
+  if (questionIndex >= QUESTION_TOTAL) {
     finishGame();
     return;
   }
 
-  selectedItems=[];
-  currentType=(questionIndex%2===0)?"animal":"food";
+  gameLocked = false;
+  selectedCards = [];
 
-  const cfg=levels[currentLevel];
-  const targetPool=shuffle(items.filter(x=>x.type===currentType));
-  const otherPool=shuffle(items.filter(x=>x.type!==currentType));
-  const correctCount=Math.min(cfg.correctCards,cfg.cards,targetPool.length);
+  const levelCategories = categoryLevels[currentLevel];
 
-  currentBoard=shuffle([
-    ...targetPool.slice(0,correctCount),
-    ...otherPool.slice(0,cfg.cards-correctCount)
+  const settings = levelSettings[currentLevel];
+
+  // 出題可能なカテゴリーを抽出
+  const availableCategories = levelCategories.filter(category => {
+    return cards.filter(card =>
+      card.categories.includes(category)
+    ).length >= settings.correctCount;
+  });
+
+  if (availableCategories.length === 0) {
+    alert("出題できるカテゴリーがありません。");
+    backToStart();
+    return;
+  }
+
+  const category = shuffle(availableCategories)[0];
+
+  // 正解カード
+  const correctPool = cards.filter(card =>
+    card.categories.includes(category)
+  );
+
+  currentCorrectCards = shuffle(correctPool)
+    .slice(0, settings.correctCount);
+
+  // 不正解カード
+  const correctSet = new Set(currentCorrectCards);
+
+  const wrongPool = cards.filter(card =>
+    !card.categories.includes(category) &&
+    !correctSet.has(card)
+  );
+
+  const wrongCount = settings.boardSize - settings.correctCount;
+
+  const wrongCards = shuffle(wrongPool).slice(0, wrongCount);
+
+  const board = shuffle([
+    ...currentCorrectCards,
+    ...wrongCards
   ]);
 
-  $("questionLabel").textContent=(questionIndex+1)+" / "+cfg.questions+" もん";
-  $("progressBar").style.width=(questionIndex/cfg.questions*100)+"%";
-  $("instructionText").textContent=typeLabel(currentType)+"をタップ！";
-  $("feedback").textContent="";
-  renderBoard();
-  setTimeout(()=>speak("「"+typeLabel(currentType)+"」のカードを、ぜんぶえらんでね。"),180);
+  document.getElementById("questionCount").textContent =
+    (questionIndex + 1) + " / " + QUESTION_TOTAL;
+
+  document.getElementById("category").textContent = category;
+  document.getElementById("message").textContent = "";
+  document.getElementById("score").textContent = score;
+
+  renderCards(board);
+
+  speak(category);
 }
 
-function renderBoard(){
-  const board=$("board");
-  board.replaceChildren();
-  const columns=currentBoard.length===4?2:3;
-  board.style.gridTemplateColumns=`repeat(${columns}, minmax(0, 1fr))`;
+/* =====================================
+   カード表示
+===================================== */
 
-  currentBoard.forEach(item=>{
-    const button=document.createElement("button");
-    button.className="card";
-    button.type="button";
-    button.setAttribute("aria-label",item.name);
+function renderCards(board) {
 
-    const emoji=document.createElement("span");
-    emoji.className="emoji";
-    emoji.textContent=item.emoji;
+  const grid = document.getElementById("cardGrid");
 
-    const name=document.createElement("span");
-    name.className="name";
-    name.textContent=item.name;
+  grid.innerHTML = "";
 
-    button.append(emoji,name);
-    button.addEventListener("click",()=>selectCard(item,button));
-    board.appendChild(button);
+  board.forEach(card => {
+
+    const button = document.createElement("button");
+
+    button.className = "card";
+
+    button.innerHTML = `
+      <span class="emoji">${card.emoji}</span>
+      <span class="word">${card.name}</span>
+    `;
+
+    button.onclick = () => selectCard(card, button);
+
+    grid.appendChild(button);
   });
 }
 
-function selectCard(item,button){
-  if(isRestarting || button.disabled) return;
+/* =====================================
+   カード選択
+===================================== */
 
-  // 正解カード以外をタップしたら、ゲーム全体を最初からやり直す
-  if(item.type!==currentType){
+function selectCard(card, button) {
+
+  if (gameLocked) return;
+
+  if (button.classList.contains("selected")) return;
+
+  const isCorrect = card.categories.includes(
+    document.getElementById("category").textContent
+  );
+
+  if (!isCorrect) {
     restartAfterMistake();
     return;
   }
 
-  // 正解カードを選択済みなら何もしない
-  if(selectedItems.some(x=>x.name===item.name)) return;
-
-  selectedItems.push(item);
+  // 正解カードを選択
   button.classList.add("selected");
+  button.disabled = true;
 
-  const requiredCount=currentBoard.filter(x=>x.type===currentType).length;
+  selectedCards.push(card);
 
-  // この問題の正解カードをすべて選んだら、自動で次へ
-  if(selectedItems.length===requiredCount){
+  // すべての正解を選んだか確認
+  if (selectedCards.length === currentCorrectCards.length) {
+
+    gameLocked = true;
+
     score++;
+
+    document.getElementById("score").textContent = score;
+
+    document.getElementById("message").textContent = "せいかい！";
+
     questionIndex++;
-    $("feedback").textContent="せいかい！ ぜんぶえらべたよ！ ✨";
-    $("progressBar").style.width=(questionIndex/levels[currentLevel].questions*100)+"%";
-    document.querySelectorAll(".card").forEach(card=>card.disabled=true);
-    speak("せいかい！ ぜんぶえらべたよ！");
-    setTimeout(nextQuestion,1000);
-  }else{
-    $("feedback").textContent="いいね！ あと"+(requiredCount-selectedItems.length)+"まい！";
+
+    setTimeout(() => {
+      nextQuestion();
+    }, 800);
   }
 }
 
-function restartAfterMistake(){
-  if(isRestarting) return;
-  isRestarting=true;
-  $("feedback").textContent="ちがうカードだよ。さいしょからやりなおし！";
-  speak("ちがうカードだよ。さいしょからやりなおし。");
-  document.querySelectorAll(".card").forEach(card=>card.disabled=true);
+/* =====================================
+   間違えた場合
+===================================== */
 
-  setTimeout(()=>{
+function restartAfterMistake() {
+
+  if (gameLocked) return;
+
+  gameLocked = true;
+
+  clearInterval(timerInterval);
+  window.speechSynthesis?.cancel();
+
+  document.getElementById("message").textContent =
+    "もういちど はじめから！";
+
+  const buttons = document.querySelectorAll(".card");
+
+  buttons.forEach(button => {
+    button.disabled = true;
+  });
+
+  setTimeout(() => {
     startGame(currentLevel);
-    speak("もういちど、さいしょからはじめよう！");
-  },1400);
+  }, 1200);
 }
 
-function repeatInstruction(){
-  speak("「"+typeLabel(currentType)+"」のカードを、ぜんぶえらんでね。");
+/* =====================================
+   ゲーム終了
+===================================== */
+
+function finishGame() {
+
+  clearInterval(timerInterval);
+  updateTimer();
+
+  window.speechSynthesis?.cancel();
+
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+
+  document.getElementById("resultScore").textContent =
+    "せいかい " + score + " / " + QUESTION_TOTAL + " もん";
+
+  document.getElementById("resultTime").textContent =
+    formatTime(elapsedSeconds);
 }
 
-function finishGame(){
-  stopTimer();
-  finalElapsed=Date.now()-startTime;
-  $("timerLabel").textContent="⏱ "+formatTime(finalElapsed);
-  showScreen("resultScreen");
+/* =====================================
+   結果コピー
+===================================== */
 
-  const total=levels[currentLevel].questions;
-  $("scoreText").textContent=score+" / "+total+" もん せいかい！";
-  $("resultLevel").textContent="レベル"+currentLevel;
-  $("resultTime").textContent=formatTime(finalElapsed);
-  $("progressBar").style.width="100%";
-  $("resultEmoji").textContent="🏆";
-  $("resultMessage").textContent="すべての問題をクリア！ さいごまでよくがんばったね。";
-  $("copyFeedback").textContent="";
-  speak("おしまい！ ぜんぶのもんだいをクリアしたよ！");
-}
+function copyResults() {
 
-async function copyResults(){
-  const total=levels[currentLevel].questions;
-  const text=[
-    "ルールチェンジ！",
-    "レベル："+currentLevel,
-    "正解数："+score+" / "+total+"問",
-    "合計時間："+formatTime(finalElapsed)
-  ].join("\n");
+  const text =
+    "なかまわけゲーム\n" +
+    "レベル：" + ["", "初級", "中級", "上級"][currentLevel] + "\n" +
+    "せいかい：" + score + " / " + QUESTION_TOTAL + "\n" +
+    "じかん：" + formatTime(elapsedSeconds);
 
-  try{
-    if(navigator.clipboard && window.isSecureContext){
-      await navigator.clipboard.writeText(text);
-    }else{
-      const textarea=document.createElement("textarea");
-      textarea.value=text;
-      textarea.style.position="fixed";
-      textarea.style.opacity="0";
-      document.body.appendChild(textarea);
-      textarea.select();
-      const succeeded=document.execCommand("copy");
-      textarea.remove();
-      if(!succeeded) throw new Error("copy failed");
-    }
-    $("copyFeedback").textContent="けっかをコピーしたよ！";
-  }catch(error){
-    $("copyFeedback").textContent="コピーできませんでした。画面の結果を確認してください。";
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(() => alert("結果をコピーしました！"))
+      .catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
   }
 }
+
+function fallbackCopy(text) {
+
+  const textarea = document.createElement("textarea");
+
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+
+  document.body.appendChild(textarea);
+
+  textarea.select();
+
+  try {
+    document.execCommand("copy");
+    alert("結果をコピーしました！");
+  } catch (error) {
+    alert("コピーできませんでした。");
+  }
+
+  textarea.remove();
+}
+
+/* =====================================
+   レベル選択へ戻る
+===================================== */
+
+function backToStart() {
+
+  clearInterval(timerInterval);
+  window.speechSynthesis?.cancel();
+
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.add("hidden");
+  document.getElementById("startScreen").classList.remove("hidden");
+}
+
 </script>
 </body>
 </html>
