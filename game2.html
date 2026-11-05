@@ -7,14 +7,12 @@
 <title>なかまわけゲーム</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   padding: 16px;
-  font-family: "Arial", "Hiragino Kaku Gothic ProN", sans-serif;
+  font-family: Arial, "Hiragino Kaku Gothic ProN", sans-serif;
   background: #fff8ec;
   color: #444;
   text-align: center;
@@ -58,13 +56,8 @@ button {
   font-weight: bold;
 }
 
-.level-button:nth-of-type(2) {
-  background: #70c9a0;
-}
-
-.level-button:nth-of-type(3) {
-  background: #7ba9e8;
-}
+.level-button:nth-of-type(2) { background: #70c9a0; }
+.level-button:nth-of-type(3) { background: #7ba9e8; }
 
 .level-button:active,
 .card:active {
@@ -140,13 +133,9 @@ button {
   opacity: .65;
 }
 
-.card:disabled {
-  cursor: default;
-}
+.card:disabled { cursor: default; }
 
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
 .result-time {
   font-size: 38px;
@@ -187,17 +176,9 @@ button {
 }
 
 @media (max-width: 380px) {
-  body {
-    padding: 9px;
-  }
-
-  .card-grid {
-    gap: 6px;
-  }
-
-  .card {
-    border-radius: 11px;
-  }
+  body { padding: 9px; }
+  .card-grid { gap: 6px; }
+  .card { border-radius: 11px; }
 }
 </style>
 </head>
@@ -223,7 +204,7 @@ button {
 
     <button class="level-button" onclick="startGame(3)">
       上級
-      <div style="font-size:13px;font-weight:normal;">25カテゴリー・カード16枚</div>
+      <div style="font-size:13px;font-weight:normal;">26カテゴリー・カード16枚</div>
     </button>
 
     <p class="note">
@@ -285,8 +266,100 @@ button {
 <script>
 
 /* =====================================
+   効果音の準備
+===================================== */
+
+let audioContext = null;
+
+function initAudio() {
+  const AudioContextClass =
+    window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContextClass) return;
+
+  if (!audioContext) {
+    audioContext = new AudioContextClass();
+  }
+
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+}
+
+// 音を鳴らす共通処理
+function playTone(frequency, startTime, duration, volume, type = "sine") {
+  if (!audioContext) return;
+
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, startTime);
+
+  gain.gain.setValueAtTime(0.001, startTime);
+  gain.gain.exponentialRampToValueAtTime(
+    volume,
+    startTime + 0.02
+  );
+  gain.gain.exponentialRampToValueAtTime(
+    0.001,
+    startTime + duration
+  );
+
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+
+  oscillator.start(startTime);
+  oscillator.stop(startTime + duration + 0.03);
+}
+
+// 正解音：ピンポーン♪
+function playCorrectSound() {
+  if (!audioContext) return;
+
+  const now = audioContext.currentTime;
+
+  playTone(880, now, 0.22, 0.18, "sine");
+  playTone(1175, now + 0.18, 0.35, 0.18, "sine");
+}
+
+// 不正解音：ブッブー！
+function playWrongSound() {
+  if (!audioContext) return;
+
+  const now = audioContext.currentTime;
+
+  playTone(180, now, 0.35, 0.22, "sawtooth");
+  playTone(145, now + 0.25, 0.45, 0.22, "sawtooth");
+}
+
+// クリア音：明るいチャイム
+function playClearSound() {
+  if (!audioContext) return;
+
+  const now = audioContext.currentTime;
+
+  playTone(784, now, 0.25, 0.18, "sine");
+  playTone(988, now + 0.18, 0.25, 0.18, "sine");
+  playTone(1175, now + 0.36, 0.25, 0.18, "sine");
+  playTone(1568, now + 0.54, 0.55, 0.18, "sine");
+}
+
+// クリアー！と声で知らせる
+function speakClear() {
+  if (!("speechSynthesis" in window)) return;
+
+  const utterance = new SpeechSynthesisUtterance("クリアー！");
+  utterance.lang = "ja-JP";
+  utterance.rate = 0.9;
+  utterance.pitch = 1.2;
+
+  window.speechSynthesis.speak(utterance);
+}
+
+
+/* =====================================
    カードデータ
-   1枚のカードに複数のカテゴリーを設定
 ===================================== */
 
 const cards = [];
@@ -525,6 +598,7 @@ addCards("スポーツ", null, [
   ["ゴルフ", "⛳"]
 ]);
 
+
 /* =====================================
    カテゴリー設定
 ===================================== */
@@ -587,6 +661,7 @@ const categoryLevels = {
   ]
 };
 
+
 /* =====================================
    ゲーム設定
 ===================================== */
@@ -608,6 +683,7 @@ let startTime = 0;
 let timerInterval = null;
 let gameLocked = false;
 let elapsedSeconds = 0;
+
 
 /* =====================================
    共通処理
@@ -652,11 +728,15 @@ function updateTimer() {
     formatTime(elapsedSeconds);
 }
 
+
 /* =====================================
    ゲーム開始
 ===================================== */
 
 function startGame(level) {
+
+  // iPhoneの音声機能を開始
+  initAudio();
 
   currentLevel = level;
   questionIndex = 0;
@@ -667,7 +747,10 @@ function startGame(level) {
   gameLocked = false;
 
   clearInterval(timerInterval);
-  window.speechSynthesis?.cancel();
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
 
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("resultScreen").classList.add("hidden");
@@ -682,6 +765,7 @@ function startGame(level) {
 
   nextQuestion();
 }
+
 
 /* =====================================
    次の問題を作る
@@ -698,10 +782,8 @@ function nextQuestion() {
   selectedCards = [];
 
   const levelCategories = categoryLevels[currentLevel];
-
   const settings = levelSettings[currentLevel];
 
-  // 出題可能なカテゴリーを抽出
   const availableCategories = levelCategories.filter(category => {
     return cards.filter(card =>
       card.categories.includes(category)
@@ -753,6 +835,7 @@ function nextQuestion() {
   speak(category);
 }
 
+
 /* =====================================
    カード表示
 ===================================== */
@@ -780,6 +863,7 @@ function renderCards(board) {
   });
 }
 
+
 /* =====================================
    カード選択
 ===================================== */
@@ -799,6 +883,9 @@ function selectCard(card, button) {
     return;
   }
 
+  // 正解音
+  playCorrectSound();
+
   // 正解カードを選択
   button.classList.add("selected");
   button.disabled = true;
@@ -813,7 +900,6 @@ function selectCard(card, button) {
     score++;
 
     document.getElementById("score").textContent = score;
-
     document.getElementById("message").textContent = "せいかい！";
 
     questionIndex++;
@@ -823,6 +909,7 @@ function selectCard(card, button) {
     }, 800);
   }
 }
+
 
 /* =====================================
    間違えた場合
@@ -834,8 +921,14 @@ function restartAfterMistake() {
 
   gameLocked = true;
 
+  // 不正解音
+  playWrongSound();
+
   clearInterval(timerInterval);
-  window.speechSynthesis?.cancel();
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
 
   document.getElementById("message").textContent =
     "もういちど はじめから！";
@@ -851,6 +944,7 @@ function restartAfterMistake() {
   }, 1200);
 }
 
+
 /* =====================================
    ゲーム終了
 ===================================== */
@@ -860,7 +954,9 @@ function finishGame() {
   clearInterval(timerInterval);
   updateTimer();
 
-  window.speechSynthesis?.cancel();
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
 
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("resultScreen").classList.remove("hidden");
@@ -870,7 +966,15 @@ function finishGame() {
 
   document.getElementById("resultTime").textContent =
     formatTime(elapsedSeconds);
+
+  // クリア音と「クリアー！」の音声
+  playClearSound();
+
+  setTimeout(() => {
+    speakClear();
+  }, 850);
 }
+
 
 /* =====================================
    結果コピー
@@ -915,6 +1019,7 @@ function fallbackCopy(text) {
   textarea.remove();
 }
 
+
 /* =====================================
    レベル選択へ戻る
 ===================================== */
@@ -922,7 +1027,10 @@ function fallbackCopy(text) {
 function backToStart() {
 
   clearInterval(timerInterval);
-  window.speechSynthesis?.cancel();
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
 
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("resultScreen").classList.add("hidden");
