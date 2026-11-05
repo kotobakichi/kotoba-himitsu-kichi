@@ -3,7 +3,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>なかまわけゲーム</title>
 
 <style>
@@ -11,28 +11,22 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
+  width: 100%;
+  height: 100%;
   margin: 0;
-  padding: 20px 12px;
+  overflow: hidden;
+}
+
+body {
+  height: 100vh;
+  height: 100dvh;
+  padding: 5px 8px;
   background: #fff8ed;
   font-family: sans-serif;
-  text-align: center;
   color: #333;
-}
-
-h1 {
-  color: #f28a45;
-  margin: 5px 0 20px;
-  font-size: 28px;
-}
-
-.container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 18px 14px;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
 }
 
 button {
@@ -46,94 +40,129 @@ button {
   display: none !important;
 }
 
+h1 {
+  flex: 0 0 auto;
+  color: #f28a45;
+  text-align: center;
+  font-size: 23px;
+  margin: 2px 0 7px;
+}
+
+.container {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 10px;
+  background: white;
+  border-radius: 17px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
 /* 難易度選択 */
 
+#startScreen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+#startScreen h2 {
+  font-size: 22px;
+  margin: 10px 0;
+}
+
 .level-description {
-  font-size: 16px;
-  margin: 15px 0 25px;
-  line-height: 1.8;
+  font-size: 15px;
+  margin: 8px 0 20px;
 }
 
 .level-buttons {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  width: 100%;
   max-width: 400px;
   margin: 0 auto;
 }
 
 .level-button {
-  padding: 18px;
-  border-radius: 15px;
+  padding: 15px 8px;
+  border-radius: 14px;
   background: #fff0df;
   color: #333;
-  font-size: 19px;
+  font-size: 18px;
   border: 2px solid #ffd5ad;
+}
+
+.level-button small {
+  font-size: 13px;
 }
 
 /* ゲーム画面 */
 
+#gameScreen {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .status {
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 7px;
 }
 
 .status div {
   background: #fff0df;
-  padding: 12px 5px;
-  border-radius: 12px;
+  padding: 7px 3px;
+  border-radius: 10px;
+  font-size: 14px;
   font-weight: bold;
+  text-align: center;
 }
 
 .timer {
+  flex: 0 0 auto;
   background: #f4f4f4;
-  padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  font-size: 17px;
+  padding: 7px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  font-size: 15px;
   font-weight: bold;
+  text-align: center;
 }
 
 .instruction {
-  font-size: 17px;
-  margin: 15px 0;
+  flex: 0 0 auto;
+  font-size: 14px;
+  margin: 5px 0 2px;
+  text-align: center;
 }
 
 .category {
+  flex: 0 0 auto;
   color: #f28a45;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
-  margin: 20px 0 10px;
-}
-
-.audio-status {
-  font-size: 13px;
-  color: #888;
-  margin: 10px 0;
-}
-
-.replay-button {
-  background: #fff0df;
-  color: #c66c31;
-  border: 1px solid #ffbd8b;
-  border-radius: 25px;
-  padding: 10px 18px;
-  font-size: 14px;
-}
-
-.progress {
-  margin: 12px 0;
-  color: #666;
-  font-size: 15px;
+  margin: 3px 0 5px;
+  text-align: center;
 }
 
 .message {
-  min-height: 38px;
-  font-size: 20px;
+  flex: 0 0 auto;
+  min-height: 25px;
+  font-size: 16px;
   font-weight: bold;
-  margin: 12px 0;
+  margin: 2px 0 5px;
+  text-align: center;
 }
 
 .message.correct {
@@ -144,37 +173,62 @@ button {
   color: #e34b4b;
 }
 
-/* カード */
+/* カード配置 */
 
 .cards {
+  flex: 1;
+  min-height: 0;
   display: grid;
+  gap: 7px;
+  margin: 3px 0 7px;
+  overflow: hidden;
+}
+
+.cards.level1 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin: 15px 0;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.cards.level2 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.cards.level3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
 }
 
 .card {
-  background: #fff2e2;
-  border: 3px solid transparent;
-  border-radius: 17px;
-  padding: 10px 5px;
   min-width: 0;
+  min-height: 0;
+  background: #fff2e2;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 4px 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .card img {
+  display: block;
   width: 100%;
-  max-width: 125px;
-  height: 125px;
+  height: 65%;
+  min-height: 0;
   object-fit: contain;
   background: white;
-  display: block;
-  margin: 0 auto 8px;
+  margin-bottom: 3px;
 }
 
 .card-name {
-  font-size: 18px;
+  flex: 0 0 auto;
+  font-size: 14px;
   font-weight: bold;
   color: #111;
+  line-height: 1.2;
 }
 
 .card.correct {
@@ -189,35 +243,47 @@ button {
 
 .card:disabled {
   cursor: default;
-  opacity: 0.65;
 }
 
+/* 戻るボタン */
+
 .change-button {
-  margin: 18px auto 5px;
-  padding: 12px 22px;
-  border-radius: 25px;
+  flex: 0 0 auto;
+  align-self: center;
+  margin: 0 auto 2px;
+  padding: 7px 16px;
+  border-radius: 20px;
   background: #eee;
   color: #555;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /* 結果画面 */
 
+#resultScreen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .result-title {
   color: #f28a45;
-  font-size: 28px;
+  font-size: 25px;
 }
 
 .result-score {
-  font-size: 24px;
+  font-size: 21px;
   font-weight: bold;
-  margin: 25px 0;
+  margin: 15px 0;
 }
 
 .result-time {
-  font-size: 22px;
+  font-size: 19px;
   font-weight: bold;
-  margin: 20px 0;
+  margin: 10px 0 20px;
   color: #e58b43;
 }
 
@@ -225,136 +291,127 @@ button {
   background: #f5a052;
   color: white;
   border-radius: 15px;
-  padding: 16px 25px;
-  font-size: 18px;
+  padding: 13px 22px;
+  font-size: 16px;
 }
 
-/* iPhone・スマートフォン用 */
+/* パソコン用 */
 
-@media screen and (max-width: 600px) {
-
+@media screen and (min-width: 601px) {
   body {
-    padding: 8px 7px;
+    padding: 12px;
   }
 
   h1 {
-    font-size: 23px;
-    margin: 4px 0 12px;
+    font-size: 28px;
+    margin: 5px 0 12px;
   }
 
   .container {
-    padding: 12px 9px;
-    border-radius: 17px;
-  }
-
-  .status {
-    gap: 6px;
-    margin-bottom: 8px;
+    padding: 15px;
+    border-radius: 20px;
   }
 
   .status div {
-    padding: 9px 3px;
-    font-size: 14px;
+    padding: 10px;
+    font-size: 16px;
   }
 
   .timer {
-    padding: 8px;
-    margin-bottom: 8px;
-    font-size: 15px;
+    padding: 9px;
+    font-size: 17px;
   }
 
   .instruction {
-    font-size: 15px;
-    margin: 9px 0;
+    font-size: 16px;
+    margin: 8px 0 3px;
   }
 
   .category {
-    font-size: 25px;
-    margin: 10px 0 5px;
-  }
-
-  .audio-status {
-    font-size: 12px;
-    margin: 6px 0;
-  }
-
-  .replay-button {
-    padding: 8px 15px;
-    font-size: 13px;
-  }
-
-  .progress {
-    margin: 8px 0;
-    font-size: 14px;
+    font-size: 29px;
+    margin: 5px 0;
   }
 
   .message {
-    min-height: 28px;
-    font-size: 17px;
-    margin: 7px 0;
+    font-size: 18px;
+    min-height: 29px;
   }
 
   .cards {
-    gap: 8px;
-    margin: 9px 0;
+    gap: 10px;
   }
 
   .card {
-    padding: 7px 4px;
-    border-radius: 13px;
-    border-width: 3px;
-  }
-
-  .card img {
-    width: 100%;
-    max-width: 90px;
-    height: 88px;
-    margin-bottom: 4px;
+    padding: 8px;
+    border-radius: 15px;
   }
 
   .card-name {
-    font-size: 15px;
+    font-size: 17px;
   }
 
   .change-button {
-    margin: 10px auto 3px;
-    padding: 9px 16px;
-    font-size: 13px;
-  }
-
-  .result-title {
-    font-size: 24px;
-  }
-
-  .result-score {
-    font-size: 20px;
-    margin: 18px 0;
-  }
-
-  .result-time {
-    font-size: 19px;
-    margin: 15px 0;
-  }
-
-  .restart-button {
-    padding: 13px 20px;
-    font-size: 16px;
+    font-size: 14px;
+    padding: 9px 20px;
   }
 }
 
-/* さらに小さい画面用 */
+/* 画面の高さが小さい場合 */
 
-@media screen and (max-width: 380px) {
+@media screen and (max-height: 650px) {
+  h1 {
+    font-size: 19px;
+    margin: 0 0 3px;
+  }
 
-  .card img {
-    height: 78px;
-    max-width: 80px;
+  .container {
+    padding: 6px;
+  }
+
+  .status {
+    margin-bottom: 3px;
+  }
+
+  .status div {
+    padding: 4px;
+    font-size: 12px;
+  }
+
+  .timer {
+    padding: 4px;
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+
+  .instruction {
+    margin: 2px 0;
+    font-size: 12px;
+  }
+
+  .category {
+    font-size: 20px;
+    margin: 1px 0;
+  }
+
+  .message {
+    min-height: 19px;
+    font-size: 13px;
+    margin: 1px 0;
+  }
+
+  .cards {
+    gap: 4px;
+    margin: 2px 0 4px;
   }
 
   .card-name {
-    font-size: 14px;
+    font-size: 12px;
   }
 
+  .change-button {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
 }
 </style>
 </head>
@@ -365,9 +422,10 @@ button {
 
 <div class="container">
 
-  <!-- 難易度選択画面 -->
+  <!-- 難易度選択 -->
 
   <section id="startScreen">
+
     <h2>むずかしさをえらんでね！</h2>
 
     <p class="level-description">
@@ -392,6 +450,7 @@ button {
       </button>
 
     </div>
+
   </section>
 
 
@@ -408,21 +467,11 @@ button {
       ⏱ タイム：<span id="timerDisplay">00:00</span>
     </div>
 
-    <p class="instruction">このなかまはどれかな？</p>
+    <p class="instruction">
+      このなかまはどれかな？
+    </p>
 
     <div class="category" id="categoryName"></div>
-
-    <div class="audio-status" id="audioStatus">
-      カテゴリーの音声を再生中
-    </div>
-
-    <button class="replay-button" onclick="playCategoryAudio()">
-      🔊 もういちど聞く
-    </button>
-
-    <div class="progress" id="progress">
-      みつけた数：0 / 1
-    </div>
 
     <div class="message" id="message"></div>
 
@@ -458,7 +507,7 @@ button {
 
 <script>
 
-/* カードのデータ */
+/* カードデータ */
 
 const categories = {
 
@@ -498,7 +547,7 @@ const categories = {
 };
 
 
-/* ゲームの設定 */
+/* ゲーム設定 */
 
 let difficulty = 1;
 let totalCards = 4;
@@ -513,7 +562,6 @@ let foundItems = [];
 let answeredItems = [];
 
 let currentAudio = null;
-
 let startTime = 0;
 let timerInterval = null;
 let autoNextTimeout = null;
@@ -540,7 +588,7 @@ function shuffle(array) {
 }
 
 
-/* タイマー表示 */
+/* 時間表示 */
 
 function formatTime(milliseconds) {
 
@@ -569,8 +617,6 @@ function updateTimer() {
 }
 
 
-/* タイマー開始 */
-
 function startTimer() {
 
   clearInterval(timerInterval);
@@ -584,8 +630,6 @@ function startTimer() {
 }
 
 
-/* タイマー停止 */
-
 function stopTimer() {
 
   clearInterval(timerInterval);
@@ -597,7 +641,7 @@ function stopTimer() {
 }
 
 
-/* 音声停止 */
+/* 音声 */
 
 function stopAudio() {
 
@@ -610,6 +654,21 @@ function stopAudio() {
     currentAudio = null;
 
   }
+
+}
+
+
+function playCategoryAudio() {
+
+  if (!currentCategory) return;
+
+  stopAudio();
+
+  currentAudio = new Audio(currentCategory.audio);
+
+  currentAudio.play().catch(() => {
+    // iPhoneなどで自動再生が制限された場合は再生できないことがあります
+  });
 
 }
 
@@ -663,7 +722,7 @@ function startGame(level) {
 }
 
 
-/* 難易度選択画面に戻る */
+/* 難易度選択に戻る */
 
 function backToStart() {
 
@@ -716,13 +775,13 @@ function nextQuestion() {
   currentCategory = categories[randomKey];
 
 
-  /* 正解カード */
+  /* 正解カードを選ぶ */
 
   correctItems = shuffle(currentCategory.items)
     .slice(0, requiredCorrect);
 
 
-  /* 間違いカード */
+  /* 不正解カードを選ぶ */
 
   const otherItems = [];
 
@@ -750,7 +809,7 @@ function nextQuestion() {
   ]);
 
 
-  /* 表示 */
+  /* 画面表示 */
 
   document.getElementById("questionStatus").textContent =
     `もんだい ${questionNumber}/${totalQuestions}`;
@@ -761,21 +820,23 @@ function nextQuestion() {
   document.getElementById("categoryName").textContent =
     currentCategory.name;
 
-  document.getElementById("progress").textContent =
-    `みつけた数：0 / ${requiredCorrect}`;
-
   const message = document.getElementById("message");
 
   message.textContent = "";
 
   message.className = "message";
 
+
+  /* 難易度ごとのカード配置 */
+
   const cardsArea = document.getElementById("cards");
 
   cardsArea.innerHTML = "";
 
+  cardsArea.className = "cards level" + difficulty;
 
-  /* カードを作成 */
+
+  /* カード作成 */
 
   allCards.forEach(item => {
 
@@ -795,45 +856,14 @@ function nextQuestion() {
   });
 
 
-  /* 音声再生 */
+  /* カテゴリー音声を再生 */
 
   playCategoryAudio();
 
 }
 
 
-/* カテゴリー音声 */
-
-function playCategoryAudio() {
-
-  if (!currentCategory) return;
-
-  stopAudio();
-
-  const audioStatus = document.getElementById("audioStatus");
-
-  audioStatus.textContent = "カテゴリーの音声を再生中";
-
-  currentAudio = new Audio(currentCategory.audio);
-
-  currentAudio.play()
-    .catch(() => {
-
-      audioStatus.textContent =
-        "音声が再生されないときは、もういちど聞くを押してね";
-
-    });
-
-  currentAudio.onended = () => {
-
-    audioStatus.textContent = "音声を聞きおわりました";
-
-  };
-
-}
-
-
-/* カードを選んだとき */
+/* 答え合わせ */
 
 function checkAnswer(card, item) {
 
@@ -860,11 +890,8 @@ function checkAnswer(card, item) {
 
     message.className = "message correct";
 
-    document.getElementById("progress").textContent =
-      `みつけた数：${foundItems.length} / ${requiredCorrect}`;
 
-
-    /* 全部見つけたら自動で次へ */
+    /* 全問正解した場合 */
 
     if (foundItems.length === requiredCorrect) {
 
@@ -879,37 +906,28 @@ function checkAnswer(card, item) {
 
         nextQuestion();
 
-      }, 900);
+      }, 800);
 
     }
 
   } else {
 
-    /* 間違い */
+    /* 不正解 */
 
     card.classList.add("wrong");
 
     card.disabled = true;
 
-    message.textContent = "× ちがうよ！さいしょからやりなおそう";
+    message.textContent = "× ちがうよ！";
 
     message.className = "message wrong";
-
-
-    /* 少し表示してから最初からやり直す */
-
-    autoNextTimeout = setTimeout(() => {
-
-      startGame(difficulty);
-
-    }, 1000);
 
   }
 
 }
 
 
-/* ゲーム終了 */
+/* 結果画面 */
 
 function showResult() {
 
