@@ -4,1070 +4,306 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>なかまわけゲーム</title>
-
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  padding: 16px;
-  font-family: Arial, "Hiragino Kaku Gothic ProN", sans-serif;
-  background: #fff8ec;
-  color: #444;
-  text-align: center;
-}
-
-.container {
-  max-width: 650px;
-  margin: 0 auto;
-}
-
-h1 {
-  color: #f08b55;
-  font-size: 27px;
-  margin: 12px 0 20px;
-}
-
-.panel {
-  background: white;
-  border-radius: 20px;
-  padding: 20px 14px;
-  box-shadow: 0 3px 10px #00000012;
-  margin-bottom: 16px;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-}
-
-.level-button {
-  display: block;
-  width: 100%;
-  max-width: 300px;
-  margin: 12px auto;
-  padding: 17px;
-  border-radius: 15px;
-  background: #ffb66d;
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.level-button:nth-of-type(2) { background: #70c9a0; }
-.level-button:nth-of-type(3) { background: #7ba9e8; }
-
-.level-button:active,
-.card:active {
-  transform: scale(.96);
-}
-
-.info {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 15px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.info div {
-  flex: 1;
-  background: #fff1df;
-  border-radius: 10px;
-  padding: 10px 4px;
-}
-
-.category {
-  font-size: 36px;
-  font-weight: bold;
-  color: #f07842;
-  margin: 15px 0 20px;
-}
-
-.message {
-  min-height: 28px;
-  font-size: 17px;
-  font-weight: bold;
-  color: #e17c4c;
-  margin: 10px 0;
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 9px;
-}
-
-.card {
-  min-width: 0;
-  aspect-ratio: 1 / 1;
-  border-radius: 15px;
-  background: #fff0d9;
-  border: 3px solid transparent;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 3px;
-  padding: 4px;
-  transition: .15s;
-}
-
-.card .emoji {
-  font-size: clamp(30px, 8vw, 46px);
-  line-height: 1.2;
-}
-
-.card .word {
-  font-size: clamp(11px, 3vw, 15px);
-  font-weight: bold;
-  overflow-wrap: anywhere;
-}
-
-.card.selected {
-  background: #c9f2d9;
-  border-color: #54b77b;
-  opacity: .65;
-}
-
-.card:disabled { cursor: default; }
-
-.hidden { display: none !important; }
-
-.result-time {
-  font-size: 38px;
-  font-weight: bold;
-  color: #e88b4e;
-  margin: 15px 0;
-}
-
-.result-score {
-  font-size: 23px;
-  margin: 15px 0;
-}
-
-.action-button {
-  background: #75bd98;
-  color: white;
-  padding: 14px 25px;
-  border-radius: 12px;
-  font-size: 17px;
-  font-weight: bold;
-  margin: 8px;
-}
-
-.back-button {
-  background: #aaa;
-  color: white;
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-size: 15px;
-  margin-top: 15px;
-}
-
-.note {
-  font-size: 12px;
-  color: #999;
-  line-height: 1.6;
-  margin-top: 18px;
-}
-
-@media (max-width: 380px) {
-  body { padding: 9px; }
-  .card-grid { gap: 6px; }
-  .card { border-radius: 11px; }
-}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;font-family:Arial,"Hiragino Kaku Gothic ProN",sans-serif;background:#fff8ec;color:#444;text-align:center}
+.container{max-width:720px;margin:0 auto}
+h1{color:#e78343;font-size:26px;margin:12px 0 18px}
+.panel{background:#fff;border-radius:20px;padding:18px 14px;margin-bottom:16px;box-shadow:0 3px 10px #00000012}
+.hidden{display:none!important}
+button{font-family:inherit;cursor:pointer;border:0}
+.start-button,.action-button{background:#f3a45d;color:#fff;font-size:19px;font-weight:bold;padding:15px 30px;border-radius:14px}
+.info{display:flex;gap:8px;justify-content:space-between;margin-bottom:14px}
+.info div{flex:1;background:#fff1df;border-radius:10px;padding:9px 4px;font-size:13px;font-weight:bold}
+.category{font-size:32px;font-weight:bold;color:#e78343;margin:8px 0 6px}
+.audio-status{font-size:13px;color:#777;min-height:22px;margin:3px 0 8px}
+.replay-button{background:#fff0df;color:#a85b24;border:1px solid #f0c49e;border-radius:20px;padding:7px 14px;font-size:14px}
+.message{min-height:30px;font-size:17px;font-weight:bold;color:#d97842;margin:9px 0}
+.card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.card{position:relative;min-width:0;aspect-ratio:1/1;border-radius:14px;background:#fff4e5;border:3px solid transparent;padding:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.card img{width:100%;height:76%;object-fit:contain;display:block}
+.card .word{font-size:clamp(11px,2.7vw,15px);font-weight:bold;line-height:1.2}
+.card.selected{background:#fff0f0;border-color:#e53935}
+.card.incorrect{background:#edf4ff;border-color:#1976d2}
+.feedback-mark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(42px,12vw,70px);font-weight:bold;line-height:1;text-shadow:0 1px 3px #fff}
+.card.selected .feedback-mark{color:#e53935}
+.card.incorrect .feedback-mark{color:#1976d2}
+.card:disabled{cursor:default}
+.note{font-size:12px;color:#999;line-height:1.6;margin-top:14px}
+.result-score{font-size:23px;margin:15px 0}
+.result-time{font-size:38px;font-weight:bold;color:#e88b4e;margin:15px 0}
+.back-button{background:#aaa;color:white;padding:12px 22px;border-radius:12px;font-size:15px;margin-top:12px}
+@media(max-width:380px){body{padding:8px}.card-grid{gap:6px}.card{border-radius:10px;padding:3px}}
 </style>
 </head>
-
 <body>
 <div class="container">
+<h1>🌟 なかまわけゲーム 🌟</h1>
 
-  <h1>🌟 なかまわけゲーム 🌟</h1>
+<section id="startScreen" class="panel">
+  <h2>なかまを みつけよう！</h2>
+  <p>お題と同じなかまのカードを4枚えらんでね。</p>
+  <p>くだもの・どうぶつ・のりものの3つのカテゴリーが出てくるよ。</p>
+  <button class="start-button" id="startButton">ゲームスタート</button>
+  <p class="note">全10問です。まちがえると最初からやり直しになります。</p>
+</section>
 
-  <!-- スタート画面 -->
-  <section id="startScreen" class="panel">
-    <h2>レベルをえらんでね</h2>
+<section id="gameScreen" class="panel hidden">
+  <div class="info">
+    <div>もんだい<br><span id="questionCount">1 / 10</span></div>
+    <div>せいかい<br><span id="score">0</span></div>
+    <div>じかん<br><span id="timer">00:00</span></div>
+  </div>
+  <div>このなかまを えらぼう！</div>
+  <div id="category" class="category">くだもの</div>
+  <div id="audioStatus" class="audio-status" aria-live="polite">カテゴリーの音声を再生します。</div>
+  <button id="replayButton" class="replay-button" type="button">🔊 もういちど聞く</button>
+  <div id="message" class="message" aria-live="polite"></div>
+  <div id="cardGrid" class="card-grid"></div>
+  <p class="note">正解は赤い丸、不正解は青いバツで表示されます。</p>
+</section>
 
-    <button class="level-button" onclick="startGame(1)">
-      初級
-      <div style="font-size:13px;font-weight:normal;">6カテゴリー・カード8枚</div>
-    </button>
-
-    <button class="level-button" onclick="startGame(2)">
-      中級
-      <div style="font-size:13px;font-weight:normal;">15カテゴリー・カード12枚</div>
-    </button>
-
-    <button class="level-button" onclick="startGame(3)">
-      上級
-      <div style="font-size:13px;font-weight:normal;">26カテゴリー・カード16枚</div>
-    </button>
-
-    <p class="note">
-      お題と同じなかまのカードを<br>
-      ぜんぶえらんでね！
-    </p>
-  </section>
-
-  <!-- ゲーム画面 -->
-  <section id="gameScreen" class="panel hidden">
-
-    <div class="info">
-      <div>もんだい<br><span id="questionCount">1 / 10</span></div>
-      <div>せいかい<br><span id="score">0</span></div>
-      <div>じかん<br><span id="timer">00:00</span></div>
-    </div>
-
-    <div>このなかまを えらぼう！</div>
-
-    <div id="category" class="category">くだもの</div>
-
-    <div id="message" class="message"></div>
-
-    <div id="cardGrid" class="card-grid"></div>
-
-    <p class="note">
-      ちがうカードをえらぶと、さいしょからになるよ。
-    </p>
-  </section>
-
-  <!-- 結果画面 -->
-  <section id="resultScreen" class="panel hidden">
-    <h2>🎉 クリア！ 🎉</h2>
-
-    <div class="result-score" id="resultScore"></div>
-
-    <div>かかったじかん</div>
-    <div class="result-time" id="resultTime">00:00</div>
-
-    <button class="action-button" onclick="copyResults()">
-      結果をコピー
-    </button>
-
-    <br>
-
-    <button class="action-button" onclick="startGame(currentLevel)">
-      もういちど
-    </button>
-
-    <br>
-
-    <button class="back-button" onclick="backToStart()">
-      レベル選択にもどる
-    </button>
-  </section>
-
+<section id="resultScreen" class="panel hidden">
+  <h2>🎉 クリア！ 🎉</h2>
+  <div class="result-score" id="resultScore"></div>
+  <div>かかったじかん</div>
+  <div class="result-time" id="resultTime">00:00</div>
+  <button class="action-button" id="againButton">もういちど</button><br>
+  <button class="back-button" id="backButton">最初の画面にもどる</button>
+</section>
 </div>
 
 <script>
-
-/* =====================================
-   効果音の準備
-===================================== */
-
-let audioContext = null;
-
-// iPhone/SafariではAudioContextの再開完了を待ってから音を鳴らす
-function initAudio() {
-  const AudioContextClass =
-    window.AudioContext || window.webkitAudioContext;
-
-  if (!AudioContextClass) return Promise.resolve(false);
-
-  try {
-    if (!audioContext || audioContext.state === "closed") {
-      audioContext = new AudioContextClass();
-    }
-
-    if (audioContext.state === "running") {
-      return Promise.resolve(true);
-    }
-
-    return audioContext.resume().then(() => {
-      return audioContext.state === "running";
-    }).catch(() => false);
-
-  } catch (error) {
-    return Promise.resolve(false);
-  }
-}
-
-// 音を鳴らす共通処理
-function playTone(frequency, startTime, duration, volume, type = "sine") {
-  if (!audioContext || audioContext.state !== "running") return;
-
-  const oscillator = audioContext.createOscillator();
-  const gain = audioContext.createGain();
-
-  oscillator.type = type;
-  oscillator.frequency.setValueAtTime(frequency, startTime);
-
-  gain.gain.setValueAtTime(0.001, startTime);
-  gain.gain.exponentialRampToValueAtTime(
-    volume,
-    startTime + 0.02
-  );
-  gain.gain.exponentialRampToValueAtTime(
-    0.001,
-    startTime + duration
-  );
-
-  oscillator.connect(gain);
-  gain.connect(audioContext.destination);
-
-  oscillator.start(startTime);
-  oscillator.stop(startTime + duration + 0.03);
-}
-
-// 音声再開が完了してから、指定した音を順番に鳴らす
-function playSoundSequence(notes) {
-  initAudio().then((ready) => {
-    if (!ready || !audioContext || audioContext.state !== "running") {
-      return;
-    }
-
-    const now = audioContext.currentTime;
-
-    notes.forEach(note => {
-      playTone(
-        note.frequency,
-        now + note.delay,
-        note.duration,
-        note.volume,
-        note.type || "sine"
-      );
-    });
-  });
-}
-
-// 正解音：ピンポーン♪
-function playCorrectSound() {
-  playSoundSequence([
-    { frequency: 880, delay: 0, duration: 0.22, volume: 0.22 },
-    { frequency: 1175, delay: 0.18, duration: 0.35, volume: 0.22 }
-  ]);
-}
-
-// 不正解音：ブッブー！
-function playWrongSound() {
-  playSoundSequence([
-    { frequency: 180, delay: 0, duration: 0.35, volume: 0.24, type: "sawtooth" },
-    { frequency: 145, delay: 0.25, duration: 0.45, volume: 0.24, type: "sawtooth" }
-  ]);
-}
-
-// クリア音：明るいチャイム
-function playClearSound() {
-  playSoundSequence([
-    { frequency: 784, delay: 0, duration: 0.25, volume: 0.22 },
-    { frequency: 988, delay: 0.18, duration: 0.25, volume: 0.22 },
-    { frequency: 1175, delay: 0.36, duration: 0.25, volume: 0.22 },
-    { frequency: 1568, delay: 0.54, duration: 0.55, volume: 0.22 }
-  ]);
-}
-
-// クリアー！と声で知らせる
-function speakClear() {
-  if (!("speechSynthesis" in window)) return;
-
-  window.speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance("クリアー！");
-  utterance.lang = "ja-JP";
-  utterance.rate = 0.9;
-  utterance.pitch = 1.2;
-
-  // iOSで一時停止状態になっている場合に備える
-  if (typeof window.speechSynthesis.resume === "function") {
-    window.speechSynthesis.resume();
-  }
-
-  window.speechSynthesis.speak(utterance);
-}
-
-
-/* =====================================
-   カードデータ
-===================================== */
-
-const cards = [];
-
-function addCards(category, parent, items) {
-  items.forEach(item => {
-    const tags = [category];
-
-    if (parent) {
-      tags.push(parent);
-    }
-
-    cards.push({
-      name: item[0],
-      emoji: item[1],
-      categories: tags
-    });
-  });
-}
-
-/* 食べ物 */
-
-addCards("くだもの", "たべもの", [
-  ["りんご", "🍎"],
-  ["みかん", "🍊"],
-  ["ばなな", "🍌"],
-  ["ぶどう", "🍇"],
-  ["いちご", "🍓"],
-  ["もも", "🍑"],
-  ["すいか", "🍉"],
-  ["なし", "🍐"]
-]);
-
-addCards("やさい", "たべもの", [
-  ["にんじん", "🥕"],
-  ["だいこん", "🥬"],
-  ["とまと", "🍅"],
-  ["きゅうり", "🥒"],
-  ["なす", "🍆"],
-  ["とうもろこし", "🌽"],
-  ["たまねぎ", "🧅"],
-  ["じゃがいも", "🥔"]
-]);
-
-addCards("おかし", "たべもの", [
-  ["ケーキ", "🍰"],
-  ["クッキー", "🍪"],
-  ["プリン", "🍮"],
-  ["ドーナツ", "🍩"],
-  ["チョコレート", "🍫"],
-  ["アイス", "🍨"]
-]);
-
-addCards("のみもの", "たべもの", [
-  ["ぎゅうにゅう", "🥛"],
-  ["ジュース", "🧃"],
-  ["おちゃ", "🍵"],
-  ["コーヒー", "☕"],
-  ["みず", "💧"],
-  ["ココア", "🥤"]
-]);
-
-addCards("りょうり", "たべもの", [
-  ["カレー", "🍛"],
-  ["ラーメン", "🍜"],
-  ["すし", "🍣"],
-  ["おにぎり", "🍙"],
-  ["ハンバーグ", "🍖"],
-  ["ピザ", "🍕"]
-]);
-
-/* 生き物 */
-
-addCards("どうぶつ", "いきもの", [
-  ["いぬ", "🐶"],
-  ["ねこ", "🐱"],
-  ["ぞう", "🐘"],
-  ["うさぎ", "🐰"],
-  ["きりん", "🦒"],
-  ["らいおん", "🦁"],
-  ["くま", "🐻"],
-  ["さる", "🐵"]
-]);
-
-addCards("とり", "いきもの", [
-  ["にわとり", "🐔"],
-  ["すずめ", "🐦"],
-  ["はと", "🕊️"],
-  ["ふくろう", "🦉"],
-  ["ぺんぎん", "🐧"]
-]);
-
-addCards("むし", "いきもの", [
-  ["ちょう", "🦋"],
-  ["てんとうむし", "🐞"],
-  ["かぶとむし", "🪲"],
-  ["せみ", "🪰"],
-  ["とんぼ", "🪰"],
-  ["ばった", "🦗"]
-]);
-
-addCards("さかな", "いきもの", [
-  ["きんぎょ", "🐠"],
-  ["さけ", "🐟"],
-  ["まぐろ", "🐟"],
-  ["たい", "🐟"],
-  ["ふぐ", "🐡"]
-]);
-
-addCards("うみのいきもの", "いきもの", [
-  ["いるか", "🐬"],
-  ["くじら", "🐳"],
-  ["たこ", "🐙"],
-  ["かに", "🦀"],
-  ["えび", "🦐"],
-  ["くらげ", "🪼"]
-]);
-
-/* 身の回りのもの */
-
-addCards("のりもの", null, [
-  ["くるま", "🚗"],
-  ["でんしゃ", "🚃"],
-  ["ひこうき", "✈️"],
-  ["ふね", "🚢"],
-  ["じてんしゃ", "🚲"],
-  ["バス", "🚌"]
-]);
-
-addCards("がっき", null, [
-  ["ピアノ", "🎹"],
-  ["ギター", "🎸"],
-  ["たいこ", "🥁"],
-  ["ふえ", "🪈"],
-  ["バイオリン", "🎻"]
-]);
-
-addCards("おもちゃ", null, [
-  ["ボール", "⚽"],
-  ["つみき", "🧱"],
-  ["けんだま", "🪀"],
-  ["ぬいぐるみ", "🧸"],
-  ["パズル", "🧩"]
-]);
-
-addCards("ぶんぼうぐ", null, [
-  ["えんぴつ", "✏️"],
-  ["はさみ", "✂️"],
-  ["けしごむ", "🩷"],
-  ["のり", "🧴"],
-  ["ノート", "📓"]
-]);
-
-addCards("しょっき", null, [
-  ["おさら", "🍽️"],
-  ["コップ", "🥛"],
-  ["スプーン", "🥄"],
-  ["フォーク", "🍴"],
-  ["おはし", "🥢"]
-]);
-
-addCards("ようふく", null, [
-  ["シャツ", "👕"],
-  ["ズボン", "👖"],
-  ["ワンピース", "👗"],
-  ["ぼうし", "🧢"],
-  ["コート", "🧥"]
-]);
-
-addCards("くつ", null, [
-  ["スニーカー", "👟"],
-  ["ながぐつ", "🥾"],
-  ["サンダル", "🩴"],
-  ["くつした", "🧦"]
-]);
-
-addCards("かぐ", null, [
-  ["いす", "🪑"],
-  ["つくえ", "🪑"],
-  ["ベッド", "🛏️"],
-  ["たな", "🗄️"],
-  ["ソファ", "🛋️"]
-]);
-
-addCards("でんき", null, [
-  ["テレビ", "📺"],
-  ["れいぞうこ", "🧊"],
-  ["せんぷうき", "🌀"],
-  ["そうじき", "🧹"],
-  ["でんわ", "📱"]
-]);
-
-/* 自然 */
-
-addCards("はな", "しぜん", [
-  ["さくら", "🌸"],
-  ["ひまわり", "🌻"],
-  ["チューリップ", "🌷"],
-  ["ばら", "🌹"],
-  ["たんぽぽ", "🌼"]
-]);
-
-addCards("き", "しぜん", [
-  ["まつ", "🌲"],
-  ["さくらのき", "🌳"],
-  ["やしのき", "🌴"],
-  ["もみのき", "🎄"]
-]);
-
-addCards("しぜん", null, [
-  ["たいよう", "☀️"],
-  ["つき", "🌙"],
-  ["ほし", "⭐"],
-  ["くも", "☁️"],
-  ["にじ", "🌈"],
-  ["やま", "⛰️"]
-]);
-
-/* からだ・運動 */
-
-addCards("からだ", null, [
-  ["め", "👀"],
-  ["みみ", "👂"],
-  ["はな", "👃"],
-  ["くち", "👄"],
-  ["て", "✋"],
-  ["あし", "🦶"]
-]);
-
-addCards("スポーツ", null, [
-  ["サッカー", "⚽"],
-  ["やきゅう", "⚾"],
-  ["テニス", "🎾"],
-  ["バスケット", "🏀"],
-  ["すいえい", "🏊"],
-  ["ゴルフ", "⛳"]
-]);
-
-
-/* =====================================
-   カテゴリー設定
-===================================== */
-
-const categoryLevels = {
-  1: [
-    "くだもの",
-    "やさい",
-    "どうぶつ",
-    "むし",
-    "のりもの",
-    "たべもの"
-  ],
-
-  2: [
-    "くだもの",
-    "やさい",
-    "おかし",
-    "のみもの",
-    "どうぶつ",
-    "とり",
-    "むし",
-    "さかな",
-    "のりもの",
-    "がっき",
-    "おもちゃ",
-    "ぶんぼうぐ",
-    "しょっき",
-    "ようふく",
-    "はな"
-  ],
-
-  3: [
-    "たべもの",
-    "くだもの",
-    "やさい",
-    "おかし",
-    "のみもの",
-    "りょうり",
-    "いきもの",
-    "どうぶつ",
-    "とり",
-    "むし",
-    "さかな",
-    "うみのいきもの",
-    "のりもの",
-    "がっき",
-    "おもちゃ",
-    "ぶんぼうぐ",
-    "しょっき",
-    "ようふく",
-    "くつ",
-    "かぐ",
-    "でんき",
-    "はな",
-    "き",
-    "しぜん",
-    "からだ",
-    "スポーツ"
-  ]
+"use strict";
+
+// 今回受け取った画像12枚と録音音声3つだけを使用します。
+const cardData = [
+  {name:"りんご", image:"images/apple.png", category:"くだもの"},
+  {name:"ばなな", image:"images/banana.png", category:"くだもの"},
+  {name:"ぶどう", image:"images/grapes.png", category:"くだもの"},
+  {name:"いちご", image:"images/strawberry.png", category:"くだもの"},
+
+  {name:"いぬ", image:"images/dog.png", category:"どうぶつ"},
+  {name:"ねこ", image:"images/cat.png", category:"どうぶつ"},
+  {name:"ぞう", image:"images/elephant.png", category:"どうぶつ"},
+  {name:"きりん", image:"images/giraffe.png", category:"どうぶつ"},
+
+  {name:"くるま", image:"images/car.png", category:"のりもの"},
+  {name:"ばす", image:"images/bus.png", category:"のりもの"},
+  {name:"ふね", image:"images/ship.png", category:"のりもの"},
+  {name:"ひこうき", image:"images/airplane.png", category:"のりもの"}
+];
+
+const categoryAudio = {
+  "くだもの": "audio/fruits.m4a",
+  "どうぶつ": "audio/animals.m4a",
+  "のりもの": "audio/vehicles.m4a"
 };
-
-
-/* =====================================
-   ゲーム設定
-===================================== */
 
 const QUESTION_TOTAL = 10;
+const CORRECT_COUNT = 4;
 
-const levelSettings = {
-  1: { boardSize: 8, correctCount: 4 },
-  2: { boardSize: 12, correctCount: 4 },
-  3: { boardSize: 16, correctCount: 4 }
-};
-
-let currentLevel = 1;
 let questionIndex = 0;
 let score = 0;
-let selectedCards = [];
-let currentCorrectCards = [];
+let currentCategory = "";
+let selectedCount = 0;
+let locked = false;
 let startTime = 0;
 let timerInterval = null;
-let gameLocked = false;
 let elapsedSeconds = 0;
+let currentAudio = null;
 
-
-/* =====================================
-   共通処理
-===================================== */
+const startScreen = document.getElementById("startScreen");
+const gameScreen = document.getElementById("gameScreen");
+const resultScreen = document.getElementById("resultScreen");
+const audioStatus = document.getElementById("audioStatus");
 
 function shuffle(array) {
-  const result = [...array];
-
-  for (let i = result.length - 1; i > 0; i--) {
+  const copy = [...array];
+  for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
+    [copy[i], copy[j]] = [copy[j], copy[i]];
   }
-
-  return result;
+  return copy;
 }
 
 function formatTime(seconds) {
-  const minutes = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-
-  return String(minutes).padStart(2, "0") +
-    ":" +
-    String(secs).padStart(2, "0");
-}
-
-function speak(text) {
-  if (!("speechSynthesis" in window)) return;
-
-  window.speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "ja-JP";
-  utterance.rate = 0.85;
-
-  window.speechSynthesis.speak(utterance);
+  const min = Math.floor(seconds / 60);
+  const sec = seconds % 60;
+  return String(min).padStart(2,"0") + ":" + String(sec).padStart(2,"0");
 }
 
 function updateTimer() {
   elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-
-  document.getElementById("timer").textContent =
-    formatTime(elapsedSeconds);
+  document.getElementById("timer").textContent = formatTime(elapsedSeconds);
 }
 
+function playCategoryAudio() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+  }
+  currentAudio = new Audio(categoryAudio[currentCategory]);
+  currentAudio.preload = "auto";
+  audioStatus.textContent = "「" + currentCategory + "」の音声を再生します。";
+  const playPromise = currentAudio.play();
 
-/* =====================================
-   ゲーム開始
-===================================== */
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => {
+      // iPhone等で自動再生が制限された場合は、再生ボタンを案内する。
+      audioStatus.textContent = "音声を再生できない場合は「もういちど聞く」を押してください。";
+    });
+  }
+}
 
-function startGame(level) {
-
-  // iPhoneの音声機能を開始
-  initAudio();
-
-  currentLevel = level;
+function startGame() {
+  clearInterval(timerInterval);
   questionIndex = 0;
   score = 0;
   elapsedSeconds = 0;
-  selectedCards = [];
-  currentCorrectCards = [];
-  gameLocked = false;
+  selectedCount = 0;
+  locked = false;
 
-  clearInterval(timerInterval);
-
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("resultScreen").classList.add("hidden");
-  document.getElementById("gameScreen").classList.remove("hidden");
+  startScreen.classList.add("hidden");
+  resultScreen.classList.add("hidden");
+  gameScreen.classList.remove("hidden");
 
   document.getElementById("score").textContent = "0";
   document.getElementById("timer").textContent = "00:00";
 
   startTime = Date.now();
-
   timerInterval = setInterval(updateTimer, 500);
 
+  // スタートボタンを押した直後に最初の問題と音声を開始する。
   nextQuestion();
 }
 
-
-/* =====================================
-   次の問題を作る
-===================================== */
-
 function nextQuestion() {
-
   if (questionIndex >= QUESTION_TOTAL) {
     finishGame();
     return;
   }
 
-  gameLocked = false;
-  selectedCards = [];
+  locked = false;
+  selectedCount = 0;
 
-  const levelCategories = categoryLevels[currentLevel];
-  const settings = levelSettings[currentLevel];
+  const categories = ["くだもの", "どうぶつ", "のりもの"];
+  let nextCategory = categories[Math.floor(Math.random() * categories.length)];
 
-  const availableCategories = levelCategories.filter(category => {
-    return cards.filter(card =>
-      card.categories.includes(category)
-    ).length >= settings.correctCount;
-  });
-
-  if (availableCategories.length === 0) {
-    alert("出題できるカテゴリーがありません。");
-    backToStart();
-    return;
+  // 同じカテゴリーが続きにくいようにする。
+  if (nextCategory === currentCategory && Math.random() < 0.7) {
+    const others = categories.filter(c => c !== currentCategory);
+    nextCategory = others[Math.floor(Math.random() * others.length)];
   }
+  currentCategory = nextCategory;
 
-  const category = shuffle(availableCategories)[0];
-
-  // 正解カード
-  const correctPool = cards.filter(card =>
-    card.categories.includes(category)
-  );
-
-  currentCorrectCards = shuffle(correctPool)
-    .slice(0, settings.correctCount);
-
-  // 不正解カード
-  const correctSet = new Set(currentCorrectCards);
-
-  const wrongPool = cards.filter(card =>
-    !card.categories.includes(category) &&
-    !correctSet.has(card)
-  );
-
-  const wrongCount = settings.boardSize - settings.correctCount;
-
-  const wrongCards = shuffle(wrongPool).slice(0, wrongCount);
-
-  const board = shuffle([
-    ...currentCorrectCards,
-    ...wrongCards
-  ]);
-
+  document.getElementById("category").textContent = currentCategory;
   document.getElementById("questionCount").textContent =
     (questionIndex + 1) + " / " + QUESTION_TOTAL;
-
-  document.getElementById("category").textContent = category;
   document.getElementById("message").textContent = "";
   document.getElementById("score").textContent = score;
 
-  renderCards(board);
-
-  speak(category);
+  renderCards(shuffle(cardData));
+  playCategoryAudio();
 }
 
-
-/* =====================================
-   カード表示
-===================================== */
-
-function renderCards(board) {
-
+function renderCards(cards) {
   const grid = document.getElementById("cardGrid");
-
   grid.innerHTML = "";
 
-  board.forEach(card => {
-
+  cards.forEach(card => {
     const button = document.createElement("button");
-
+    button.type = "button";
     button.className = "card";
+    button.setAttribute("aria-label", card.name);
 
-    button.innerHTML = `
-      <span class="emoji">${card.emoji}</span>
-      <span class="word">${card.name}</span>
-    `;
+    const img = document.createElement("img");
+    img.src = card.image;
+    img.alt = card.name;
+    img.draggable = false;
 
-    button.onclick = () => selectCard(card, button);
+    const label = document.createElement("span");
+    label.className = "word";
+    label.textContent = card.name;
 
+    button.appendChild(img);
+    button.appendChild(label);
+    button.addEventListener("click", () => selectCard(card, button));
     grid.appendChild(button);
   });
 }
 
-
-/* =====================================
-   カード選択
-===================================== */
+function addMark(button, mark) {
+  const markElement = document.createElement("span");
+  markElement.className = "feedback-mark";
+  markElement.textContent = mark;
+  button.appendChild(markElement);
+}
 
 function selectCard(card, button) {
+  if (locked || button.disabled) return;
 
-  if (gameLocked) return;
-
-  if (button.classList.contains("selected")) return;
-
-  const isCorrect = card.categories.includes(
-    document.getElementById("category").textContent
-  );
-
-  if (!isCorrect) {
-    restartAfterMistake();
+  if (card.category !== currentCategory) {
+    handleWrong(button);
     return;
   }
 
-  // 正解音
-  playCorrectSound();
-
-  // 正解カードを選択
   button.classList.add("selected");
+  addMark(button, "○");
   button.disabled = true;
+  selectedCount++;
 
-  selectedCards.push(card);
-
-  // すべての正解を選んだか確認
-  if (selectedCards.length === currentCorrectCards.length) {
-
-    gameLocked = true;
-
+  if (selectedCount === CORRECT_COUNT) {
+    locked = true;
     score++;
-
-    document.getElementById("score").textContent = score;
-    document.getElementById("message").textContent = "せいかい！";
-
     questionIndex++;
+    document.getElementById("score").textContent = score;
+    document.getElementById("message").textContent = "○ せいかい！";
 
-    setTimeout(() => {
-      nextQuestion();
-    }, 800);
+    setTimeout(nextQuestion, 900);
   }
 }
 
+function handleWrong(button) {
+  locked = true;
+  button.classList.add("incorrect");
+  addMark(button, "×");
 
-/* =====================================
-   間違えた場合
-===================================== */
-
-function restartAfterMistake() {
-
-  if (gameLocked) return;
-
-  gameLocked = true;
-
-  // 不正解音
-  playWrongSound();
-
-  clearInterval(timerInterval);
-
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-
-  document.getElementById("message").textContent =
-    "もういちど はじめから！";
-
-  const buttons = document.querySelectorAll(".card");
-
-  buttons.forEach(button => {
-    button.disabled = true;
+  document.querySelectorAll(".card").forEach(card => {
+    card.disabled = true;
   });
 
-  setTimeout(() => {
-    startGame(currentLevel);
-  }, 1200);
+  clearInterval(timerInterval);
+  document.getElementById("message").textContent =
+    "× ちがうよ！さいしょから もういちど！";
+
+  setTimeout(startGame, 1300);
 }
 
-
-/* =====================================
-   ゲーム終了
-===================================== */
-
 function finishGame() {
-
   clearInterval(timerInterval);
   updateTimer();
 
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-
-  document.getElementById("gameScreen").classList.add("hidden");
-  document.getElementById("resultScreen").classList.remove("hidden");
+  gameScreen.classList.add("hidden");
+  resultScreen.classList.remove("hidden");
 
   document.getElementById("resultScore").textContent =
     "せいかい " + score + " / " + QUESTION_TOTAL + " もん";
-
-  document.getElementById("resultTime").textContent =
-    formatTime(elapsedSeconds);
-
-  // クリア音と「クリアー！」の音声
-  playClearSound();
-
-  setTimeout(() => {
-    speakClear();
-  }, 850);
+  document.getElementById("resultTime").textContent = formatTime(elapsedSeconds);
 }
-
-
-/* =====================================
-   結果コピー
-===================================== */
-
-function copyResults() {
-
-  const text =
-    "なかまわけゲーム\n" +
-    "レベル：" + ["", "初級", "中級", "上級"][currentLevel] + "\n" +
-    "せいかい：" + score + " / " + QUESTION_TOTAL + "\n" +
-    "じかん：" + formatTime(elapsedSeconds);
-
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text)
-      .then(() => alert("結果をコピーしました！"))
-      .catch(() => fallbackCopy(text));
-  } else {
-    fallbackCopy(text);
-  }
-}
-
-function fallbackCopy(text) {
-
-  const textarea = document.createElement("textarea");
-
-  textarea.value = text;
-  textarea.style.position = "fixed";
-  textarea.style.left = "-9999px";
-
-  document.body.appendChild(textarea);
-
-  textarea.select();
-
-  try {
-    document.execCommand("copy");
-    alert("結果をコピーしました！");
-  } catch (error) {
-    alert("コピーできませんでした。");
-  }
-
-  textarea.remove();
-}
-
-
-/* =====================================
-   レベル選択へ戻る
-===================================== */
 
 function backToStart() {
-
   clearInterval(timerInterval);
-
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-
-  document.getElementById("gameScreen").classList.add("hidden");
-  document.getElementById("resultScreen").classList.add("hidden");
-  document.getElementById("startScreen").classList.remove("hidden");
+  if (currentAudio) currentAudio.pause();
+  gameScreen.classList.add("hidden");
+  resultScreen.classList.add("hidden");
+  startScreen.classList.remove("hidden");
 }
 
+document.getElementById("startButton").addEventListener("click", startGame);
+document.getElementById("replayButton").addEventListener("click", playCategoryAudio);
+document.getElementById("againButton").addEventListener("click", startGame);
+document.getElementById("backButton").addEventListener("click", backToStart);
 </script>
 </body>
 </html>
