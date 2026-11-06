@@ -2,11 +2,19 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>はんたいむきゲーム｜ことばのヒミツ基地</title>
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+}
 
 body {
   margin: 0;
@@ -17,13 +25,22 @@ body {
   text-align: center;
 }
 
+button {
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 .container {
   width: 100%;
   max-width: 680px;
   margin: 0 auto;
 }
 
-header { margin: 5px 0 18px; }
+header {
+  margin: 5px 0 18px;
+}
 
 .site-name {
   color: #55b9b5;
@@ -51,8 +68,13 @@ h1 {
   box-shadow: 0 5px 0 #c9e4df;
 }
 
-.screen { display: none; }
-.screen.active { display: block; }
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
 
 h2 {
   margin: 4px 0 16px;
@@ -81,12 +103,6 @@ h2 {
   margin-top: 20px;
 }
 
-button {
-  font-family: inherit;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
 .level-button {
   border: 0;
   border-radius: 16px;
@@ -97,9 +113,17 @@ button {
   box-shadow: 0 4px 0 rgba(0,0,0,0.13);
 }
 
-.easy { background: #65bd83; }
-.normal { background: #edb94f; }
-.hard { background: #e98576; }
+.easy {
+  background: #65bd83;
+}
+
+.normal {
+  background: #edb94f;
+}
+
+.hard {
+  background: #e98576;
+}
 
 .level-note {
   display: block;
@@ -114,6 +138,8 @@ button {
   transform: translateY(3px);
   box-shadow: none;
 }
+
+/* ゲーム画面 */
 
 .status {
   display: flex;
@@ -161,6 +187,8 @@ button {
   margin: 8px 0;
 }
 
+/* 問題表示エリア */
+
 .arrow-area {
   background: #fff8e9;
   border-radius: 20px;
@@ -168,7 +196,6 @@ button {
   margin: 12px auto 18px;
 }
 
-/* 問題に表示する大きな矢印 */
 .big-arrow {
   height: 145px;
   display: flex;
@@ -181,9 +208,11 @@ button {
   width: 190px;
   height: 125px;
   fill: currentColor;
+  display: block;
 }
 
-/* 4つのボタン */
+/* 十字型ボタン */
+
 .direction-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -203,7 +232,6 @@ button {
   align-items: center;
   justify-content: center;
   padding: 12px;
-  touch-action: manipulation;
 }
 
 .direction-button svg {
@@ -211,16 +239,32 @@ button {
   height: 100%;
   max-width: 100px;
   fill: currentColor;
+  display: block;
 }
 
 .direction-button:active {
   background: #4c9fc1;
 }
 
-.up { grid-column: 2; grid-row: 1; }
-.left { grid-column: 1; grid-row: 2; }
-.right { grid-column: 3; grid-row: 2; }
-.down { grid-column: 2; grid-row: 3; }
+.up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.down {
+  grid-column: 2;
+  grid-row: 3;
+}
 
 .feedback {
   min-height: 32px;
@@ -229,9 +273,19 @@ button {
   font-weight: bold;
 }
 
-.feedback.correct { color: #36a66a; }
-.feedback.wrong { color: #e47768; }
-.feedback.timeout { color: #d69b35; }
+.feedback.correct {
+  color: #36a66a;
+}
+
+.feedback.wrong {
+  color: #e47768;
+}
+
+.feedback.timeout {
+  color: #d69b35;
+}
+
+/* 結果画面 */
 
 .main-button {
   border: 0;
@@ -260,7 +314,9 @@ button {
   background: #eff9f5;
 }
 
-.result-box.wrong-box { background: #fff1ed; }
+.result-box.wrong-box {
+  background: #fff1ed;
+}
 
 .result-box strong {
   display: block;
@@ -268,8 +324,13 @@ button {
   color: #43a77e;
 }
 
-.result-box.wrong-box strong { color: #df806f; }
-.result-box small { font-size: 15px; }
+.result-box.wrong-box strong {
+  color: #df806f;
+}
+
+.result-box small {
+  font-size: 15px;
+}
 
 .result-message {
   font-size: 20px;
@@ -277,28 +338,161 @@ button {
   margin: 18px 0;
 }
 
-@media (max-width: 420px) {
-  body { padding: 10px; }
-  .panel { padding: 17px 10px; }
+/* iPhone・スマートフォン用 */
 
-  .direction-grid {
-    grid-template-rows: repeat(3, 78px);
-    gap: 7px;
+@media (max-width: 600px) {
+
+  body {
+    padding: 10px;
   }
 
-  .big-arrow {
-    height: 125px;
+  body.game-active {
+    padding: 5px;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
   }
 
-  .big-arrow svg {
-    width: 165px;
-    height: 110px;
+  body.game-active .container {
+    height: 100%;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  body.game-active header {
+    display: none;
+  }
+
+  body.game-active .panel {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    padding: 8px;
+    border-radius: 18px;
+    box-shadow: 0 3px 0 #c9e4df;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body.game-active #gameScreen {
+    flex: 1;
+    min-height: 0;
+    display: none;
+    flex-direction: column;
+  }
+
+  body.game-active #gameScreen.active {
+    display: flex;
+  }
+
+  body.game-active .status {
+    flex-shrink: 0;
+    gap: 5px;
+    margin-bottom: 7px;
+  }
+
+  body.game-active .status-item {
+    padding: 6px 3px;
+    font-size: 12px;
+    border-radius: 9px;
+  }
+
+  body.game-active .status-item span {
+    font-size: 17px;
+    margin-top: 2px;
+  }
+
+  body.game-active .progress-outer {
+    flex-shrink: 0;
+    height: 8px;
+    margin: 7px 0 10px;
+  }
+
+  body.game-active .instruction {
+    flex-shrink: 0;
+    font-size: 14px;
+    margin: 5px 0;
+  }
+
+  body.game-active .arrow-area {
+    flex: 1;
+    min-height: 65px;
+    max-height: 130px;
+    padding: 4px;
+    margin: 7px auto 9px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body.game-active .big-arrow {
+    height: 100%;
+    width: 100%;
+  }
+
+  body.game-active .big-arrow svg {
+    width: min(115px, 32vw);
+    height: 85%;
+    max-height: 100px;
+  }
+
+  body.game-active .direction-grid {
+    flex-shrink: 0;
+    grid-template-rows: repeat(3, clamp(48px, 9dvh, 68px));
+    gap: 6px;
+    width: 100%;
+    max-width: 290px;
+    margin: 0 auto;
+  }
+
+  body.game-active .direction-button {
+    padding: 5px;
+    border-radius: 13px;
+    box-shadow: 0 4px 0 #4c91ae;
+  }
+
+  body.game-active .direction-button svg {
+    max-width: 65px;
+  }
+
+  body.game-active .feedback {
+    flex-shrink: 0;
+    min-height: 25px;
+    margin: 8px 0 0;
+    font-size: 17px;
+  }
+}
+
+/* 画面が低いスマートフォン向け */
+
+@media (max-width: 600px) and (max-height: 650px) {
+
+  body.game-active .direction-grid {
+    grid-template-rows: repeat(3, 46px);
+    max-width: 240px;
+  }
+
+  body.game-active .arrow-area {
+    max-height: 85px;
+  }
+
+  body.game-active .progress-outer {
+    margin: 4px 0 6px;
+  }
+
+  body.game-active .instruction {
+    margin: 3px 0;
   }
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
 <header>
@@ -309,7 +503,10 @@ button {
 
 <main class="panel">
 
+<!-- スタート画面 -->
+
 <section id="startScreen" class="screen active">
+
   <h2>あそびかた</h2>
 
   <div class="description">
@@ -327,6 +524,7 @@ button {
   <p class="description">むずかしさをえらんでね！</p>
 
   <div class="level-list">
+
     <button class="level-button easy" onclick="startGame('easy')">
       かんたん
       <span class="level-note">ゆっくり考えよう・2秒</span>
@@ -341,12 +539,18 @@ button {
       むずかしい
       <span class="level-note">すばやく答えよう・0.7秒</span>
     </button>
+
   </div>
+
 </section>
+
+
+<!-- ゲーム画面 -->
 
 <section id="gameScreen" class="screen">
 
   <div class="status">
+
     <div class="status-item">
       もんだい
       <span id="questionNumber">1 / 10</span>
@@ -361,6 +565,7 @@ button {
       のこり時間
       <span id="timeLeft">2.0</span>
     </div>
+
   </div>
 
   <div class="progress-outer">
@@ -371,46 +576,66 @@ button {
     矢印と はんたいの方向をおそう！
   </div>
 
+  <!-- 問題の矢印 -->
+
   <div class="arrow-area">
     <div class="big-arrow" id="bigArrow"></div>
   </div>
+
+  <!-- 4方向ボタン -->
 
   <div class="direction-grid">
 
     <button class="direction-button up"
       onclick="answer('up')" aria-label="上">
+
       <svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
         <path d="M10 40 H65 V15 L100 50 L65 85 V60 H10 Z"/>
       </svg>
+
     </button>
+
 
     <button class="direction-button left"
       onclick="answer('left')" aria-label="左">
+
       <svg viewBox="0 0 100 100" style="transform:rotate(180deg)">
         <path d="M10 40 H65 V15 L100 50 L65 85 V60 H10 Z"/>
       </svg>
+
     </button>
+
 
     <button class="direction-button right"
       onclick="answer('right')" aria-label="右">
+
       <svg viewBox="0 0 100 100">
         <path d="M10 40 H65 V15 L100 50 L65 85 V60 H10 Z"/>
       </svg>
+
     </button>
+
 
     <button class="direction-button down"
       onclick="answer('down')" aria-label="下">
+
       <svg viewBox="0 0 100 100" style="transform:rotate(90deg)">
         <path d="M10 40 H65 V15 L100 50 L65 85 V60 H10 Z"/>
       </svg>
+
     </button>
 
   </div>
 
   <div id="feedback" class="feedback" aria-live="polite"></div>
+
 </section>
 
+
+<!-- 結果画面 -->
+
 <section id="resultScreen" class="screen">
+
   <h2>よくがんばったね！</h2>
 
   <div class="result-message" id="resultMessage">
@@ -418,6 +643,7 @@ button {
   </div>
 
   <div class="result-number">
+
     <div class="result-box">
       <strong id="finalCorrect">0</strong>
       <small>せいかい</small>
@@ -427,6 +653,7 @@ button {
       <strong id="finalWrong">0</strong>
       <small>まちがい</small>
     </div>
+
   </div>
 
   <p id="resultDetail" class="description"></p>
@@ -434,25 +661,55 @@ button {
   <button class="main-button" onclick="backToStart()">
     もういちどあそぶ
   </button>
+
 </section>
 
 </main>
 </div>
 
+
 <script>
+
+/* 矢印の向きと正解 */
+
 const directions = {
-  up: { angle: -90, opposite: "down" },
-  down: { angle: 90, opposite: "up" },
-  left: { angle: 180, opposite: "right" },
-  right: { angle: 0, opposite: "left" }
+
+  up: {
+    angle: -90,
+    opposite: "down"
+  },
+
+  down: {
+    angle: 90,
+    opposite: "up"
+  },
+
+  left: {
+    angle: 180,
+    opposite: "right"
+  },
+
+  right: {
+    angle: 0,
+    opposite: "left"
+  }
+
 };
+
+
+/* ブロック型矢印 */
 
 const arrowShape = `
 <svg viewBox="0 0 100 100"
      style="transform:rotate({ANGLE}deg)"
      aria-hidden="true">
+
   <path d="M10 40 H65 V15 L100 50 L65 85 V60 H10 Z"/>
+
 </svg>`;
+
+
+/* 難易度ごとの制限時間 */
 
 const levels = {
   easy: 2000,
@@ -460,29 +717,49 @@ const levels = {
   hard: 700
 };
 
+
 let currentLevel = "easy";
 let questionIndex = 0;
 let correct = 0;
 let wrong = 0;
 let currentDirection = "";
+
 let questionTimer = null;
 let countdownTimer = null;
+
 let questionStart = 0;
 let acceptingAnswer = false;
 let questionDuration = 2000;
 
+
+/* 画面切り替え */
+
 function showScreen(id) {
+
   document.querySelectorAll(".screen").forEach(screen => {
     screen.classList.remove("active");
   });
+
   document.getElementById(id).classList.add("active");
+
+  if (id === "gameScreen") {
+    document.body.classList.add("game-active");
+  } else {
+    document.body.classList.remove("game-active");
+  }
+
 }
 
+
+/* ゲーム開始 */
+
 function startGame(level) {
+
   clearTimers();
 
   currentLevel = level;
   questionDuration = levels[level];
+
   questionIndex = 0;
   correct = 0;
   wrong = 0;
@@ -490,17 +767,29 @@ function startGame(level) {
   document.getElementById("correctCount").textContent = "0";
 
   showScreen("gameScreen");
+
   nextQuestion();
+
 }
+
+
+/* タイマー停止 */
 
 function clearTimers() {
+
   clearTimeout(questionTimer);
   clearInterval(countdownTimer);
+
   questionTimer = null;
   countdownTimer = null;
+
 }
 
+
+/* 次の問題 */
+
 function nextQuestion() {
+
   clearTimers();
 
   if (questionIndex >= 10) {
@@ -509,116 +798,199 @@ function nextQuestion() {
   }
 
   questionIndex++;
+
   acceptingAnswer = true;
 
   const keys = Object.keys(directions);
-  currentDirection = keys[Math.floor(Math.random() * keys.length)];
+
+  currentDirection =
+    keys[Math.floor(Math.random() * keys.length)];
+
 
   document.getElementById("questionNumber").textContent =
     questionIndex + " / 10";
 
+
   document.getElementById("bigArrow").innerHTML =
-    arrowShape.replace("{ANGLE}", directions[currentDirection].angle);
+    arrowShape.replace(
+      "{ANGLE}",
+      directions[currentDirection].angle
+    );
+
 
   document.getElementById("feedback").textContent = "";
-  document.getElementById("feedback").className = "feedback";
+
+  document.getElementById("feedback").className =
+    "feedback";
+
 
   document.getElementById("progressBar").style.width =
     ((questionIndex - 1) / 10 * 100) + "%";
 
+
   questionStart = Date.now();
+
   updateCountdown();
 
   countdownTimer = setInterval(updateCountdown, 50);
 
+
+  /* 時間切れ */
+
   questionTimer = setTimeout(() => {
+
     if (!acceptingAnswer) return;
 
     acceptingAnswer = false;
+
     wrong++;
 
-    document.getElementById("feedback").textContent = "じかんぎれ！";
+    document.getElementById("feedback").textContent =
+      "じかんぎれ！";
+
     document.getElementById("feedback").className =
       "feedback timeout";
 
     document.getElementById("timeLeft").textContent = "0.0";
 
     clearInterval(countdownTimer);
+
     setTimeout(nextQuestion, 450);
 
   }, questionDuration);
+
 }
 
+
+/* 残り時間の表示 */
+
 function updateCountdown() {
+
   if (!acceptingAnswer) return;
 
   const elapsed = Date.now() - questionStart;
-  const remaining = Math.max(0, questionDuration - elapsed);
+
+  const remaining = Math.max(
+    0,
+    questionDuration - elapsed
+  );
 
   document.getElementById("timeLeft").textContent =
     (remaining / 1000).toFixed(1);
+
 }
 
+
+/* 回答判定 */
+
 function answer(selected) {
+
   if (!acceptingAnswer) return;
 
   acceptingAnswer = false;
+
   clearTimers();
 
   const isCorrect =
     selected === directions[currentDirection].opposite;
 
-  const feedback = document.getElementById("feedback");
+  const feedback =
+    document.getElementById("feedback");
+
 
   if (isCorrect) {
+
     correct++;
+
     feedback.textContent = "せいかい！";
+
     feedback.className = "feedback correct";
+
   } else {
+
     wrong++;
+
     feedback.textContent = "ざんねん！";
+
     feedback.className = "feedback wrong";
+
   }
 
-  document.getElementById("correctCount").textContent = correct;
+
+  document.getElementById("correctCount").textContent =
+    correct;
+
   document.getElementById("timeLeft").textContent = "0.0";
 
+
   setTimeout(nextQuestion, 450);
+
 }
 
+
+/* 結果画面 */
+
 function finishGame() {
+
   clearTimers();
+
   acceptingAnswer = false;
 
-  document.getElementById("progressBar").style.width = "100%";
-  document.getElementById("finalCorrect").textContent = correct;
-  document.getElementById("finalWrong").textContent = wrong;
+  document.getElementById("progressBar").style.width =
+    "100%";
+
+
+  document.getElementById("finalCorrect").textContent =
+    correct;
+
+  document.getElementById("finalWrong").textContent =
+    wrong;
+
 
   if (correct === 10) {
+
     document.getElementById("resultMessage").textContent =
       "パーフェクト！すごいね！";
+
   } else if (correct >= 7) {
+
     document.getElementById("resultMessage").textContent =
       "すごい！よくできたね！";
+
   } else if (correct >= 4) {
+
     document.getElementById("resultMessage").textContent =
       "がんばったね！";
+
   } else {
+
     document.getElementById("resultMessage").textContent =
       "さいごまでチャレンジできたね！";
+
   }
+
 
   document.getElementById("resultDetail").textContent =
     "10もん中 " + correct + "もん せいかい！";
 
+
   showScreen("resultScreen");
+
 }
 
+
+/* 最初に戻る */
+
 function backToStart() {
+
   clearTimers();
+
   acceptingAnswer = false;
+
   showScreen("startScreen");
+
 }
+
 </script>
 
 </body>
