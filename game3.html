@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>はんたいむきゲーム｜ことばのヒミツ基地</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 18px;
+  font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+  background: #fff8e9;
+  color: #394454;
+  text-align: center;
+}
+.container {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+}
+header {
+  margin: 5px 0 18px;
+}
+.site-name {
+  color: #55b9b5;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+h1 {
+  margin: 8px 0;
+  color: #3d9f9b;
+  font-size: clamp(28px, 6vw, 40px);
+}
+.subtitle {
+  color: #7d8792;
+  font-size: 15px;
+}
+.panel {
+  background: #ffffff;
+  border: 3px solid #d9eeeb;
+  border-radius: 24px;
+  padding: 22px 16px;
+  box-shadow: 0 5px 0 #c9e4df;
+}
+.screen {
+  display: none;
+}
+.screen.active {
+  display: block;
+}
+h2 {
+  margin: 4px 0 16px;
+  color: #438f8d;
+  font-size: 23px;
+}
+.description {
+  line-height: 1.8;
+  font-size: 16px;
+  margin: 12px 0 20px;
+}
+.rule-box {
+  background: #f0faf7;
+  border-radius: 16px;
+  padding: 14px;
+  margin: 16px 0;
+  line-height: 1.9;
+  font-size: 15px;
+}
+.level-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.level-button {
+  border: 0;
+  border-radius: 16px;
+  padding: 16px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.13);
+}
+.easy { background: #65bd83; }
+.normal { background: #edb94f; }
+.hard { background: #e98576; }
+.level-button:active,
+.direction-button:active,
+.main-button:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+.level-note {
+  display: block;
+  font-size: 13px;
+  font-weight: normal;
+  margin-top: 4px;
+}
+.status {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.status-item {
+  flex: 1;
+  background: #f0f7fa;
+  border-radius: 12px;
+  padding: 10px 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.status-item span {
+  display: block;
+  color: #438f8d;
+  font-size: 20px;
+  margin-top: 3px;
+}
+.progress-outer {
+  height: 12px;
+  background: #e9eeee;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 12px 0 18px;
+}
+.progress-inner {
+  height: 100%;
+  width: 0%;
+  background: #69c4b5;
+  border-radius: 20px;
+  transition: width 0.2s;
+}
+.instruction {
+  font-size: 16px;
+  font-weight: bold;
+  color: #697783;
+  margin: 8px 0;
+}
+.arrow-area {
+  background: #fff8e9;
+  border-radius: 20px;
+  padding: 12px;
+  margin: 12px auto 18px;
+}
+.big-arrow {
+  height: 145px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #347eaa;
+  font-family: Arial, sans-serif;
+  font-size: 116px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 2px 3px 0 #d3e8f1;
+}
+.direction-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, 86px);
+  gap: 9px;
+  max-width: 390px;
+  margin: 0 auto;
+}
+.direction-button {
+  border: 0;
+  border-radius: 18px;
+  background: #69b8d7;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 62px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 5px 0 #428eae;
+  touch-action: manipulation;
+}
+.direction-button:active {
+  background: #4c9fc1;
+}
+.up { grid-column: 2; grid-row: 1; }
+.left { grid-column: 1; grid-row: 2; }
+.right { grid-column: 3; grid-row: 2; }
+.down { grid-column: 2; grid-row: 3; }
+.feedback {
+  min-height: 32px;
+  margin: 14px 0 0;
+  font-size: 21px;
+  font-weight: bold;
+}
+.feedback.correct { color: #36a66a; }
+.feedback.wrong { color: #e47768; }
+.feedback.timeout { color: #d69b35; }
+.main-button {
+  border: 0;
+  border-radius: 16px;
+  background: #55b9b5;
+  color: white;
+  font-size: 19px;
+  font-weight: bold;
+  padding: 15px 28px;
+  box-shadow: 0 4px 0 #378f8c;
+  margin-top: 14px;
+}
+.result-number {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin: 22px 0;
+}
+.result-box {
+  flex: 1;
+  max-width: 150px;
+  padding: 18px 8px;
+  border-radius: 18px;
+  background: #eff9f5;
+}
+.result-box.wrong-box {
+  background: #fff1ed;
+}
+.result-box strong {
+  display: block;
+  font-size: 38px;
+  color: #43a77e;
+}
+.result-box.wrong-box strong {
+  color: #df806f;
+}
+.result-box small {
+  font-size: 15px;
+}
+.result-message {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 18px 0;
+}
+@media (max-width: 420px) {
+  body { padding: 10px; }
+  .panel { padding: 17px 10px; }
+  .direction-grid {
+    grid-template-rows: repeat(3, 78px);
+    gap: 7px;
+  }
+  .direction-button { font-size: 55px; }
+  .big-arrow { height: 125px; font-size: 100px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="site-name">ことばのヒミツ基地</div>
+    <h1>はんたいむきゲーム</h1>
+    <div class="subtitle">矢印と反対の方向をおしてみよう！</div>
+  </header>
+
+  <main class="panel">
+    <section id="startScreen" class="screen active">
+      <h2>あそびかた</h2>
+      <div class="description">
+        画面に出てくる矢印を見て、<br>
+        <strong>反対の方向のボタン</strong>をおそう！
+      </div>
+      <div class="rule-box">
+        ↑ が出たら　↓ をおす<br>
+        ↓ が出たら　↑ をおす<br>
+        ← が出たら　→ をおす<br>
+        → が出たら　← をおす
+      </div>
+      <p class="description">むずかしさをえらんでね！</p>
+      <div class="level-list">
+        <button class="level-button easy" onclick="startGame('easy')">
+          かんたん
+          <span class="level-note">ゆっくり考えよう・2秒</span>
+        </button>
+        <button class="level-button normal" onclick="startGame('normal')">
+          ふつう
+          <span class="level-note">すばやく答えよう・1.2秒</span>
+        </button>
+        <button class="level-button hard" onclick="startGame('hard')">
+          むずかしい
+          <span class="level-note">すばやく答えよう・0.7秒</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="status">
+        <div class="status-item">もんだい<span id="questionNumber">1 / 10</span></div>
+        <div class="status-item">せいかい<span id="correctCount">0</span></div>
+        <div class="status-item">のこり時間<span id="timeLeft">2.0</span></div>
+      </div>
+      <div class="progress-outer">
+        <div class="progress-inner" id="progressBar"></div>
+      </div>
+      <div class="instruction">矢印と はんたいの方向をおそう！</div>
+      <div class="arrow-area">
+        <div class="big-arrow" id="bigArrow">↑</div>
+      </div>
+      <div class="direction-grid">
+        <button class="direction-button up" onclick="answer('up')" aria-label="上">↑</button>
+        <button class="direction-button left" onclick="answer('left')" aria-label="左">←</button>
+        <button class="direction-button right" onclick="answer('right')" aria-label="右">→</button>
+        <button class="direction-button down" onclick="answer('down')" aria-label="下">↓</button>
+      </div>
+      <div id="feedback" class="feedback" aria-live="polite"></div>
+    </section>
+
+    <section id="resultScreen" class="screen">
+      <h2>よくがんばったね！</h2>
+      <div class="result-message" id="resultMessage">チャレンジ終了！</div>
+      <div class="result-number">
+        <div class="result-box">
+          <strong id="finalCorrect">0</strong>
+          <small>せいかい</small>
+        </div>
+        <div class="result-box wrong-box">
+          <strong id="finalWrong">0</strong>
+          <small>まちがい</small>
+        </div>
+      </div>
+      <p id="resultDetail" class="description"></p>
+      <button class="main-button" onclick="backToStart()">もういちどあそぶ</button>
+    </section>
+  </main>
+</div>
+
+<script>
+const directions = {
+  up: { symbol: "↑", opposite: "down" },
+  down: { symbol: "↓", opposite: "up" },
+  left: { symbol: "←", opposite: "right" },
+  right: { symbol: "→", opposite: "left" }
+};
+
+const levels = {
+  easy: 2000,
+  normal: 1200,
+  hard: 700
+};
+
+let currentLevel = "easy";
+let questionIndex = 0;
+let correct = 0;
+let wrong = 0;
+let currentDirection = "";
+let questionTimer = null;
+let countdownTimer = null;
+let questionStart = 0;
+let acceptingAnswer = false;
+let questionDuration = 2000;
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
+  document.getElementById(id).classList.add("active");
+}
+
+function startGame(level) {
+  clearTimers();
+  currentLevel = level;
+  questionDuration = levels[level];
+  questionIndex = 0;
+  correct = 0;
+  wrong = 0;
+  document.getElementById("correctCount").textContent = "0";
+  showScreen("gameScreen");
+  nextQuestion();
+}
+
+function clearTimers() {
+  clearTimeout(questionTimer);
+  clearInterval(countdownTimer);
+  questionTimer = null;
+  countdownTimer = null;
+}
+
+function nextQuestion() {
+  clearTimers();
+
+  if (questionIndex >= 10) {
+    finishGame();
+    return;
+  }
+
+  questionIndex++;
+  acceptingAnswer = true;
+
+  const keys = Object.keys(directions);
+  currentDirection = keys[Math.floor(Math.random() * keys.length)];
+
+  document.getElementById("questionNumber").textContent =
+    questionIndex + " / 10";
+  document.getElementById("bigArrow").textContent =
+    directions[currentDirection].symbol;
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("progressBar").style.width =
+    ((questionIndex - 1) / 10 * 100) + "%";
+
+  questionStart = Date.now();
+  updateCountdown();
+
+  countdownTimer = setInterval(updateCountdown, 50);
+
+  questionTimer = setTimeout(() => {
+    if (!acceptingAnswer) return;
+    acceptingAnswer = false;
+    wrong++;
+    document.getElementById("feedback").textContent = "じかんぎれ！";
+    document.getElementById("feedback").className = "feedback timeout";
+    document.getElementById("timeLeft").textContent = "0.0";
+    clearInterval(countdownTimer);
+    setTimeout(nextQuestion, 450);
+  }, questionDuration);
+}
+
+function updateCountdown() {
+  if (!acceptingAnswer) return;
+  const elapsed = Date.now() - questionStart;
+  const remaining = Math.max(0, questionDuration - elapsed);
+  document.getElementById("timeLeft").textContent =
+    (remaining / 1000).toFixed(1);
+}
+
+function answer(selected) {
+  if (!acceptingAnswer) return;
+
+  acceptingAnswer = false;
+  clearTimers();
+
+  const isCorrect = selected === directions[currentDirection].opposite;
+  const feedback = document.getElementById("feedback");
+
+  if (isCorrect) {
+    correct++;
+    feedback.textContent = "せいかい！";
+    feedback.className = "feedback correct";
+  } else {
+    wrong++;
+    feedback.textContent = "ざんねん！";
+    feedback.className = "feedback wrong";
+  }
+
+  document.getElementById("correctCount").textContent = correct;
+  document.getElementById("timeLeft").textContent = "0.0";
+
+  setTimeout(nextQuestion, 450);
+}
+
+function finishGame() {
+  clearTimers();
+  acceptingAnswer = false;
+
+  document.getElementById("progressBar").style.width = "100%";
+  document.getElementById("finalCorrect").textContent = correct;
+  document.getElementById("finalWrong").textContent = wrong;
+
+  if (correct === 10) {
+    document.getElementById("resultMessage").textContent =
+      "パーフェクト！すごいね！";
+  } else if (correct >= 7) {
+    document.getElementById("resultMessage").textContent =
+      "すごい！よくできたね！";
+  } else if (correct >= 4) {
+    document.getElementById("resultMessage").textContent =
+      "がんばったね！";
+  } else {
+    document.getElementById("resultMessage").textContent =
+      "さいごまでチャレンジできたね！";
+  }
+
+  document.getElementById("resultDetail").textContent =
+    "10もん中 " + correct + "もん せいかい！";
+
+  showScreen("resultScreen");
+}
+
+function backToStart() {
+  clearTimers();
+  acceptingAnswer = false;
+  showScreen("startScreen");
+}
+</script>
+</body>
+</html>
