@@ -802,7 +802,7 @@ h2 {
 <header>
   <div class="site-name">ことばのヒミツ基地</div>
   <h1>はんたいむきゲーム</h1>
-  <div class="subtitle">矢印と反対の方向をおしてみよう！</div>
+  <div class="subtitle">青は同じ向き・赤は反対の向き！</div>
 </header>
 
 <main class="panel">
@@ -811,15 +811,12 @@ h2 {
   <h2>あそびかた</h2>
 
   <div class="description">
-    画面に出てくる矢印を見て、<br>
-    <strong>反対の方向のボタン</strong>をおそう！
+    矢印の<strong>色</strong>を見て、ルールに合った方向のボタンをおそう！
   </div>
 
   <div class="rule-box">
-    ↑ が出たら　↓ をおす<br>
-    ↓ が出たら　↑ をおす<br>
-    ← が出たら　→ をおす<br>
-    → が出たら　← をおす
+    <strong style="color:#347eaa;">● 青い矢印</strong>：同じ向きのボタンをおす<br>
+    <strong style="color:#e45b59;">● 赤い矢印</strong>：反対の向きのボタンをおす
   </div>
 
   <p class="description">むずかしさをえらんでね！</p>
@@ -872,7 +869,7 @@ h2 {
     <div class="progress-inner" id="progressBar"></div>
   </div>
 
-  <div class="instruction">矢印と はんたいの方向をおそう！</div>
+  <div class="instruction">青は同じ向き・赤は反対の向き！</div>
 
   <div class="arrow-area">
     <div class="big-arrow blue" id="bigArrow"></div>
@@ -971,10 +968,12 @@ let questionIndex = 0;
 let correct = 0;
 let wrong = 0;
 let currentDirection = "";
+let currentColor = "blue";
 
 let questionTimer = null;
 let countdownTimer = null;
 let countdownInterval = null;
+let transitionTimer = null;
 let bgmInterval = null;
 
 let questionStart = 0;
@@ -1172,10 +1171,12 @@ function clearTimers() {
   clearTimeout(questionTimer);
   clearInterval(countdownTimer);
   clearInterval(countdownInterval);
+  clearTimeout(transitionTimer);
 
   questionTimer = null;
   countdownTimer = null;
   countdownInterval = null;
+  transitionTimer = null;
 }
 
 /* ゲーム開始 */
@@ -1274,28 +1275,20 @@ function nextQuestion() {
   }
 
   questionIndex++;
-  acceptingAnswer = true;
+  acceptingAnswer = false;
 
   const keys = Object.keys(directions);
-
-  currentDirection =
-    keys[Math.floor(Math.random()*keys.length)];
+  currentDirection = keys[Math.floor(Math.random()*keys.length)];
+  currentColor = questionIndex % 2 === 1 ? "blue" : "red";
 
   document.getElementById("questionNumber").textContent =
     questionIndex + " / 10";
 
   const arrow = document.getElementById("bigArrow");
 
-  arrow.innerHTML = arrowShape.replace(
-    "{ANGLE}",
-    directions[currentDirection].angle
-  );
-
-  arrow.classList.remove("blue","red");
-
-  arrow.classList.add(
-    questionIndex % 2 === 1 ? "blue" : "red"
-  );
+  // 切り替わりを分かりやすくするため、次の矢印を出す前に一瞬消す
+  arrow.innerHTML = "";
+  arrow.classList.remove("blue", "red");
 
   document.getElementById("feedback").textContent = "";
   document.getElementById("feedback").className = "feedback";
@@ -1303,33 +1296,41 @@ function nextQuestion() {
   document.getElementById("progressBar").style.width =
     ((questionIndex-1)/10*100) + "%";
 
-  questionStart = Date.now();
+  // 180ミリ秒の空白のあと、新しい矢印を表示して制限時間を開始
+  transitionTimer = setTimeout(() => {
+    arrow.innerHTML = arrowShape.replace(
+      "{ANGLE}",
+      directions[currentDirection].angle
+    );
+    arrow.classList.add(currentColor);
 
-  updateCountdown();
-  countdownTimer = setInterval(updateCountdown,50);
+    acceptingAnswer = true;
+    questionStart = Date.now();
 
-  questionTimer = setTimeout(() => {
-    if (!acceptingAnswer) return;
+    document.getElementById("timeLeft").textContent =
+      (questionDuration/1000).toFixed(1);
 
-    acceptingAnswer = false;
-    wrong++;
+    updateCountdown();
+    countdownTimer = setInterval(updateCountdown, 50);
 
-    document.getElementById("feedback").textContent =
-      "じかんぎれ！";
+    questionTimer = setTimeout(() => {
+      if (!acceptingAnswer) return;
 
-    document.getElementById("feedback").className =
-      "feedback timeout";
+      acceptingAnswer = false;
+      wrong++;
 
-    document.getElementById("timeLeft").textContent = "0.0";
+      document.getElementById("feedback").textContent =
+        "じかんぎれ！";
+      document.getElementById("feedback").className =
+        "feedback timeout";
+      document.getElementById("timeLeft").textContent = "0.0";
 
-    clearInterval(countdownTimer);
+      clearInterval(countdownTimer);
+      playTimeoutSound();
 
-    // 時間切れ音
-    playTimeoutSound();
-
-    questionTimer = setTimeout(nextQuestion,450);
-
-  },questionDuration);
+      questionTimer = setTimeout(nextQuestion, 450);
+    }, questionDuration);
+  }, 180);
 }
 
 /* 残り時間 */
@@ -1358,8 +1359,11 @@ function answer(selected) {
   clearTimeout(questionTimer);
   clearInterval(countdownTimer);
 
-  const isCorrect =
-    selected === directions[currentDirection].opposite;
+  const correctDirection = currentColor === "blue"
+    ? currentDirection
+    : directions[currentDirection].opposite;
+
+  const isCorrect = selected === correctDirection;
 
   const feedback = document.getElementById("feedback");
 
