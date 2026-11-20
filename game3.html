@@ -627,6 +627,162 @@ h2 {
   }
 }
 
+
+
+/* タブレット・PC：ゲーム中も画面内に収める */
+@media (min-width:601px) {
+  body.game-active {
+    height:100vh;
+    height:100dvh;
+    overflow:hidden;
+    padding:0;
+  }
+
+  body.game-active .container {
+    height:100%;
+    height:100dvh;
+    max-width:900px;
+    padding:8px 12px;
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+
+  body.game-active header {
+    display:none;
+  }
+
+  body.game-active .panel {
+    flex:1;
+    min-height:0;
+    height:100%;
+    padding:10px 14px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  body.game-active #gameScreen {
+    flex:1;
+    min-height:0;
+    display:none;
+    flex-direction:column;
+  }
+
+  body.game-active #gameScreen.active {
+    display:flex;
+  }
+
+  body.game-active .game-top {
+    flex-shrink:0;
+    margin-bottom:5px;
+  }
+
+  body.game-active .back-button,
+  body.game-active .music-button {
+    padding:6px 10px;
+    font-size:13px;
+  }
+
+  body.game-active .status {
+    flex-shrink:0;
+    margin-bottom:5px;
+  }
+
+  body.game-active .status-item {
+    padding:5px 3px;
+  }
+
+  body.game-active .status-item span {
+    font-size:19px;
+  }
+
+  body.game-active .progress-outer {
+    flex-shrink:0;
+    margin:5px 0;
+  }
+
+  body.game-active .instruction {
+    flex-shrink:0;
+    margin:4px 0;
+    font-size:14px;
+  }
+
+  body.game-active .arrow-area {
+    flex:1;
+    min-height:75px;
+    max-height:150px;
+    width:100%;
+    margin:5px auto 8px;
+  }
+
+  body.game-active .big-arrow svg {
+    width:min(38%,190px);
+    height:75%;
+  }
+
+  body.game-active .direction-grid {
+    flex-shrink:0;
+    grid-template-rows:repeat(3,clamp(42px,6.5dvh,58px));
+    gap:6px;
+    max-width:330px;
+  }
+
+  body.game-active .direction-button {
+    border-radius:13px;
+    box-shadow:0 4px 0 #4c91ae;
+  }
+
+  body.game-active .direction-button svg {
+    max-width:58px;
+  }
+
+  body.game-active .feedback {
+    flex-shrink:0;
+    min-height:21px;
+    margin:6px 0 0;
+    font-size:15px;
+  }
+}
+
+/* iPadなど高さが限られる画面では、さらに縦の余白を縮める */
+@media (min-width:601px) and (max-height:800px) {
+  body.game-active .container {
+    padding:5px 10px;
+  }
+
+  body.game-active .panel {
+    padding:7px 10px;
+  }
+
+  body.game-active .status-item {
+    padding:4px 2px;
+    font-size:11px;
+  }
+
+  body.game-active .status-item span {
+    font-size:17px;
+  }
+
+  body.game-active .arrow-area {
+    min-height:55px;
+    max-height:115px;
+    margin:3px auto 6px;
+  }
+
+  body.game-active .direction-grid {
+    grid-template-rows:repeat(3,clamp(36px,5.8dvh,48px));
+    gap:5px;
+    max-width:300px;
+  }
+
+  body.game-active .feedback {
+    min-height:18px;
+    margin-top:4px;
+    font-size:14px;
+  }
+}
+
 </style>
 </head>
 
