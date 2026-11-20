@@ -210,6 +210,18 @@ canvas {
   border-radius: 10px;
 }
 
+.next-question-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 18px auto 4px;
+}
+
+.next-question-button {
+  min-width: 210px;
+  padding: 13px 24px;
+  font-size: 1rem;
+}
+
 .score-display {
   display: flex;
   align-items: center;
@@ -526,7 +538,11 @@ footer {
           </div>
 
         </div>
-</div>
+
+        <div class="next-question-wrap">
+          <button class="primary next-question-button" id="nextQuestionButton">つぎの もんだいへ</button>
+        </div>
+      </div>
 
     </section>
 
@@ -585,7 +601,6 @@ let drawing = false;
 let totalScore = 0;
 let roundScores = [];
 let currentScore = 0;
-let advanceTimer = null;
 let questionLocked = false;
 
 function setupCanvas(canvas, ctx) {
@@ -799,11 +814,6 @@ function fitBoardPoint(canvas, e) {
 }
 
 function newQuestion() {
-  if (advanceTimer) {
-    clearTimeout(advanceTimer);
-    advanceTimer = null;
-  }
-
   questionLocked = false;
 
   document.getElementById("done").disabled = false;
@@ -1194,6 +1204,10 @@ function done() {
   document.getElementById("scoreDisplay").textContent =
     `${currentScore}点！`;
 
+  // 次の問題へ進む操作は子ども自身が行う
+  document.getElementById("nextQuestionButton").textContent =
+    question >= 5 ? "けっかを みる" : "つぎの もんだいへ";
+
   // 描画画面用の案内文は答え合わせ中には表示しない
   document.getElementById("feedback").textContent = "";
 
@@ -1209,19 +1223,20 @@ function done() {
     "mine"
   );
 
-  advanceTimer = setTimeout(() => {
-    advanceTimer = null;
+}
 
-    if (question >= 5) {
-      finishGame();
-    } else {
-      newQuestion();
-    }
+function goToNextQuestion() {
+  if (!questionLocked) return;
 
-  }, 3000);
+  if (question >= 5) {
+    finishGame();
+  } else {
+    newQuestion();
+  }
 }
 
 document.getElementById("done").onclick = done;
+document.getElementById("nextQuestionButton").onclick = goToNextQuestion;
 
 /* 結果画面 */
 function finishGame() {
