@@ -1,9 +1,6 @@
 
 
 
-
-
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -123,7 +120,7 @@ main {
   width: 100%;
   height: clamp(180px, 31vh, 280px);
   position: relative;
-  border: 0;
+  border: 2px dashed #cbd8e8;
   border-radius: 13px;
   overflow: hidden;
   background: #fff;
@@ -262,7 +259,7 @@ footer {
 /* スマートフォン */
 @media (max-width: 699px) {
   header {
-    padding: 3px 8px 1px;
+    padding: 2px 8px 0;
   }
 
   h1 {
@@ -270,13 +267,9 @@ footer {
     margin: 0;
   }
 
-  .sub {
-    font-size: .73rem;
-    margin: 1px 0;
-  }
 
   main {
-    padding: 3px 7px 10px;
+    padding: 2px 7px 76px;
   }
 
   .topbar {
@@ -303,7 +296,7 @@ footer {
 
   /* 見本と描画欄の高さを同じにする */
   #workArea > .panel .canvas-wrap {
-    height: 250px;
+    height: 220px;
   }
 
   .actions {
@@ -316,13 +309,21 @@ footer {
     font-size: .78rem;
   }
 
-  .controls {
-    margin-top: 5px;
+  /* 「できた！」を画面下に固定し、Safariの下部バーに隠れにくくする */
+  #workControls {
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+    margin: 8px -7px 0;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    background: linear-gradient(to bottom, rgba(243,247,255,.88), #f3f7ff 35%);
+    border-top: 1px solid #d7e1ef;
   }
 
-  .controls button {
-    padding: 9px 18px;
-    font-size: .9rem;
+  #workControls button {
+    min-width: 190px;
+    padding: 11px 20px;
+    font-size: .95rem;
   }
 
   .feedback {
@@ -349,7 +350,13 @@ footer {
 /* 小さいスマートフォン */
 @media (max-width: 380px) {
   #workArea > .panel .canvas-wrap {
-    height: 230px;
+    height: 205px;
+  }
+}
+
+@media (max-height: 700px) and (max-width: 699px) {
+  #workArea > .panel .canvas-wrap {
+    height: 200px;
   }
 }
 
@@ -438,7 +445,6 @@ footer {
 
 <header>
   <h1>ずけいをまねしてかこう！</h1>
-  <p class="sub">おてほんをよくみて、したにかいてみよう</p>
 </header>
 
 <main>
