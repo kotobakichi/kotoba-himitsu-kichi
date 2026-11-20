@@ -7,608 +7,561 @@
 <title>はんたいむきゲーム｜ことばのヒミツ基地</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 :root {
-  --cream: #fff8e9;
-  --teal: #55a6a4;
-  --border: #d9eeeb;
-  --text: #394454;
-  --blue: #347eaa;
-  --red: #e45b59;
+  --cream:#fff8e9;
+  --teal:#55a6a4;
+  --border:#d9eeeb;
+  --text:#394454;
+  --blue:#347eaa;
+  --red:#e45b59;
 }
 
-html, body {
-  margin: 0;
-  width: 100%;
-  min-height: 100%;
+html,body {
+  margin:0;
+  width:100%;
+  min-height:100%;
 }
 
 body {
-  background: var(--cream);
-  color: var(--text);
-  font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
-  text-align: center;
-  -webkit-text-size-adjust: 100%;
+  background:var(--cream);
+  color:var(--text);
+  font-family:"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  text-align:center;
+  -webkit-text-size-adjust:100%;
 }
 
 button {
-  font: inherit;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+  font:inherit;
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
 }
 
 .container {
-  width: 100%;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 12px;
+  width:100%;
+  max-width:680px;
+  margin:0 auto;
+  padding:12px;
 }
 
-header {
-  margin: 4px 0 14px;
-}
+header { margin:4px 0 14px; }
 
 .site-name {
-  color: var(--teal);
-  font-size: 14px;
-  font-weight: bold;
-  letter-spacing: 1px;
+  color:var(--teal);
+  font-size:14px;
+  font-weight:bold;
+  letter-spacing:1px;
 }
 
 h1 {
-  color: #3d9f9b;
-  font-size: clamp(26px, 6vw, 40px);
-  margin: 7px 0;
+  color:#3d9f9b;
+  font-size:clamp(26px,6vw,40px);
+  margin:7px 0;
 }
 
 .subtitle {
-  color: #7d8792;
-  font-size: 15px;
+  color:#7d8792;
+  font-size:15px;
 }
 
 .panel {
-  background: white;
-  border: 3px solid var(--border);
-  border-radius: 24px;
-  padding: 20px 16px;
-  box-shadow: 0 5px 0 #c9e4df;
+  background:white;
+  border:3px solid var(--border);
+  border-radius:24px;
+  padding:20px 16px;
+  box-shadow:0 5px 0 #c9e4df;
 }
 
-.screen {
-  display: none;
-}
-
-.screen.active {
-  display: block;
-}
+.screen { display:none; }
+.screen.active { display:block; }
 
 h2 {
-  color: #438f8d;
-  font-size: 23px;
-  margin: 4px 0 12px;
+  color:#438f8d;
+  font-size:23px;
+  margin:4px 0 12px;
 }
 
 .description {
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 10px 0 14px;
+  font-size:16px;
+  line-height:1.6;
+  margin:10px 0 14px;
 }
 
 .rule-box {
-  background: #f0faf7;
-  border-radius: 16px;
-  padding: 10px;
-  margin: 12px 0;
-  line-height: 1.7;
-  font-size: 15px;
+  background:#f0faf7;
+  border-radius:16px;
+  padding:10px;
+  margin:12px 0;
+  line-height:1.7;
+  font-size:15px;
 }
 
 .level-list {
-  display: grid;
-  gap: 10px;
-  margin-top: 12px;
+  display:grid;
+  gap:10px;
+  margin-top:12px;
 }
 
 .level-button {
-  border: 0;
-  border-radius: 16px;
-  padding: 12px 10px;
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-  box-shadow: 0 4px 0 rgba(0,0,0,.13);
+  border:0;
+  border-radius:16px;
+  padding:12px 10px;
+  color:white;
+  font-size:20px;
+  font-weight:bold;
+  box-shadow:0 4px 0 rgba(0,0,0,.13);
 }
 
-.easy { background: #65bd83; }
-.normal { background: #edb94f; }
-.hard { background: #e98576; }
+.easy { background:#65bd83; }
+.normal { background:#edb94f; }
+.hard { background:#e98576; }
 
 .level-note {
-  display: block;
-  font-size: 13px;
-  font-weight: normal;
-  margin-top: 3px;
+  display:block;
+  font-size:13px;
+  font-weight:normal;
+  margin-top:3px;
 }
 
 .level-button:active,
 .direction-button:active,
 .main-button:active,
 .back-button:active {
-  transform: translateY(2px);
+  transform:translateY(2px);
 }
 
 /* ゲーム画面 */
 
+#gameScreen { position:relative; }
+
 .game-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
 }
 
 .game-label {
-  color: var(--teal);
-  font-size: 13px;
-  font-weight: bold;
+  color:var(--teal);
+  font-size:13px;
+  font-weight:bold;
+}
+
+.top-buttons {
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.back-button,.music-button {
+  flex-shrink:0;
+  border:0;
+  border-radius:12px;
+  padding:8px 11px;
+  font-size:14px;
+  font-weight:bold;
 }
 
 .back-button {
-  flex-shrink: 0;
-  border: 0;
-  border-radius: 12px;
-  background: #edf5f5;
-  color: #438f8d;
-  padding: 8px 13px;
-  font-size: 14px;
-  font-weight: bold;
+  background:#edf5f5;
+  color:#438f8d;
+}
+
+.music-button {
+  background:#fff2d8;
+  color:#9a6a20;
 }
 
 .status {
-  display: flex;
-  gap: 7px;
-  margin-bottom: 8px;
+  display:flex;
+  gap:7px;
+  margin-bottom:8px;
 }
 
 .status-item {
-  flex: 1;
-  min-width: 0;
-  background: #f0f7fa;
-  border-radius: 12px;
-  padding: 7px 3px;
-  font-size: 12px;
-  font-weight: bold;
+  flex:1;
+  min-width:0;
+  background:#f0f7fa;
+  border-radius:12px;
+  padding:7px 3px;
+  font-size:12px;
+  font-weight:bold;
 }
 
 .status-item span {
-  display: block;
-  color: #438f8d;
-  font-size: 20px;
-  margin-top: 2px;
+  display:block;
+  color:#438f8d;
+  font-size:20px;
+  margin-top:2px;
 }
 
 .progress-outer {
-  height: 8px;
-  background: #e9eeee;
-  border-radius: 20px;
-  overflow: hidden;
-  margin: 8px 0;
+  height:8px;
+  background:#e9eeee;
+  border-radius:20px;
+  overflow:hidden;
+  margin:8px 0;
 }
 
 .progress-inner {
-  height: 100%;
-  width: 0;
-  background: #69c4b5;
-  border-radius: 20px;
-  transition: width .2s;
+  height:100%;
+  width:0;
+  background:#69c4b5;
+  border-radius:20px;
+  transition:width .2s;
 }
 
 .instruction {
-  font-size: 15px;
-  font-weight: bold;
-  color: #697783;
-  margin: 7px 0;
+  font-size:15px;
+  font-weight:bold;
+  color:#697783;
+  margin:7px 0;
 }
 
-/* 太い矢印 */
+/* 矢印 */
 
 .arrow-area {
-  background: var(--cream);
-  border-radius: 20px;
-  height: clamp(105px, 23dvh, 190px);
-  margin: 8px auto 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color .12s;
+  background:var(--cream);
+  border-radius:20px;
+  height:clamp(105px,23dvh,190px);
+  margin:8px auto 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .big-arrow {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .big-arrow svg {
-  width: min(48%, 220px);
-  height: 78%;
-  fill: currentColor;
-  display: block;
+  width:min(48%,220px);
+  height:78%;
+  fill:currentColor;
+  display:block;
 }
 
-.big-arrow.blue {
-  color: var(--blue);
-}
+.big-arrow.blue { color:var(--blue); }
+.big-arrow.red { color:var(--red); }
 
-.big-arrow.red {
-  color: var(--red);
-}
-
-/* 十字型の4方向ボタン */
+/* 4方向ボタン */
 
 .direction-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(3, clamp(55px, 10dvh, 86px));
-  gap: 7px;
-  width: 100%;
-  max-width: 390px;
-  margin: 0 auto;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:repeat(3,clamp(55px,10dvh,86px));
+  gap:7px;
+  width:100%;
+  max-width:390px;
+  margin:0 auto;
 }
 
 .direction-button {
-  border: 0;
-  border-radius: 16px;
-  background: #79b6d0;
-  color: white;
-  box-shadow: 0 5px 0 #4c91ae;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px;
-  min-width: 0;
-  min-height: 0;
+  border:0;
+  border-radius:16px;
+  background:#79b6d0;
+  color:white;
+  box-shadow:0 5px 0 #4c91ae;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px;
+  min-width:0;
+  min-height:0;
 }
 
 .direction-button svg {
-  width: 76%;
-  height: 76%;
-  max-width: 75px;
-  fill: currentColor;
-  display: block;
+  width:76%;
+  height:76%;
+  max-width:75px;
+  fill:currentColor;
+  display:block;
 }
 
-.up {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.left {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.right {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.down {
-  grid-column: 2;
-  grid-row: 3;
-}
+.up { grid-column:2; grid-row:1; }
+.left { grid-column:1; grid-row:2; }
+.right { grid-column:3; grid-row:2; }
+.down { grid-column:2; grid-row:3; }
 
 .feedback {
-  min-height: 24px;
-  margin: 9px 0 0;
-  font-size: 17px;
-  font-weight: bold;
+  min-height:24px;
+  margin:9px 0 0;
+  font-size:17px;
+  font-weight:bold;
 }
 
-.feedback.correct { color: #36a66a; }
-.feedback.wrong { color: #e47768; }
-.feedback.timeout { color: #d69b35; }
+.feedback.correct { color:#36a66a; }
+.feedback.wrong { color:#e47768; }
+.feedback.timeout { color:#d69b35; }
+
+/* カウントダウン */
+
+.countdown-overlay {
+  display:none;
+  position:absolute;
+  inset:0;
+  z-index:10;
+  background:rgba(255,248,233,.94);
+  border-radius:20px;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  pointer-events:none;
+}
+
+.countdown-overlay.active { display:flex; }
+
+.countdown-number {
+  color:#3d9f9b;
+  font-size:clamp(90px,22vw,150px);
+  font-weight:900;
+  line-height:1;
+  animation:countPop .45s ease-out;
+  text-shadow:3px 4px 0 #d9eeeb;
+}
+
+.countdown-text {
+  color:#438f8d;
+  font-size:clamp(24px,6vw,36px);
+  font-weight:900;
+  margin-top:15px;
+}
+
+@keyframes countPop {
+  0% { transform:scale(.5); opacity:0; }
+  70% { transform:scale(1.15); opacity:1; }
+  100% { transform:scale(1); opacity:1; }
+}
 
 /* 結果画面 */
 
 .main-button {
-  border: 0;
-  border-radius: 16px;
-  background: #55b9b5;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 13px 24px;
-  box-shadow: 0 4px 0 #378f8c;
-  margin-top: 12px;
+  border:0;
+  border-radius:16px;
+  background:#55b9b5;
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  padding:13px 24px;
+  box-shadow:0 4px 0 #378f8c;
+  margin-top:12px;
 }
 
 .result-number {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin: 18px 0;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin:18px 0;
 }
 
 .result-box {
-  flex: 1;
-  max-width: 150px;
-  padding: 14px 8px;
-  border-radius: 18px;
-  background: #eff9f5;
+  flex:1;
+  max-width:150px;
+  padding:14px 8px;
+  border-radius:18px;
+  background:#eff9f5;
 }
 
-.result-box.wrong-box {
-  background: #fff1ed;
-}
+.result-box.wrong-box { background:#fff1ed; }
 
 .result-box strong {
-  display: block;
-  font-size: 36px;
-  color: #43a77e;
+  display:block;
+  font-size:36px;
+  color:#43a77e;
 }
 
-.result-box.wrong-box strong {
-  color: #df806f;
-}
-
-.result-box small {
-  font-size: 14px;
-}
+.result-box.wrong-box strong { color:#df806f; }
+.result-box small { font-size:14px; }
 
 .result-message {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 14px 0;
+  font-size:20px;
+  font-weight:bold;
+  margin:14px 0;
 }
 
-/* BGM切り替えボタン */
-.music-button {
-  flex-shrink: 0;
-  border: 0;
-  border-radius: 12px;
-  background: #fff2d8;
-  color: #9a6a20;
-  padding: 8px 11px;
-  font-size: 14px;
-  font-weight: bold;
-}
+/* スマートフォン */
 
-/* スマートフォン：最初の画面を縦画面内に収める */
-
-@media (max-width: 600px) {
-  .container {
-    padding: 8px;
-  }
-
-  header {
-    margin: 2px 0 8px;
-  }
-
-  h1 {
-    font-size: clamp(25px, 7vw, 34px);
-    margin: 4px 0;
-  }
-
-  .subtitle {
-    font-size: 13px;
-  }
-
-  .panel {
-    padding: 14px 12px;
-    border-radius: 20px;
-  }
+@media(max-width:600px) {
+  .container { padding:8px; }
+  header { margin:2px 0 8px; }
+  h1 { font-size:clamp(25px,7vw,34px); margin:4px 0; }
+  .subtitle { font-size:13px; }
+  .panel { padding:14px 12px; border-radius:20px; }
 
   #startScreen h2 {
-    font-size: 20px;
-    margin: 0 0 7px;
+    font-size:20px;
+    margin:0 0 7px;
   }
 
   #startScreen .description {
-    font-size: 14px;
-    line-height: 1.45;
-    margin: 6px 0;
+    font-size:14px;
+    line-height:1.45;
+    margin:6px 0;
   }
 
   #startScreen .rule-box {
-    font-size: 13px;
-    line-height: 1.45;
-    padding: 7px;
-    margin: 7px 0;
+    font-size:13px;
+    line-height:1.45;
+    padding:7px;
+    margin:7px 0;
   }
 
   #startScreen .level-list {
-    gap: 8px;
-    margin-top: 7px;
+    gap:8px;
+    margin-top:7px;
   }
 
   #startScreen .level-button {
-    padding: 9px 8px;
-    font-size: 18px;
-    border-radius: 13px;
+    padding:9px 8px;
+    font-size:18px;
+    border-radius:13px;
   }
 
   #startScreen .level-note {
-    font-size: 12px;
-    margin-top: 2px;
+    font-size:12px;
+    margin-top:2px;
   }
 
   body.game-active {
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    padding: 0;
+    height:100vh;
+    height:100dvh;
+    overflow:hidden;
+    padding:0;
   }
 
   body.game-active .container {
-    height: 100%;
-    height: 100dvh;
-    max-width: none;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
+    height:100%;
+    height:100dvh;
+    max-width:none;
+    padding:5px;
+    display:flex;
+    flex-direction:column;
+    min-height:0;
   }
 
-  body.game-active header {
-    display: none;
-  }
+  body.game-active header { display:none; }
 
   body.game-active .panel {
-    flex: 1;
-    min-height: 0;
-    height: 100%;
-    padding: 7px;
-    border-radius: 18px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    flex:1;
+    min-height:0;
+    height:100%;
+    padding:7px;
+    border-radius:18px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
   }
 
   body.game-active #gameScreen {
-    flex: 1;
-    min-height: 0;
-    display: none;
-    flex-direction: column;
+    flex:1;
+    min-height:0;
+    display:none;
+    flex-direction:column;
   }
 
-  body.game-active #gameScreen.active {
-    display: flex;
-  }
+  body.game-active #gameScreen.active { display:flex; }
 
   body.game-active .game-top {
-    flex-shrink: 0;
-    margin-bottom: 5px;
+    flex-shrink:0;
+    margin-bottom:5px;
   }
 
-  body.game-active .back-button {
-    padding: 6px 11px;
-    font-size: 13px;
-  }
-
+  body.game-active .back-button,
   body.game-active .music-button {
-    padding: 6px 9px;
-    font-size: 12px;
+    padding:6px 9px;
+    font-size:12px;
   }
 
   body.game-active .status {
-    flex-shrink: 0;
-    gap: 5px;
-    margin-bottom: 5px;
+    flex-shrink:0;
+    gap:5px;
+    margin-bottom:5px;
   }
 
   body.game-active .status-item {
-    padding: 5px 2px;
-    font-size: 11px;
-    border-radius: 9px;
+    padding:5px 2px;
+    font-size:11px;
+    border-radius:9px;
   }
 
-  body.game-active .status-item span {
-    font-size: 18px;
-  }
+  body.game-active .status-item span { font-size:18px; }
 
   body.game-active .progress-outer {
-    flex-shrink: 0;
-    margin: 5px 0;
+    flex-shrink:0;
+    margin:5px 0;
   }
 
   body.game-active .instruction {
-    flex-shrink: 0;
-    font-size: 13px;
-    margin: 4px 0;
+    flex-shrink:0;
+    font-size:13px;
+    margin:4px 0;
   }
 
   body.game-active .arrow-area {
-    flex: 1;
-    min-height: 70px;
-    max-height: 190px;
-    margin: 5px auto 8px;
-    width: 100%;
+    flex:1;
+    min-height:70px;
+    max-height:190px;
+    margin:5px auto 8px;
+    width:100%;
   }
 
   body.game-active .big-arrow svg {
-    width: min(55%, 190px);
-    height: 78%;
+    width:min(55%,190px);
+    height:78%;
   }
 
   body.game-active .direction-grid {
-    flex-shrink: 0;
-    grid-template-rows: repeat(3, clamp(43px, 8.5dvh, 68px));
-    gap: 6px;
-    max-width: 290px;
+    flex-shrink:0;
+    grid-template-rows:repeat(3,clamp(43px,8.5dvh,68px));
+    gap:6px;
+    max-width:290px;
   }
 
   body.game-active .direction-button {
-    border-radius: 13px;
-    box-shadow: 0 4px 0 #4c91ae;
+    border-radius:13px;
+    box-shadow:0 4px 0 #4c91ae;
   }
 
-  body.game-active .direction-button svg {
-    max-width: 65px;
-  }
+  body.game-active .direction-button svg { max-width:65px; }
 
   body.game-active .feedback {
-    flex-shrink: 0;
-    min-height: 22px;
-    margin: 7px 0 0;
-    font-size: 16px;
+    flex-shrink:0;
+    min-height:22px;
+    margin:7px 0 0;
+    font-size:16px;
   }
+
+  body.game-active .countdown-overlay { border-radius:18px; }
 }
 
-/* 高さの低いスマートフォン */
-
-@media (max-width: 600px) and (max-height: 720px) {
-  .container {
-    padding: 5px;
-  }
-
-  header {
-    margin: 0 0 5px;
-  }
-
-  .site-name {
-    font-size: 12px;
-  }
-
-  h1 {
-    font-size: 25px;
-    margin: 2px 0;
-  }
-
-  .subtitle {
-    font-size: 12px;
-  }
-
-  .panel {
-    padding: 9px;
-  }
+@media(max-width:600px) and (max-height:720px) {
+  .container { padding:5px; }
+  header { margin:0 0 5px; }
+  .site-name { font-size:12px; }
+  h1 { font-size:25px; margin:2px 0; }
+  .subtitle { font-size:12px; }
+  .panel { padding:9px; }
 
   #startScreen .rule-box {
-    line-height: 1.35;
-    margin: 5px 0;
+    line-height:1.35;
+    margin:5px 0;
   }
 
-  #startScreen .description {
-    margin: 4px 0;
-  }
+  #startScreen .description { margin:4px 0; }
+  #startScreen .level-button { padding:7px; }
 
-  #startScreen .level-button {
-    padding: 7px;
-  }
-
-  body.game-active .arrow-area {
-    max-height: 140px;
-  }
+  body.game-active .arrow-area { max-height:140px; }
 
   body.game-active .direction-grid {
-    grid-template-rows: repeat(3,  min(8dvh, 53px));
-    max-width: 250px;
+    grid-template-rows:repeat(3,min(8dvh,53px));
+    max-width:250px;
   }
 }
 </style>
@@ -624,8 +577,6 @@ h2 {
 </header>
 
 <main class="panel">
-
-<!-- 難易度選択画面 -->
 
 <section id="startScreen" class="screen active">
   <h2>あそびかた</h2>
@@ -662,14 +613,13 @@ h2 {
   </div>
 </section>
 
-<!-- ゲーム画面 -->
-
 <section id="gameScreen" class="screen">
 
   <div class="game-top">
     <div class="game-label">はんたいむきゲーム</div>
-    <div style="display:flex;align-items:center;gap:6px">
-      <button class="music-button" id="musicToggle" type="button" onclick="toggleMusic()">♪ 音楽 ON</button>
+    <div class="top-buttons">
+      <button class="music-button" id="musicToggle"
+        type="button" onclick="toggleMusic()">♪ 音楽 ON</button>
       <button class="back-button" onclick="backToStart()">← もどる</button>
     </div>
   </div>
@@ -679,12 +629,10 @@ h2 {
       もんだい
       <span id="questionNumber">1 / 10</span>
     </div>
-
     <div class="status-item">
       せいかい
       <span id="correctCount">0</span>
     </div>
-
     <div class="status-item">
       のこり時間
       <span id="timeLeft">2.0</span>
@@ -734,9 +682,13 @@ h2 {
   </div>
 
   <div id="feedback" class="feedback" aria-live="polite"></div>
-</section>
 
-<!-- 結果画面 -->
+  <div id="countdownOverlay" class="countdown-overlay">
+    <div id="countdownNumber" class="countdown-number">3</div>
+    <div class="countdown-text">じゅんびはいい？</div>
+  </div>
+
+</section>
 
 <section id="resultScreen" class="screen">
   <h2>よくがんばったね！</h2>
@@ -767,10 +719,10 @@ h2 {
 
 <script>
 const directions = {
-  up:    { angle: -90, opposite: "down" },
-  down:  { angle: 90,  opposite: "up" },
-  left:  { angle: 180, opposite: "right" },
-  right: { angle: 0,   opposite: "left" }
+  up:    { angle:-90, opposite:"down" },
+  down:  { angle:90, opposite:"up" },
+  left:  { angle:180, opposite:"right" },
+  right: { angle:0, opposite:"left" }
 };
 
 const arrowShape = `
@@ -780,9 +732,9 @@ const arrowShape = `
 </svg>`;
 
 const levels = {
-  easy: 2000,
-  normal: 1200,
-  hard: 700
+  easy:2000,
+  normal:1200,
+  hard:700
 };
 
 let currentLevel = "easy";
@@ -790,78 +742,117 @@ let questionIndex = 0;
 let correct = 0;
 let wrong = 0;
 let currentDirection = "";
+
 let questionTimer = null;
 let countdownTimer = null;
-let transitionTimer = null;
+let countdownInterval = null;
+let bgmInterval = null;
+
 let questionStart = 0;
 let acceptingAnswer = false;
 let questionDuration = 2000;
 
-// 明るく弾むオリジナルBGM（Web Audioで生成）
 let audioContext = null;
-let bgmInterval = null;
 let musicEnabled = true;
 
+/* BGMメロディ */
+
 const melodyNotes = [
-  [659.25, 0], [783.99, 0.32], [880.00, 0.64], [783.99, 0.96],
-  [659.25, 1.28], [523.25, 1.60], [587.33, 1.92], [659.25, 2.24],
-  [783.99, 2.56], [880.00, 2.88], [1046.50, 3.20], [880.00, 3.52],
-  [783.99, 3.84], [659.25, 4.16], [587.33, 4.48], [523.25, 4.80]
+  [659.25,0],[783.99,.32],[880,.64],[783.99,.96],
+  [659.25,1.28],[523.25,1.60],[587.33,1.92],[659.25,2.24],
+  [783.99,2.56],[880,2.88],[1046.50,3.20],[880,3.52],
+  [783.99,3.84],[659.25,4.16],[587.33,4.48],[523.25,4.80]
 ];
 
-function playTone(frequency, startTime, duration, type, volume) {
-  if (!audioContext) return;
+function prepareAudio() {
+  try {
+    const AudioContextClass =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) return;
+
+    if (!audioContext) {
+      audioContext = new AudioContextClass();
+    }
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume().catch(() => {});
+    }
+  } catch(error) {}
+}
+
+function playTone(frequency,startTime,duration,type,volume) {
+  if (!audioContext || audioContext.state !== "running") return;
+
   const oscillator = audioContext.createOscillator();
   const gain = audioContext.createGain();
+
   oscillator.type = type;
-  oscillator.frequency.setValueAtTime(frequency, startTime);
-  gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.025);
-  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  oscillator.frequency.setValueAtTime(frequency,startTime);
+
+  gain.gain.setValueAtTime(.0001,startTime);
+  gain.gain.exponentialRampToValueAtTime(
+    volume,startTime+.025
+  );
+  gain.gain.exponentialRampToValueAtTime(
+    .0001,startTime+duration
+  );
+
   oscillator.connect(gain);
   gain.connect(audioContext.destination);
+
   oscillator.start(startTime);
-  oscillator.stop(startTime + duration + 0.03);
+  oscillator.stop(startTime+duration+.03);
 }
+
+/* 楽しいBGM */
 
 function playBgmPhrase() {
   if (!audioContext || !musicEnabled) return;
-  const start = audioContext.currentTime + 0.05;
 
-  // 軽やかな高音のメロディ
-  melodyNotes.forEach(([frequency, offset]) => {
-    playTone(frequency, start + offset, 0.25, "triangle", 0.045);
+  const start = audioContext.currentTime + .05;
+
+  melodyNotes.forEach(([frequency,offset]) => {
+    playTone(frequency,start+offset,.25,"triangle",.045);
   });
 
-  // 明るい和音と低音の伴奏
   const chords = [
-    { time: 0, notes: [261.63, 329.63, 392.00], bass: 130.81 },
-    { time: 1.28, notes: [349.23, 440.00, 523.25], bass: 174.61 },
-    { time: 2.56, notes: [392.00, 493.88, 587.33], bass: 196.00 },
-    { time: 3.84, notes: [329.63, 392.00, 493.88], bass: 164.81 }
+    {time:0,notes:[261.63,329.63,392],bass:130.81},
+    {time:1.28,notes:[349.23,440,523.25],bass:174.61},
+    {time:2.56,notes:[392,493.88,587.33],bass:196},
+    {time:3.84,notes:[329.63,392,493.88],bass:164.81}
   ];
 
   chords.forEach(chord => {
-    playTone(chord.bass, start + chord.time, 0.48, "sine", 0.035);
-    chord.notes.forEach((frequency, index) => {
-      playTone(frequency, start + chord.time + index * 0.035, 0.32, "sine", 0.012);
+    playTone(chord.bass,start+chord.time,.48,"sine",.035);
+
+    chord.notes.forEach((frequency,index) => {
+      playTone(
+        frequency,
+        start+chord.time+index*.035,
+        .32,
+        "sine",
+        .012
+      );
     });
   });
 }
 
 async function startBgm() {
   if (!musicEnabled) return;
+
+  prepareAudio();
+
   try {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) return;
-    if (!audioContext) audioContext = new AudioContextClass();
-    if (audioContext.state === "suspended") await audioContext.resume();
+    if (audioContext.state === "suspended") {
+      await audioContext.resume();
+    }
+
     stopBgmTimer();
     playBgmPhrase();
-    bgmInterval = setInterval(playBgmPhrase, 5120);
-  } catch (error) {
-    // 音声に対応していない環境でもゲームは通常どおり遊べる
-  }
+
+    bgmInterval = setInterval(playBgmPhrase,5120);
+  } catch(error) {}
 }
 
 function stopBgmTimer() {
@@ -873,21 +864,65 @@ function stopBgmTimer() {
 
 function stopBgm() {
   stopBgmTimer();
+
   if (audioContext && audioContext.state === "running") {
     audioContext.suspend().catch(() => {});
   }
 }
 
+/* 正解音：ピロリン */
+
+function playCorrectSound() {
+  if (!audioContext || audioContext.state !== "running") return;
+
+  const start = audioContext.currentTime + .02;
+
+  playTone(659.25,start,.16,"sine",.09);
+  playTone(783.99,start+.13,.18,"sine",.09);
+  playTone(1046.50,start+.27,.28,"sine",.10);
+}
+
+/* 不正解音：やさしいブブッ */
+
+function playWrongSound() {
+  if (!audioContext || audioContext.state !== "running") return;
+
+  const start = audioContext.currentTime + .02;
+
+  playTone(330,start,.13,"triangle",.07);
+  playTone(247,start+.14,.18,"triangle",.07);
+}
+
+/* 時間切れ音：ポーン */
+
+function playTimeoutSound() {
+  if (!audioContext || audioContext.state !== "running") return;
+
+  const start = audioContext.currentTime + .02;
+
+  playTone(392,start,.35,"sine",.07);
+}
+
+/* 音楽ON・OFF */
+
 function toggleMusic() {
   musicEnabled = !musicEnabled;
+
   const button = document.getElementById("musicToggle");
-  if (button) button.textContent = musicEnabled ? "♪ 音楽 ON" : "♪ 音楽 OFF";
-  if (musicEnabled && document.getElementById("gameScreen").classList.contains("active")) {
+
+  button.textContent = musicEnabled
+    ? "♪ 音楽 ON"
+    : "♪ 音楽 OFF";
+
+  if (musicEnabled &&
+      document.getElementById("gameScreen").classList.contains("active")) {
     startBgm();
   } else {
     stopBgm();
   }
 }
+
+/* 画面切り替え */
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(screen => {
@@ -896,38 +931,110 @@ function showScreen(id) {
 
   document.getElementById(id).classList.add("active");
 
-  document.body.classList.toggle("game-active", id === "gameScreen");
+  document.body.classList.toggle(
+    "game-active",
+    id === "gameScreen"
+  );
 }
+
+/* タイマー停止 */
 
 function clearTimers() {
   clearTimeout(questionTimer);
   clearInterval(countdownTimer);
-  clearTimeout(transitionTimer);
+  clearInterval(countdownInterval);
 
   questionTimer = null;
   countdownTimer = null;
-  transitionTimer = null;
+  countdownInterval = null;
 }
+
+/* ゲーム開始 */
 
 function startGame(level) {
   clearTimers();
+  stopBgm();
+
+  prepareAudio();
 
   currentLevel = level;
   questionDuration = levels[level];
+
   questionIndex = 0;
   correct = 0;
   wrong = 0;
   acceptingAnswer = false;
 
   document.getElementById("correctCount").textContent = "0";
+
   document.getElementById("timeLeft").textContent =
-    (questionDuration / 1000).toFixed(1);
+    (questionDuration/1000).toFixed(1);
+
   document.getElementById("progressBar").style.width = "0%";
+  document.getElementById("questionNumber").textContent = "1 / 10";
 
   showScreen("gameScreen");
-  if (musicEnabled) startBgm();
-  nextQuestion();
+
+  startCountdown();
 }
+
+/* 3・2・1・スタート */
+
+function startCountdown() {
+  const overlay = document.getElementById("countdownOverlay");
+  const number = document.getElementById("countdownNumber");
+
+  let count = 3;
+
+  overlay.classList.add("active");
+
+  number.textContent = "3";
+  number.style.animation = "none";
+  void number.offsetWidth;
+  number.style.animation = "";
+
+  countdownInterval = setInterval(() => {
+
+    if (count > 1) {
+      count--;
+
+      number.textContent = count;
+      number.style.animation = "none";
+      void number.offsetWidth;
+      number.style.animation = "";
+
+    } else if (count === 1) {
+      count = 0;
+
+      number.textContent = "スタート！";
+      number.style.fontSize = "clamp(55px,14vw,90px)";
+      number.style.animation = "none";
+      void number.offsetWidth;
+      number.style.animation = "";
+
+      document.querySelector(".countdown-text").textContent =
+        "がんばってね！";
+
+    } else {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+
+      overlay.classList.remove("active");
+
+      number.style.fontSize = "";
+
+      document.querySelector(".countdown-text").textContent =
+        "じゅんびはいい？";
+
+      if (musicEnabled) startBgm();
+
+      nextQuestion();
+    }
+
+  },1000);
+}
+
+/* 次の問題 */
 
 function nextQuestion() {
   clearTimers();
@@ -941,7 +1048,9 @@ function nextQuestion() {
   acceptingAnswer = true;
 
   const keys = Object.keys(directions);
-  currentDirection = keys[Math.floor(Math.random() * keys.length)];
+
+  currentDirection =
+    keys[Math.floor(Math.random()*keys.length)];
 
   document.getElementById("questionNumber").textContent =
     questionIndex + " / 10";
@@ -953,19 +1062,22 @@ function nextQuestion() {
     directions[currentDirection].angle
   );
 
-  // 1問目は青、2問目は赤。その後も青・赤を交互にする
-  arrow.classList.remove("blue", "red");
-  arrow.classList.add(questionIndex % 2 === 1 ? "blue" : "red");
+  arrow.classList.remove("blue","red");
+
+  arrow.classList.add(
+    questionIndex % 2 === 1 ? "blue" : "red"
+  );
 
   document.getElementById("feedback").textContent = "";
   document.getElementById("feedback").className = "feedback";
 
   document.getElementById("progressBar").style.width =
-    ((questionIndex - 1) / 10 * 100) + "%";
+    ((questionIndex-1)/10*100) + "%";
 
   questionStart = Date.now();
+
   updateCountdown();
-  countdownTimer = setInterval(updateCountdown, 50);
+  countdownTimer = setInterval(updateCountdown,50);
 
   questionTimer = setTimeout(() => {
     if (!acceptingAnswer) return;
@@ -973,29 +1085,47 @@ function nextQuestion() {
     acceptingAnswer = false;
     wrong++;
 
-    document.getElementById("feedback").textContent = "じかんぎれ！";
-    document.getElementById("feedback").className = "feedback timeout";
+    document.getElementById("feedback").textContent =
+      "じかんぎれ！";
+
+    document.getElementById("feedback").className =
+      "feedback timeout";
+
     document.getElementById("timeLeft").textContent = "0.0";
 
     clearInterval(countdownTimer);
-    transitionTimer = setTimeout(nextQuestion, 450);
-  }, questionDuration);
+
+    // 時間切れ音
+    playTimeoutSound();
+
+    questionTimer = setTimeout(nextQuestion,450);
+
+  },questionDuration);
 }
+
+/* 残り時間 */
 
 function updateCountdown() {
   if (!acceptingAnswer) return;
 
-  const elapsed = Date.now() - questionStart;
-  const remaining = Math.max(0, questionDuration - elapsed);
+  const elapsed = Date.now()-questionStart;
+
+  const remaining = Math.max(
+    0,
+    questionDuration-elapsed
+  );
 
   document.getElementById("timeLeft").textContent =
-    (remaining / 1000).toFixed(1);
+    (remaining/1000).toFixed(1);
 }
+
+/* 回答 */
 
 function answer(selected) {
   if (!acceptingAnswer) return;
 
   acceptingAnswer = false;
+
   clearTimeout(questionTimer);
   clearInterval(countdownTimer);
 
@@ -1006,40 +1136,57 @@ function answer(selected) {
 
   if (isCorrect) {
     correct++;
+
     feedback.textContent = "せいかい！";
     feedback.className = "feedback correct";
+
+    playCorrectSound();
+
   } else {
     wrong++;
+
     feedback.textContent = "ざんねん！";
     feedback.className = "feedback wrong";
+
+    playWrongSound();
   }
 
-  document.getElementById("correctCount").textContent = correct;
+  document.getElementById("correctCount").textContent =
+    correct;
+
   document.getElementById("timeLeft").textContent = "0.0";
 
-  transitionTimer = setTimeout(nextQuestion, 350);
+  questionTimer = setTimeout(nextQuestion,350);
 }
+
+/* 結果 */
 
 function finishGame() {
   clearTimers();
+
   acceptingAnswer = false;
   stopBgm();
 
   document.getElementById("progressBar").style.width = "100%";
+
   document.getElementById("finalCorrect").textContent = correct;
   document.getElementById("finalWrong").textContent = wrong;
+
   document.getElementById("resultDetail").textContent =
     "10もん中 " + correct + "もん せいかい！";
 
   if (correct === 10) {
     document.getElementById("resultMessage").textContent =
       "パーフェクト！すごいね！";
+
   } else if (correct >= 7) {
     document.getElementById("resultMessage").textContent =
       "すごい！よくできたね！";
+
   } else if (correct >= 4) {
     document.getElementById("resultMessage").textContent =
       "がんばったね！";
+
   } else {
     document.getElementById("resultMessage").textContent =
       "さいごまでチャレンジできたね！";
@@ -1048,10 +1195,20 @@ function finishGame() {
   showScreen("resultScreen");
 }
 
+/* 最初に戻る */
+
 function backToStart() {
   clearTimers();
+
   acceptingAnswer = false;
   stopBgm();
+
+  document.getElementById("countdownOverlay").classList.remove("active");
+  document.getElementById("countdownNumber").style.fontSize = "";
+
+  document.querySelector(".countdown-text").textContent =
+    "じゅんびはいい？";
+
   showScreen("startScreen");
 }
 </script>
