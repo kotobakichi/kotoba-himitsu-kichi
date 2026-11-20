@@ -172,12 +172,6 @@ canvas {
   color: var(--navy);
 }
 
-.compare-note {
-  text-align: center;
-  color: #63768c;
-  font-size: .88rem;
-  margin: 8px 0 0;
-}
 
 .hidden {
   display: none !important;
@@ -213,21 +207,17 @@ canvas {
   border-radius: 10px;
 }
 
-.legend {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  font-size: .82rem;
-  margin-top: 8px;
+.score-display {
+  text-align: center;
+  color: var(--navy);
+  font-size: clamp(1.65rem, 7vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+  padding: 2px 0;
 }
 
-.dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 5px;
-}
+
 
 footer {
   text-align: center;
@@ -339,10 +329,6 @@ footer {
 
   .compare-canvas {
     height: 190px;
-  }
-
-  .compare-note {
-    font-size: .76rem;
   }
 }
 
@@ -505,11 +491,6 @@ footer {
       <div class="panel">
         <h2>おてほんと くらべてみよう</h2>
 
-        <p class="compare-note">
-          青がおてほん、オレンジがじぶんの線です。
-          重ねて、形や大きさ、位置を見てみよう。
-        </p>
-
         <div class="compare-grid">
 
           <div class="compare-card">
@@ -517,22 +498,16 @@ footer {
             <canvas id="overlay" class="compare-canvas"></canvas>
           </div>
 
+          <div id="scoreDisplay" class="score-display" aria-live="polite">0点！</div>
+
           <div class="compare-card">
             <h3>じぶんが かいた図</h3>
             <canvas id="mine" class="compare-canvas"></canvas>
           </div>
 
         </div>
+</div>
 
-        <div class="legend">
-          <span><i class="dot" style="background:#3478c8"></i>おてほん</span>
-          <span><i class="dot" style="background:#ed8a32"></i>じぶん</span>
-        </div>
-      </div>
-
-      <p class="feedback" id="autoNextMessage">
-        3びょうごに つぎの もんだいへ すすむよ！
-      </p>
     </section>
 
   </section>
@@ -1195,17 +1170,12 @@ function done() {
   document.getElementById("workArea").classList.add("hidden");
   document.getElementById("workControls").classList.add("hidden");
 
-  const feedback = document.getElementById("feedback");
+  // 点数は2つの図のちょうど間に大きく表示
+  document.getElementById("scoreDisplay").textContent =
+    `${currentScore}点！`;
 
-  feedback.textContent =
-    `今回の点数は ${currentScore}点！ ${
-      correct
-        ? "せいかい！ よくできたね！"
-        : "もうすこし！ おてほんをよくみてみよう。"
-    }`;
-
-  document.getElementById("autoNextMessage").textContent =
-    "3びょうごに つぎの もんだいへ すすむよ！";
+  // 描画画面用の案内文は答え合わせ中には表示しない
+  document.getElementById("feedback").textContent = "";
 
   playResultSound(correct);
 
