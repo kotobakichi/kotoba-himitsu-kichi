@@ -179,9 +179,11 @@ canvas {
 
 .compare-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin-top: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 540px;
+  margin: 12px auto 0;
 }
 
 .compare-card {
@@ -208,13 +210,19 @@ canvas {
 }
 
 .score-display {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  min-width: 150px;
+  padding: 9px 28px;
+  border-radius: 16px;
+  background: #eaf1fa;
   color: var(--navy);
-  font-size: clamp(1.65rem, 7vw, 2.25rem);
+  font-size: clamp(1.8rem, 4vw, 2.35rem);
   font-weight: 800;
   line-height: 1.2;
   margin: 0;
-  padding: 2px 0;
 }
 
 
@@ -234,10 +242,6 @@ footer {
 
   .canvas-wrap {
     height: clamp(260px, 48vh, 430px);
-  }
-
-  .compare-grid {
-    grid-template-columns: 1fr 1fr;
   }
 
   .compare-canvas {
@@ -752,7 +756,7 @@ function renderSample() {
 
   clearCanvas(sample, sctx);
   drawGuide(sctx, w, h);
-  drawShape(sctx, target, w, h);
+  drawShape(sctx, target, w, h, "#3478c8", 7);
 }
 
 function renderDraw() {
@@ -897,7 +901,7 @@ function comparisonCanvas(canvas, mode) {
   drawGuide(ctx, w, h);
 
   if (mode === "overlay") {
-    drawShape(ctx, target, w, h, "#3478c8", 5);
+    drawShape(ctx, target, w, h, "#3478c8", 7);
     drawStrokes(ctx, strokes, w, h, "#ed8a32", 4);
   } else {
     drawStrokes(ctx, strokes, w, h, "#ed8a32", 5);
