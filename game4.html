@@ -1,392 +1,1302 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f3f7ff">
 <title>ずけいをまねしてかこう！</title>
+
 <style>
-:root{--blue:#3478c8;--navy:#24466f;--mint:#168b70;--bg:#f3f7ff;--line:#d7e1ef}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:#24364b;font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
-button{font:inherit;border:0;border-radius:14px;padding:12px 18px;font-weight:700;cursor:pointer;touch-action:manipulation}
-button:focus-visible{outline:3px solid #f2b84b;outline-offset:2px}
-button:disabled{opacity:.55;cursor:default}
-header{padding:14px 18px 8px;text-align:center}
-h1{font-size:clamp(1.25rem,3vw,1.8rem);margin:2px 0;color:var(--navy)}
-.sub{margin:3px 0;color:#61758d;font-size:.92rem}
-main{max-width:1100px;margin:auto;padding:10px 16px 26px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
-.progress{font-weight:700;color:var(--navy)}
-.pill{background:#e2edff;color:#285b9c;border-radius:99px;padding:7px 12px;font-size:.85rem;font-weight:700}
-.panels{display:grid;grid-template-columns:1fr;gap:12px}
-.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:0 3px 12px #294b7510;min-width:0}
-.panel h2{font-size:1rem;margin:0 0 8px;text-align:center;color:var(--navy)}
-.canvas-wrap{width:100%;height:clamp(180px,31vh,280px);position:relative;border:2px dashed #cbd8e8;border-radius:13px;overflow:hidden;background:#fff;touch-action:none}
-canvas{display:block;width:100%;height:100%;touch-action:none}
-.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px}
-.primary{background:var(--mint);color:white}
-.secondary{background:#eaf1fa;color:#315578}
-.warn{background:#fff1e8;color:#9b4d20}
-.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}
-.feedback{margin:12px auto 0;text-align:center;min-height:1.6em;font-weight:700;color:var(--navy)}
-.compare-note{text-align:center;color:#63768c;font-size:.88rem;margin:8px 0 0}
-.hidden{display:none!important}
-.compare-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
-.compare-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px}
-.compare-card h3{text-align:center;font-size:.9rem;margin:0 0 6px;color:var(--navy)}
-.compare-canvas{width:100%;height:220px;display:block;background:#fff;border:1px solid #e5ebf3;border-radius:10px}
-.legend{display:flex;justify-content:center;gap:16px;font-size:.82rem;margin-top:8px}
-.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
-footer{text-align:center;color:#8090a3;font-size:.78rem;padding:0 16px 20px}
-
-@media (min-width:700px){
-  .panels{grid-template-columns:1fr 1fr}
-  .canvas-wrap{height:clamp(260px,48vh,430px)}
-  .compare-grid{grid-template-columns:1fr 1fr}
-  .compare-canvas{height:300px}
+:root {
+  --blue: #3478c8;
+  --navy: #24466f;
+  --mint: #168b70;
+  --bg: #f3f7ff;
+  --line: #d7e1ef;
 }
 
-@media (max-width:699px){
-  header{padding:7px 10px 3px}
-  h1{font-size:1.2rem;margin:1px 0}
-  .sub{font-size:.8rem;margin:2px 0}
-  main{padding:5px 9px 12px}
-  .topbar{justify-content:center;flex-wrap:wrap;margin-bottom:7px;gap:6px}
-  .panels{grid-template-columns:1fr;gap:8px}
-  .panel{padding:8px;border-radius:15px}
-  .panel h2{font-size:.92rem;margin:0 0 6px}
-
-  /* 見本と描く場所の枠を同じ大きさにする */
-  #workArea > .panel .canvas-wrap{height:280px}
-
-  .actions{margin-top:7px;gap:7px}
-  .actions button{padding:9px 13px;font-size:.85rem}
-  .controls{margin-top:8px}
-  .controls button{padding:11px 20px;font-size:1rem}
-  .feedback{margin:7px auto 0;font-size:.9rem;min-height:1.4em}
-  .compare-grid{grid-template-columns:1fr;gap:8px;margin-top:8px}
-  .compare-canvas{height:210px}
-  .compare-note{font-size:.8rem}
+* {
+  box-sizing: border-box;
 }
 
-@media(max-width:380px){
-  #workArea > .panel .canvas-wrap{height:250px}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #24364b;
+  font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
 }
 
-.start-screen,.result-screen{text-align:center;max-width:620px;margin:6vh auto 24px;padding:clamp(24px,5vw,48px)}
-.start-screen h2,.result-screen h2{font-size:clamp(1.35rem,4vw,2rem);color:var(--navy);margin:8px 0}
-.start-screen p,.result-screen p{color:#61758d}
-.start-mark{font-size:3rem}
-.start-rule{font-weight:700;color:var(--navy)!important;background:#edf4ff;border-radius:14px;padding:12px}
-.start-button{font-size:1.15rem;padding:16px 30px;min-width:220px;margin-top:12px}
-.result-total{font-size:clamp(3rem,10vw,5rem);font-weight:800;color:var(--mint);margin:12px 0!important}
-.result-total small{font-size:1.2rem;color:#61758d}
-.score-list{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:20px 0}
-.score-chip{background:#edf4ff;border-radius:12px;padding:10px 3px;color:var(--navy);font-weight:700}
-.score-chip small{display:block;font-size:.72rem;color:#71839a}
-@media(max-width:480px){.score-list{grid-template-columns:repeat(3,1fr)}}
+button {
+  font: inherit;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:focus-visible {
+  outline: 3px solid #f2b84b;
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: default;
+}
+
+header {
+  padding: 14px 18px 8px;
+  text-align: center;
+}
+
+h1 {
+  font-size: clamp(1.25rem, 3vw, 1.8rem);
+  margin: 2px 0;
+  color: var(--navy);
+}
+
+.sub {
+  margin: 3px 0;
+  color: #61758d;
+  font-size: .92rem;
+}
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 10px 16px 26px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+
+.progress {
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.pill {
+  background: #e2edff;
+  color: #285b9c;
+  border-radius: 99px;
+  padding: 7px 12px;
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.panel {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 12px;
+  box-shadow: 0 3px 12px #294b7510;
+  min-width: 0;
+}
+
+.panel h2 {
+  font-size: 1rem;
+  margin: 0 0 8px;
+  text-align: center;
+  color: var(--navy);
+}
+
+.canvas-wrap {
+  width: 100%;
+  height: clamp(180px, 31vh, 280px);
+  position: relative;
+  border: 2px dashed #cbd8e8;
+  border-radius: 13px;
+  overflow: hidden;
+  background: #fff;
+  touch-action: none;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.primary {
+  background: var(--mint);
+  color: white;
+}
+
+.secondary {
+  background: #eaf1fa;
+  color: #315578;
+}
+
+.warn {
+  background: #fff1e8;
+  color: #9b4d20;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.feedback {
+  margin: 12px auto 0;
+  text-align: center;
+  min-height: 1.6em;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.compare-note {
+  text-align: center;
+  color: #63768c;
+  font-size: .88rem;
+  margin: 8px 0 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.compare-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px;
+}
+
+.compare-card h3 {
+  text-align: center;
+  font-size: .9rem;
+  margin: 0 0 6px;
+  color: var(--navy);
+}
+
+.compare-canvas {
+  width: 100%;
+  height: 220px;
+  display: block;
+  background: #fff;
+  border: 1px solid #e5ebf3;
+  border-radius: 10px;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: .82rem;
+  margin-top: 8px;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+footer {
+  text-align: center;
+  color: #8090a3;
+  font-size: .78rem;
+  padding: 0 16px 20px;
+}
+
+/* PC・タブレット */
+@media (min-width: 700px) {
+  .panels {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .canvas-wrap {
+    height: clamp(260px, 48vh, 430px);
+  }
+
+  .compare-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .compare-canvas {
+    height: 300px;
+  }
+}
+
+/* スマートフォン */
+@media (max-width: 699px) {
+  header {
+    padding: 3px 8px 1px;
+  }
+
+  h1 {
+    font-size: 1.08rem;
+    margin: 0;
+  }
+
+  .sub {
+    font-size: .73rem;
+    margin: 1px 0;
+  }
+
+  main {
+    padding: 3px 7px 10px;
+  }
+
+  .topbar {
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+    gap: 4px;
+  }
+
+  .panels {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .panel {
+    padding: 6px;
+    border-radius: 13px;
+  }
+
+  .panel h2 {
+    font-size: .85rem;
+    margin: 0 0 4px;
+  }
+
+  /* 見本と描画欄の高さを同じにする */
+  #workArea > .panel .canvas-wrap {
+    height: 190px;
+  }
+
+  .actions {
+    margin-top: 5px;
+    gap: 6px;
+  }
+
+  .actions button {
+    padding: 7px 11px;
+    font-size: .78rem;
+  }
+
+  .controls {
+    margin-top: 5px;
+  }
+
+  .controls button {
+    padding: 9px 18px;
+    font-size: .9rem;
+  }
+
+  .feedback {
+    margin: 4px auto 0;
+    font-size: .8rem;
+    min-height: 1.2em;
+  }
+
+  .compare-grid {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    margin-top: 7px;
+  }
+
+  .compare-canvas {
+    height: 190px;
+  }
+
+  .compare-note {
+    font-size: .76rem;
+  }
+}
+
+/* 小さいスマートフォン */
+@media (max-width: 380px) {
+  #workArea > .panel .canvas-wrap {
+    height: 175px;
+  }
+}
+
+/* スタート・結果画面 */
+.start-screen,
+.result-screen {
+  text-align: center;
+  max-width: 620px;
+  margin: 6vh auto 24px;
+  padding: clamp(24px, 5vw, 48px);
+}
+
+.start-screen h2,
+.result-screen h2 {
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  color: var(--navy);
+  margin: 8px 0;
+}
+
+.start-screen p,
+.result-screen p {
+  color: #61758d;
+}
+
+.start-mark {
+  font-size: 3rem;
+}
+
+.start-rule {
+  font-weight: 700;
+  color: var(--navy) !important;
+  background: #edf4ff;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.start-button {
+  font-size: 1.15rem;
+  padding: 16px 30px;
+  min-width: 220px;
+  margin-top: 12px;
+}
+
+.result-total {
+  font-size: clamp(3rem, 10vw, 5rem);
+  font-weight: 800;
+  color: var(--mint);
+  margin: 12px 0 !important;
+}
+
+.result-total small {
+  font-size: 1.2rem;
+  color: #61758d;
+}
+
+.score-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin: 20px 0;
+}
+
+.score-chip {
+  background: #edf4ff;
+  border-radius: 12px;
+  padding: 10px 3px;
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.score-chip small {
+  display: block;
+  font-size: .72rem;
+  color: #71839a;
+}
+
+@media (max-width: 480px) {
+  .score-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 </style>
 </head>
+
 <body>
+
 <header>
   <h1>ずけいをまねしてかこう！</h1>
   <p class="sub">おてほんをよくみて、したにかいてみよう</p>
 </header>
+
 <main>
+
+  <!-- スタート画面 -->
   <section id="startScreen" class="panel start-screen">
     <div class="start-mark">✏️</div>
     <h2>ずけいをまねしてかこう！</h2>
     <p>おてほんをよく見て、同じようにかいてみよう。</p>
     <p class="start-rule">ぜんぶで5もん！ 1もん100点、500点まん点だよ。</p>
-    <button class="primary start-button" id="startButton">ゲームスタート！</button>
+    <button class="primary start-button" id="startButton">
+      ゲームスタート！
+    </button>
   </section>
+
+  <!-- ゲーム画面 -->
   <section id="gameScreen" class="hidden">
-  <div class="topbar">
-    <span class="progress" id="progress">もんだい 1</span>
-    <span class="pill" id="shapeLabel">まる</span>
-  </div>
-  <section class="panels" id="workArea">
-    <div class="panel">
-      <h2>① おてほん</h2>
-      <div class="canvas-wrap"><canvas id="sample"></canvas></div>
+
+    <div class="topbar">
+      <span class="progress" id="progress">もんだい 1</span>
+      <span class="pill" id="shapeLabel">まる</span>
     </div>
-    <div class="panel">
-      <h2>② わくの中にかこう</h2>
-      <div class="canvas-wrap"><canvas id="draw"></canvas></div>
-      <div class="actions">
-        <button class="secondary" id="undo">ひとつもどる</button>
-        <button class="warn" id="clear">ぜんぶけす</button>
-      </div>
-    </div>
-  </section>
-  <div class="controls" id="workControls">
-    <button class="primary" id="done">できた！ OK</button>
-  </div>
-  <p class="feedback" id="feedback" aria-live="polite">ゆっくり かいてみよう！</p>
-  <section id="comparison" class="hidden">
-    <div class="panel">
-      <h2>おてほんと くらべてみよう</h2>
-      <p class="compare-note">青がおてほん、オレンジがじぶんの線です。重ねて、形や大きさ、位置を見てみよう。</p>
-      <div class="compare-grid">
-        <div class="compare-card">
-          <h3>おてほんと じぶんの線を かさねる</h3>
-          <canvas id="overlay" class="compare-canvas"></canvas>
-        </div>
-        <div class="compare-card">
-          <h3>じぶんが かいた図</h3>
-          <canvas id="mine" class="compare-canvas"></canvas>
+
+    <section class="panels" id="workArea">
+
+      <!-- 見本 -->
+      <div class="panel">
+        <h2>① おてほん</h2>
+        <div class="canvas-wrap">
+          <canvas id="sample"></canvas>
         </div>
       </div>
-      <div class="legend">
-        <span><i class="dot" style="background:#3478c8"></i>おてほん</span>
-        <span><i class="dot" style="background:#ed8a32"></i>じぶん</span>
+
+      <!-- 描画 -->
+      <div class="panel">
+        <h2>② わくの中にかこう</h2>
+        <div class="canvas-wrap">
+          <canvas id="draw"></canvas>
+        </div>
+
+        <div class="actions">
+          <button class="secondary" id="undo">ひとつもどる</button>
+          <button class="warn" id="clear">ぜんぶけす</button>
+        </div>
       </div>
+
+    </section>
+
+    <div class="controls" id="workControls">
+      <button class="primary" id="done">できた！ OK</button>
     </div>
-    <p class="feedback" id="autoNextMessage">3びょうごに つぎの もんだいへ すすむよ！</p>
+
+    <p class="feedback" id="feedback" aria-live="polite">
+      ゆっくり かいてみよう！
+    </p>
+
+    <!-- 比較画面 -->
+    <section id="comparison" class="hidden">
+      <div class="panel">
+        <h2>おてほんと くらべてみよう</h2>
+
+        <p class="compare-note">
+          青がおてほん、オレンジがじぶんの線です。
+          重ねて、形や大きさ、位置を見てみよう。
+        </p>
+
+        <div class="compare-grid">
+
+          <div class="compare-card">
+            <h3>おてほんと じぶんの線を かさねる</h3>
+            <canvas id="overlay" class="compare-canvas"></canvas>
+          </div>
+
+          <div class="compare-card">
+            <h3>じぶんが かいた図</h3>
+            <canvas id="mine" class="compare-canvas"></canvas>
+          </div>
+
+        </div>
+
+        <div class="legend">
+          <span><i class="dot" style="background:#3478c8"></i>おてほん</span>
+          <span><i class="dot" style="background:#ed8a32"></i>じぶん</span>
+        </div>
+      </div>
+
+      <p class="feedback" id="autoNextMessage">
+        3びょうごに つぎの もんだいへ すすむよ！
+      </p>
+    </section>
+
   </section>
-  </section>
+
+  <!-- 結果画面 -->
   <section id="resultScreen" class="panel result-screen hidden">
     <div class="start-mark">🏆</div>
     <h2>チャレンジしゅうりょう！</h2>
-    <p class="result-total"><span id="totalScore">0</span><small> / 500 点</small></p>
+
+    <p class="result-total">
+      <span id="totalScore">0</span>
+      <small> / 500 点</small>
+    </p>
+
     <p id="resultMessage">よくがんばったね！</p>
+
     <div id="scoreList" class="score-list"></div>
-    <button class="primary start-button" id="restartButton">もういちどチャレンジ</button>
+
+    <button class="primary start-button" id="restartButton">
+      もういちどチャレンジ
+    </button>
   </section>
+
 </main>
-<footer>指やタッチペン、マウスで描けます。</footer>
+
+<footer>
+  指やタッチペン、マウスで描けます。
+</footer>
+
 <script>
 (() => {
-const names={circle:"まる",cross:"ばつ",plus:"じゅうじ",triangle:"さんかく",square:"しかく",line:"よこぼう"};
-const types=Object.keys(names);
-const sample=document.getElementById('sample'), draw=document.getElementById('draw');
-const sctx=sample.getContext('2d'), dctx=draw.getContext('2d');
-let target=null, strokes=[], current=null, question=0, drawing=false, totalScore=0, roundScores=[], currentScore=0, advanceTimer=null, questionLocked=false;
-let lastSize={};
 
-function setupCanvas(canvas,ctx){
- const rect=canvas.getBoundingClientRect(), dpr=Math.max(1,window.devicePixelRatio||1);
- canvas.width=Math.round(rect.width*dpr); canvas.height=Math.round(rect.height*dpr);
- ctx.setTransform(dpr,0,0,dpr,0,0);
- return {w:rect.width,h:rect.height};
-}
-function fitPoint(canvas,e){
- const r=canvas.getBoundingClientRect();
- return {x:e.clientX-r.left,y:e.clientY-r.top};
-}
-function clearCanvas(canvas,ctx){const r=canvas.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);}
-function boardRect(w,h){
- const side=Math.min(w,h)*.78;
- return {left:(w-side)/2,top:(h-side)/2,side};
-}
-function drawGuide(ctx,w,h){
- const b=boardRect(w,h);
- ctx.save();
- ctx.strokeStyle='#aebfd3';ctx.lineWidth=1.8;ctx.setLineDash([5,5]);
- ctx.strokeRect(b.left,b.top,b.side,b.side);
- ctx.setLineDash([]);
- ctx.strokeStyle='#d7e0eb';ctx.lineWidth=1;
- ctx.beginPath();
- ctx.moveTo(b.left+b.side/2,b.top);ctx.lineTo(b.left+b.side/2,b.top+b.side);
- ctx.moveTo(b.left,b.top+b.side/2);ctx.lineTo(b.left+b.side,b.top+b.side/2);
- ctx.stroke();ctx.restore();
-}
-function drawShape(ctx,shape,w,h,color='#3478c8',width=5){
- const b=boardRect(w,h);
- ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';
- const x=b.left+shape.x*b.side,y=b.top+shape.y*b.side,size=shape.size*b.side;
- ctx.translate(x,y);ctx.rotate(shape.angle||0);ctx.beginPath();
- if(shape.type==='circle') ctx.ellipse(0,0,size*.5,size*.5*shape.ratio,0,0,Math.PI*2);
- if(shape.type==='cross'){ctx.moveTo(-size*.5,-size*.5);ctx.lineTo(size*.5,size*.5);ctx.moveTo(size*.5,-size*.5);ctx.lineTo(-size*.5,size*.5);}
- if(shape.type==='plus'){ctx.moveTo(0,-size*.55);ctx.lineTo(0,size*.55);ctx.moveTo(-size*.55,0);ctx.lineTo(size*.55,0);}
- if(shape.type==='triangle'){ctx.moveTo(0,-size*.58);ctx.lineTo(size*.58,size*.48);ctx.lineTo(-size*.58,size*.48);ctx.closePath();}
- if(shape.type==='square'){ctx.rect(-size*.48,-size*.48,size*.96,size*.96);}
- if(shape.type==='line'){ctx.moveTo(-size*.7,0);ctx.lineTo(size*.7,0);}
- ctx.stroke();ctx.restore();
-}
-function drawStrokes(ctx,strokes,w,h,color='#ed8a32',width=5){
- const b=boardRect(w,h);
- ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';
- for(const stroke of strokes){if(!stroke.length)continue;ctx.beginPath();ctx.moveTo(b.left+stroke[0].x*b.side,b.top+stroke[0].y*b.side);for(let i=1;i<stroke.length;i++)ctx.lineTo(b.left+stroke[i].x*b.side,b.top+stroke[i].y*b.side);if(stroke.length===1)ctx.lineTo(b.left+stroke[0].x*b.side+.1,b.top+stroke[0].y*b.side+.1);ctx.stroke();}
- ctx.restore();
-}
-function renderSample(){const {w,h}=setupCanvas(sample,sctx);clearCanvas(sample,sctx);drawGuide(sctx,w,h);drawShape(sctx,target,w,h);}
-function renderDraw(){const {w,h}=setupCanvas(draw,dctx);clearCanvas(draw,dctx);drawGuide(dctx,w,h);drawStrokes(dctx,strokes,w,h);}
-function fitBoardPoint(canvas,e){
- const r=canvas.getBoundingClientRect(),b=boardRect(r.width,r.height);
- const p={x:e.clientX-r.left,y:e.clientY-r.top};
- return {x:Math.max(0,Math.min(1,(p.x-b.left)/b.side)),y:Math.max(0,Math.min(1,(p.y-b.top)/b.side))};
-}
-function newQuestion(){
- if(advanceTimer){clearTimeout(advanceTimer);advanceTimer=null;}
- questionLocked=false;
- document.getElementById('done').disabled=false;
- question++;const type=types[Math.floor(Math.random()*types.length)];
- const sizes=[.20,.30,.40];
- const size=sizes[Math.floor(Math.random()*sizes.length)];
- // 微妙な傾きは使わず、90度単位で向きを変える
- const rightAngles=[0,Math.PI/2,Math.PI,Math.PI*1.5];
- const angle=type==='circle'?0:rightAngles[Math.floor(Math.random()*rightAngles.length)];
- target={type,x:.5,y:.5,size,ratio:1,angle};
- strokes=[];current=null;
- document.getElementById('progress').textContent=`もんだい ${question}`;
- document.getElementById('shapeLabel').textContent=names[type];
- document.getElementById('feedback').textContent='ゆっくり かいてみよう！';
- document.getElementById('comparison').classList.add('hidden');
- document.getElementById('workArea').classList.remove('hidden');
- document.getElementById('workControls').classList.remove('hidden');
- renderSample();renderDraw();
-}
-function begin(e){if(!document.getElementById('comparison').classList.contains('hidden'))return;e.preventDefault();drawing=true;draw.setPointerCapture?.(e.pointerId);current=[];const p=fitBoardPoint(draw,e);current.push(p);strokes.push(current);renderDraw();}
-function move(e){if(!drawing||!current)return;e.preventDefault();const p=fitBoardPoint(draw,e);current.push(p);renderDraw();}
-function end(){drawing=false;current=null;}
-draw.addEventListener('pointerdown',begin);draw.addEventListener('pointermove',move);draw.addEventListener('pointerup',end);draw.addEventListener('pointercancel',end);
-document.getElementById('undo').onclick=()=>{strokes.pop();renderDraw();};
-document.getElementById('clear').onclick=()=>{strokes=[];renderDraw();};
+const names = {
+  circle: "まる",
+  cross: "ばつ",
+  plus: "じゅうじ",
+  triangle: "さんかく",
+  square: "しかく",
+  line: "よこぼう"
+};
 
-function comparisonCanvas(canvas,mode){
- const ctx=canvas.getContext('2d'),{w,h}=setupCanvas(canvas,ctx);ctx.clearRect(0,0,w,h);drawGuide(ctx,w,h);
- if(mode==='overlay'){drawShape(ctx,target,w,h,'#3478c8',5);drawStrokes(ctx,strokes,w,h,'#ed8a32',4);}
- else drawStrokes(ctx,strokes,w,h,'#ed8a32',5);
-}
-function makeScoreCanvas(kind){
- const c=document.createElement('canvas');c.width=256;c.height=256;
- const ctx=c.getContext('2d');
- if(kind==='target') drawShape(ctx,target,256,256,'#000',7);
- else drawStrokes(ctx,strokes,256,256,'#000',7);
- const data=ctx.getImageData(0,0,256,256).data, mask=new Uint8Array(256*256);
- for(let i=0;i<mask.length;i++) if(data[i*4+3]>35) mask[i]=1;
- return mask;
-}
-function similarityScore(){
- if(!strokes.length)return 0;
- const a=makeScoreCanvas('target'),b=makeScoreCanvas('draw');
- const W=256,H=256,r=6;
- let na=0,nb=0,hitA=0,hitB=0;
- for(let i=0;i<a.length;i++)if(a[i])na++;
- for(let i=0;i<b.length;i++)if(b[i])nb++;
- if(!na||!nb)return 0;
- for(let y=0;y<H;y++)for(let x=0;x<W;x++){
-  const i=y*W+x;
-  if(a[i]){let found=false;for(let dy=-r;dy<=r&&!found;dy++)for(let dx=-r;dx<=r;dx++){if(dx*dx+dy*dy>r*r)continue;const xx=x+dx,yy=y+dy;if(xx>=0&&xx<W&&yy>=0&&yy<H&&b[yy*W+xx]){found=true;break;}}if(found)hitA++;}
-  if(b[i]){let found=false;for(let dy=-r;dy<=r&&!found;dy++)for(let dx=-r;dx<=r;dx++){if(dx*dx+dy*dy>r*r)continue;const xx=x+dx,yy=y+dy;if(xx>=0&&xx<W&&yy>=0&&yy<H&&a[yy*W+xx]){found=true;break;}}if(found)hitB++;}
- }
- const precision=hitB/nb,recall=hitA/na;
- const total=precision+recall;
- if(!Number.isFinite(total)||total===0)return 0;
- const score=100*(2*precision*recall/total);
- return Number.isFinite(score)?Math.max(0,Math.min(100,Math.round(score))):0;
+const types = Object.keys(names);
+
+const sample = document.getElementById("sample");
+const draw = document.getElementById("draw");
+
+const sctx = sample.getContext("2d");
+const dctx = draw.getContext("2d");
+
+let target = null;
+let strokes = [];
+let current = null;
+let question = 0;
+let drawing = false;
+let totalScore = 0;
+let roundScores = [];
+let currentScore = 0;
+let advanceTimer = null;
+let questionLocked = false;
+
+function setupCanvas(canvas, ctx) {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(rect.height * dpr);
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  return {
+    w: rect.width,
+    h: rect.height
+  };
 }
 
-let musicContext=null,musicTimer=null,musicOn=false,musicStep=0;
-const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,
-              523.25,659.25,783.99,1046.5,880,783.99,659.25,587.33];
+function clearCanvas(canvas, ctx) {
+  const r = canvas.getBoundingClientRect();
+  ctx.clearRect(0, 0, r.width, r.height);
+}
 
-function playMusicNote(freq,duration,when,volume,type='sine'){
- const osc=musicContext.createOscillator(),gain=musicContext.createGain();
- osc.type=type;osc.frequency.setValueAtTime(freq,when);
- gain.gain.setValueAtTime(.0001,when);
- gain.gain.exponentialRampToValueAtTime(volume,when+.035);
- gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
- osc.connect(gain);gain.connect(musicContext.destination);
- osc.start(when);osc.stop(when+duration+.03);
+function boardRect(w, h) {
+  const side = Math.min(w, h) * .78;
+
+  return {
+    left: (w - side) / 2,
+    top: (h - side) / 2,
+    side
+  };
 }
-function musicTick(){
- if(!musicOn||!musicContext)return;
- const now=musicContext.currentTime;
- const note=melody[musicStep%melody.length];
- playMusicNote(note,.27,now,.045,'sine');
- if(musicStep%2===0)playMusicNote(note/2,.34,now,.025,'triangle');
- if(musicStep%4===0)playMusicNote(130.81,.12,now,.018,'sine');
- musicStep++;
+
+function drawGuide(ctx, w, h) {
+  const b = boardRect(w, h);
+
+  ctx.save();
+
+  ctx.strokeStyle = "#aebfd3";
+  ctx.lineWidth = 1.8;
+  ctx.setLineDash([5, 5]);
+  ctx.strokeRect(b.left, b.top, b.side, b.side);
+
+  ctx.setLineDash([]);
+  ctx.strokeStyle = "#d7e0eb";
+  ctx.lineWidth = 1;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    b.left + b.side / 2,
+    b.top
+  );
+
+  ctx.lineTo(
+    b.left + b.side / 2,
+    b.top + b.side
+  );
+
+  ctx.moveTo(
+    b.left,
+    b.top + b.side / 2
+  );
+
+  ctx.lineTo(
+    b.left + b.side,
+    b.top + b.side / 2
+  );
+
+  ctx.stroke();
+  ctx.restore();
 }
-async function setMusic(on){
- try{
-  if(on){
-   const AudioCtx=window.AudioContext||window.webkitAudioContext;
-   if(!AudioCtx)return;
-   if(!musicContext)musicContext=new AudioCtx();
-   if(musicContext.state==='suspended')await musicContext.resume();
-   musicOn=true;musicTick();
-   if(musicTimer)clearInterval(musicTimer);
-   musicTimer=setInterval(musicTick,310);
-  }else{
-   musicOn=false;if(musicTimer)clearInterval(musicTimer);musicTimer=null;
+
+function drawShape(ctx, shape, w, h, color = "#3478c8", width = 5) {
+  const b = boardRect(w, h);
+
+  ctx.save();
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  const x = b.left + shape.x * b.side;
+  const y = b.top + shape.y * b.side;
+  const size = shape.size * b.side;
+
+  ctx.translate(x, y);
+  ctx.rotate(shape.angle || 0);
+  ctx.beginPath();
+
+  if (shape.type === "circle") {
+    ctx.ellipse(
+      0, 0,
+      size * .5,
+      size * .5 * shape.ratio,
+      0, 0, Math.PI * 2
+    );
   }
- }catch(e){musicOn=false;}
-}
-function playResultSound(correct){
- try{
-  const AudioCtx=window.AudioContext||window.webkitAudioContext;if(!AudioCtx)return;
-  const ac=new AudioCtx(),now=ac.currentTime;
-  const notes=correct?[659,880,1047]:[220,165];
-  notes.forEach((freq,i)=>{const osc=ac.createOscillator(),gain=ac.createGain();osc.type=correct?'sine':'triangle';osc.frequency.value=freq;gain.gain.setValueAtTime(.0001,now+i*.16);gain.gain.exponentialRampToValueAtTime(.11,now+i*.16+.025);gain.gain.exponentialRampToValueAtTime(.0001,now+i*.16+.22);osc.connect(gain);gain.connect(ac.destination);osc.start(now+i*.16);osc.stop(now+i*.16+.24);});
-  setTimeout(()=>ac.close(),900);
- }catch(e){}
-}
-function done(){
- if(questionLocked)return;
- questionLocked=true;
- document.getElementById('done').disabled=true;
- currentScore=similarityScore();
- const correct=currentScore>=70;
- roundScores[question-1]=currentScore;
- totalScore=roundScores.reduce((sum,value)=>sum+(value||0),0);
- document.getElementById('comparison').classList.remove('hidden');
- document.getElementById('workArea').classList.add('hidden');
- document.getElementById('workControls').classList.add('hidden');
- const feedback=document.getElementById('feedback');
- feedback.textContent=`今回の点数は ${currentScore}点！ ${correct?'せいかい！ よくできたね！':'もうすこし！ おてほんをよくみてみよう。'}`;
- document.getElementById('autoNextMessage').textContent='3びょうごに つぎの もんだいへ すすむよ！';
- playResultSound(correct);
- comparisonCanvas(document.getElementById('overlay'),'overlay');
- comparisonCanvas(document.getElementById('mine'),'mine');
- advanceTimer=setTimeout(()=>{
-  advanceTimer=null;
-  if(question>=5)finishGame();
-  else newQuestion();
- },3000);
-}
-document.getElementById('done').onclick=done;
 
-function finishGame(){
- document.getElementById('gameScreen').classList.add('hidden');
- document.getElementById('resultScreen').classList.remove('hidden');
- totalScore=roundScores.reduce((sum,value)=>sum+(value||0),0);
- document.getElementById('totalScore').textContent=totalScore;
- document.getElementById('resultMessage').textContent=
-  totalScore>=450?'すごい！ とってもじょうず！':
-  totalScore>=350?'よくがんばったね！':
-  totalScore>=250?'いいちょうし！ つぎもチャレンジ！':'さいごまでよくがんばったね！';
- document.getElementById('scoreList').innerHTML=roundScores.map((v,i)=>
-  `<div class="score-chip"><small>${i+1}もんめ</small>${v??0}点</div>`).join('');
-}
-function startGame(){
- question=0;totalScore=0;roundScores=[];currentScore=0;
- document.getElementById('startScreen').classList.add('hidden');
- document.getElementById('resultScreen').classList.add('hidden');
- document.getElementById('gameScreen').classList.remove('hidden');
- setMusic(true);
- newQuestion();
-}
-document.getElementById('startButton').onclick=startGame;
-document.getElementById('restartButton').onclick=startGame;
+  if (shape.type === "cross") {
+    ctx.moveTo(-size * .5, -size * .5);
+    ctx.lineTo(size * .5, size * .5);
 
+    ctx.moveTo(size * .5, -size * .5);
+    ctx.lineTo(-size * .5, size * .5);
+  }
+
+  if (shape.type === "plus") {
+    ctx.moveTo(0, -size * .55);
+    ctx.lineTo(0, size * .55);
+
+    ctx.moveTo(-size * .55, 0);
+    ctx.lineTo(size * .55, 0);
+  }
+
+  if (shape.type === "triangle") {
+    ctx.moveTo(0, -size * .58);
+    ctx.lineTo(size * .58, size * .48);
+    ctx.lineTo(-size * .58, size * .48);
+    ctx.closePath();
+  }
+
+  if (shape.type === "square") {
+    ctx.rect(
+      -size * .48,
+      -size * .48,
+      size * .96,
+      size * .96
+    );
+  }
+
+  if (shape.type === "line") {
+    ctx.moveTo(-size * .7, 0);
+    ctx.lineTo(size * .7, 0);
+  }
+
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawStrokes(ctx, strokes, w, h, color = "#ed8a32", width = 5) {
+  const b = boardRect(w, h);
+
+  ctx.save();
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  for (const stroke of strokes) {
+    if (!stroke.length) continue;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      b.left + stroke[0].x * b.side,
+      b.top + stroke[0].y * b.side
+    );
+
+    for (let i = 1; i < stroke.length; i++) {
+      ctx.lineTo(
+        b.left + stroke[i].x * b.side,
+        b.top + stroke[i].y * b.side
+      );
+    }
+
+    if (stroke.length === 1) {
+      ctx.lineTo(
+        b.left + stroke[0].x * b.side + .1,
+        b.top + stroke[0].y * b.side + .1
+      );
+    }
+
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function renderSample() {
+  const { w, h } = setupCanvas(sample, sctx);
+
+  clearCanvas(sample, sctx);
+  drawGuide(sctx, w, h);
+  drawShape(sctx, target, w, h);
+}
+
+function renderDraw() {
+  const { w, h } = setupCanvas(draw, dctx);
+
+  clearCanvas(draw, dctx);
+  drawGuide(dctx, w, h);
+  drawStrokes(dctx, strokes, w, h);
+}
+
+function fitBoardPoint(canvas, e) {
+  const r = canvas.getBoundingClientRect();
+  const b = boardRect(r.width, r.height);
+
+  const p = {
+    x: e.clientX - r.left,
+    y: e.clientY - r.top
+  };
+
+  return {
+    x: Math.max(0, Math.min(1, (p.x - b.left) / b.side)),
+    y: Math.max(0, Math.min(1, (p.y - b.top) / b.side))
+  };
+}
+
+function newQuestion() {
+  if (advanceTimer) {
+    clearTimeout(advanceTimer);
+    advanceTimer = null;
+  }
+
+  questionLocked = false;
+
+  document.getElementById("done").disabled = false;
+
+  question++;
+
+  const type = types[Math.floor(Math.random() * types.length)];
+
+  const sizes = [.20, .30, .40];
+  const size = sizes[Math.floor(Math.random() * sizes.length)];
+
+  const rightAngles = [
+    0,
+    Math.PI / 2,
+    Math.PI,
+    Math.PI * 1.5
+  ];
+
+  const angle = type === "circle"
+    ? 0
+    : rightAngles[Math.floor(Math.random() * rightAngles.length)];
+
+  target = {
+    type,
+    x: .5,
+    y: .5,
+    size,
+    ratio: 1,
+    angle
+  };
+
+  strokes = [];
+  current = null;
+
+  document.getElementById("progress").textContent =
+    `もんだい ${question}`;
+
+  document.getElementById("shapeLabel").textContent =
+    names[type];
+
+  document.getElementById("feedback").textContent =
+    "ゆっくり かいてみよう！";
+
+  document.getElementById("comparison").classList.add("hidden");
+  document.getElementById("workArea").classList.remove("hidden");
+  document.getElementById("workControls").classList.remove("hidden");
+
+  renderSample();
+  renderDraw();
+}
+
+function begin(e) {
+  if (!document.getElementById("comparison").classList.contains("hidden")) {
+    return;
+  }
+
+  e.preventDefault();
+
+  drawing = true;
+  draw.setPointerCapture?.(e.pointerId);
+
+  current = [];
+
+  const p = fitBoardPoint(draw, e);
+
+  current.push(p);
+  strokes.push(current);
+
+  renderDraw();
+}
+
+function move(e) {
+  if (!drawing || !current) return;
+
+  e.preventDefault();
+
+  const p = fitBoardPoint(draw, e);
+
+  current.push(p);
+
+  renderDraw();
+}
+
+function end() {
+  drawing = false;
+  current = null;
+}
+
+draw.addEventListener("pointerdown", begin);
+draw.addEventListener("pointermove", move);
+draw.addEventListener("pointerup", end);
+draw.addEventListener("pointercancel", end);
+
+document.getElementById("undo").onclick = () => {
+  strokes.pop();
+  renderDraw();
+};
+
+document.getElementById("clear").onclick = () => {
+  strokes = [];
+  renderDraw();
+};
+
+function comparisonCanvas(canvas, mode) {
+  const ctx = canvas.getContext("2d");
+  const { w, h } = setupCanvas(canvas, ctx);
+
+  ctx.clearRect(0, 0, w, h);
+
+  drawGuide(ctx, w, h);
+
+  if (mode === "overlay") {
+    drawShape(ctx, target, w, h, "#3478c8", 5);
+    drawStrokes(ctx, strokes, w, h, "#ed8a32", 4);
+  } else {
+    drawStrokes(ctx, strokes, w, h, "#ed8a32", 5);
+  }
+}
+
+function makeScoreCanvas(kind) {
+  const c = document.createElement("canvas");
+
+  c.width = 256;
+  c.height = 256;
+
+  const ctx = c.getContext("2d");
+
+  if (kind === "target") {
+    drawShape(ctx, target, 256, 256, "#000", 7);
+  } else {
+    drawStrokes(ctx, strokes, 256, 256, "#000", 7);
+  }
+
+  const data = ctx.getImageData(0, 0, 256, 256).data;
+  const mask = new Uint8Array(256 * 256);
+
+  for (let i = 0; i < mask.length; i++) {
+    if (data[i * 4 + 3] > 35) {
+      mask[i] = 1;
+    }
+  }
+
+  return mask;
+}
+
+function similarityScore() {
+  if (!strokes.length) return 0;
+
+  const a = makeScoreCanvas("target");
+  const b = makeScoreCanvas("draw");
+
+  const W = 256;
+  const H = 256;
+  const r = 6;
+
+  let na = 0;
+  let nb = 0;
+  let hitA = 0;
+  let hitB = 0;
+
+  for (let i = 0; i < a.length; i++) {
+    if (a[i]) na++;
+    if (b[i]) nb++;
+  }
+
+  if (!na || !nb) return 0;
+
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+
+      if (a[i]) {
+        let found = false;
+
+        for (let dy = -r; dy <= r && !found; dy++) {
+          for (let dx = -r; dx <= r; dx++) {
+            if (dx * dx + dy * dy > r * r) continue;
+
+            const xx = x + dx;
+            const yy = y + dy;
+
+            if (
+              xx >= 0 && xx < W &&
+              yy >= 0 && yy < H &&
+              b[yy * W + xx]
+            ) {
+              found = true;
+              break;
+            }
+          }
+        }
+
+        if (found) hitA++;
+      }
+
+      if (b[i]) {
+        let found = false;
+
+        for (let dy = -r; dy <= r && !found; dy++) {
+          for (let dx = -r; dx <= r; dx++) {
+            if (dx * dx + dy * dy > r * r) continue;
+
+            const xx = x + dx;
+            const yy = y + dy;
+
+            if (
+              xx >= 0 && xx < W &&
+              yy >= 0 && yy < H &&
+              a[yy * W + xx]
+            ) {
+              found = true;
+              break;
+            }
+          }
+        }
+
+        if (found) hitB++;
+      }
+    }
+  }
+
+  const precision = hitB / nb;
+  const recall = hitA / na;
+  const total = precision + recall;
+
+  if (!Number.isFinite(total) || total === 0) return 0;
+
+  const score = 100 * (2 * precision * recall / total);
+
+  return Number.isFinite(score)
+    ? Math.max(0, Math.min(100, Math.round(score)))
+    : 0;
+}
+
+/* BGM */
+let musicContext = null;
+let musicTimer = null;
+let musicOn = false;
+let musicStep = 0;
+
+const melody = [
+  523.25, 659.25, 783.99, 659.25,
+  587.33, 698.46, 880, 698.46,
+  523.25, 659.25, 783.99, 1046.5,
+  880, 783.99, 659.25, 587.33
+];
+
+function playMusicNote(freq, duration, when, volume, type = "sine") {
+  const osc = musicContext.createOscillator();
+  const gain = musicContext.createGain();
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, when);
+
+  gain.gain.setValueAtTime(.0001, when);
+  gain.gain.exponentialRampToValueAtTime(volume, when + .035);
+  gain.gain.exponentialRampToValueAtTime(.0001, when + duration);
+
+  osc.connect(gain);
+  gain.connect(musicContext.destination);
+
+  osc.start(when);
+  osc.stop(when + duration + .03);
+}
+
+function musicTick() {
+  if (!musicOn || !musicContext) return;
+
+  const now = musicContext.currentTime;
+  const note = melody[musicStep % melody.length];
+
+  playMusicNote(note, .27, now, .045, "sine");
+
+  if (musicStep % 2 === 0) {
+    playMusicNote(note / 2, .34, now, .025, "triangle");
+  }
+
+  if (musicStep % 4 === 0) {
+    playMusicNote(130.81, .12, now, .018, "sine");
+  }
+
+  musicStep++;
+}
+
+async function setMusic(on) {
+  try {
+    if (on) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+
+      if (!AudioCtx) return;
+
+      if (!musicContext) {
+        musicContext = new AudioCtx();
+      }
+
+      if (musicContext.state === "suspended") {
+        await musicContext.resume();
+      }
+
+      musicOn = true;
+      musicTick();
+
+      if (musicTimer) clearInterval(musicTimer);
+
+      musicTimer = setInterval(musicTick, 310);
+
+    } else {
+      musicOn = false;
+
+      if (musicTimer) clearInterval(musicTimer);
+
+      musicTimer = null;
+    }
+
+  } catch (e) {
+    musicOn = false;
+  }
+}
+
+/* 正解音・不正解音 */
+function playResultSound(correct) {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioCtx) return;
+
+    const ac = new AudioCtx();
+    const now = ac.currentTime;
+
+    const notes = correct
+      ? [659, 880, 1047]
+      : [220, 165];
+
+    notes.forEach((freq, i) => {
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+
+      osc.type = correct ? "sine" : "triangle";
+      osc.frequency.value = freq;
+
+      gain.gain.setValueAtTime(.0001, now + i * .16);
+      gain.gain.exponentialRampToValueAtTime(
+        .11,
+        now + i * .16 + .025
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        .0001,
+        now + i * .16 + .22
+      );
+
+      osc.connect(gain);
+      gain.connect(ac.destination);
+
+      osc.start(now + i * .16);
+      osc.stop(now + i * .16 + .24);
+    });
+
+    setTimeout(() => ac.close(), 900);
+
+  } catch (e) {}
+}
+
+/* 採点 */
+function done() {
+  if (questionLocked) return;
+
+  questionLocked = true;
+
+  document.getElementById("done").disabled = true;
+
+  currentScore = similarityScore();
+
+  const correct = currentScore >= 70;
+
+  roundScores[question - 1] = currentScore;
+
+  totalScore = roundScores.reduce(
+    (sum, value) => sum + (value || 0),
+    0
+  );
+
+  document.getElementById("comparison").classList.remove("hidden");
+  document.getElementById("workArea").classList.add("hidden");
+  document.getElementById("workControls").classList.add("hidden");
+
+  const feedback = document.getElementById("feedback");
+
+  feedback.textContent =
+    `今回の点数は ${currentScore}点！ ${
+      correct
+        ? "せいかい！ よくできたね！"
+        : "もうすこし！ おてほんをよくみてみよう。"
+    }`;
+
+  document.getElementById("autoNextMessage").textContent =
+    "3びょうごに つぎの もんだいへ すすむよ！";
+
+  playResultSound(correct);
+
+  comparisonCanvas(
+    document.getElementById("overlay"),
+    "overlay"
+  );
+
+  comparisonCanvas(
+    document.getElementById("mine"),
+    "mine"
+  );
+
+  advanceTimer = setTimeout(() => {
+    advanceTimer = null;
+
+    if (question >= 5) {
+      finishGame();
+    } else {
+      newQuestion();
+    }
+
+  }, 3000);
+}
+
+document.getElementById("done").onclick = done;
+
+/* 結果画面 */
+function finishGame() {
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+
+  totalScore = roundScores.reduce(
+    (sum, value) => sum + (value || 0),
+    0
+  );
+
+  document.getElementById("totalScore").textContent = totalScore;
+
+  document.getElementById("resultMessage").textContent =
+    totalScore >= 450
+      ? "すごい！ とってもじょうず！"
+      : totalScore >= 350
+      ? "よくがんばったね！"
+      : totalScore >= 250
+      ? "いいちょうし！ つぎもチャレンジ！"
+      : "さいごまでよくがんばったね！";
+
+  document.getElementById("scoreList").innerHTML =
+    roundScores.map((v, i) =>
+      `<div class="score-chip"><small>${i + 1}もんめ</small>${v ?? 0}点</div>`
+    ).join("");
+}
+
+/* ゲーム開始 */
+function startGame() {
+  question = 0;
+  totalScore = 0;
+  roundScores = [];
+  currentScore = 0;
+
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+
+  setMusic(true);
+
+  newQuestion();
+}
+
+document.getElementById("startButton").onclick = startGame;
+document.getElementById("restartButton").onclick = startGame;
+
+/* 画面サイズ変更時の再描画 */
 let resizeTimer;
-window.addEventListener('resize',()=>{
- clearTimeout(resizeTimer);
- resizeTimer=setTimeout(()=>{
-  if(document.getElementById('gameScreen').classList.contains('hidden'))return;
-  if(document.getElementById('comparison').classList.contains('hidden')){
-   renderSample();renderDraw();
-  }else{
-   comparisonCanvas(document.getElementById('overlay'),'overlay');
-   comparisonCanvas(document.getElementById('mine'),'mine');
-  }
- },100);
+
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+
+  resizeTimer = setTimeout(() => {
+    if (document.getElementById("gameScreen").classList.contains("hidden")) {
+      return;
+    }
+
+    if (document.getElementById("comparison").classList.contains("hidden")) {
+      renderSample();
+      renderDraw();
+
+    } else {
+      comparisonCanvas(
+        document.getElementById("overlay"),
+        "overlay"
+      );
+
+      comparisonCanvas(
+        document.getElementById("mine"),
+        "mine"
+      );
+    }
+
+  }, 100);
 });
+
 })();
 </script>
 </body>
