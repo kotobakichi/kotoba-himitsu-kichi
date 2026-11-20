@@ -709,32 +709,32 @@ h2 {
   }
 
   body.game-active .arrow-area {
-    flex:1;
-    min-height:75px;
-    max-height:150px;
+    flex:1 1 auto;
+    min-height:130px;
+    max-height:240px;
     width:100%;
-    margin:5px auto 8px;
+    margin:7px auto 12px;
   }
 
   body.game-active .big-arrow svg {
-    width:min(38%,190px);
-    height:75%;
+    width:min(48%,250px);
+    height:80%;
   }
 
   body.game-active .direction-grid {
     flex-shrink:0;
-    grid-template-rows:repeat(3,clamp(42px,6.5dvh,58px));
-    gap:6px;
-    max-width:330px;
+    grid-template-rows:repeat(3,clamp(54px,7.5dvh,70px));
+    gap:8px;
+    max-width:420px;
   }
 
   body.game-active .direction-button {
-    border-radius:13px;
-    box-shadow:0 4px 0 #4c91ae;
+    border-radius:15px;
+    box-shadow:0 5px 0 #4c91ae;
   }
 
   body.game-active .direction-button svg {
-    max-width:58px;
+    max-width:76px;
   }
 
   body.game-active .feedback {
@@ -765,20 +765,30 @@ h2 {
   }
 
   body.game-active .arrow-area {
-    min-height:55px;
-    max-height:115px;
-    margin:3px auto 6px;
+    flex:1 1 auto;
+    min-height:125px;
+    max-height:210px;
+    margin:5px auto 9px;
+  }
+
+  body.game-active .big-arrow svg {
+    width:min(48%,240px);
+    height:80%;
   }
 
   body.game-active .direction-grid {
-    grid-template-rows:repeat(3,clamp(36px,5.8dvh,48px));
-    gap:5px;
-    max-width:300px;
+    grid-template-rows:repeat(3,clamp(58px,8dvh,70px));
+    gap:8px;
+    max-width:420px;
+  }
+
+  body.game-active .direction-button svg {
+    max-width:76px;
   }
 
   body.game-active .feedback {
     min-height:18px;
-    margin-top:4px;
+    margin-top:5px;
     font-size:14px;
   }
 }
