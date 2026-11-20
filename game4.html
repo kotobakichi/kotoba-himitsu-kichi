@@ -50,42 +50,40 @@ footer{text-align:center;color:#8090a3;font-size:.78rem;padding:0 16px 20px}
 
 /* スマートフォン用 */
 @media (max-width:699px){
-  header{padding:8px 10px 4px}
-  h1{font-size:clamp(1.05rem,4.8vw,1.35rem);margin:2px 0}
-  .sub{font-size:.78rem;margin:2px 0}
-  main{padding:6px 8px 12px}
-  .topbar{justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:7px}
-  .progress{font-size:.92rem}
-  .pill{padding:5px 10px;font-size:.78rem}
+  header{padding:5px 10px 2px}
+  h1{font-size:1.18rem;margin:1px 0}
+  .sub{font-size:.78rem;margin:1px 0}
+  main{padding:4px 9px 10px}
+  .topbar{justify-content:center;flex-wrap:wrap;gap:5px;margin:0 0 6px}
+  .progress{font-size:.9rem}
+  .pill{padding:4px 10px;font-size:.78rem}
 
-  /* 見本と描画場所を横並びにする */
-  .panels{grid-template-columns:1fr 1fr;gap:7px}
+  /* スマホでは見本と描画場所を縦に並べる */
+  .panels{grid-template-columns:1fr;gap:7px}
   .panel{padding:7px;border-radius:14px}
-  .panel h2{font-size:.82rem;margin:0 0 6px}
+  .panel h2{font-size:.9rem;margin:0 0 5px}
+  .canvas-wrap{height:clamp(112px,18vh,145px);border-radius:10px}
 
-  /* 描画枠をスマホの幅に合わせて縮小 */
-  .canvas-wrap{height:clamp(135px,34vw,190px);border-radius:10px}
+  .actions{gap:6px;margin-top:6px}
+  .actions button{padding:7px 11px;font-size:.78rem;border-radius:10px}
+  .controls{margin-top:7px;gap:6px}
+  .controls button{padding:9px 18px;font-size:.9rem}
+  .feedback{font-size:.84rem;margin:5px auto 0;min-height:1.25em}
 
-  .actions{gap:5px;margin-top:7px}
-  .actions button,.controls button{padding:9px 8px;font-size:.78rem;border-radius:10px}
-  .controls{margin-top:8px;gap:6px}
-  .feedback{font-size:.88rem;margin:7px auto 0;min-height:1.4em}
-
-  .compare-grid{grid-template-columns:1fr;gap:7px;margin-top:8px}
+  .compare-grid{grid-template-columns:1fr;gap:7px;margin-top:7px}
   .compare-card{padding:7px}
   .compare-card h3{font-size:.82rem}
-  .compare-canvas{height:clamp(150px,42vw,210px)}
+  .compare-canvas{height:clamp(145px,30vh,190px)}
   .compare-note{font-size:.78rem;margin:5px 0}
-  .legend{font-size:.76rem;margin-top:6px}
+  .legend{font-size:.76rem;margin-top:5px}
+  .start-screen,.result-screen{margin:3vh auto 12px;padding:22px 14px}
 }
 
-/* 小さなスマートフォン用 */
-@media (max-width:380px){
-  .panels{gap:5px}
-  .panel{padding:5px}
-  .panel h2{font-size:.75rem}
-  .canvas-wrap{height:clamp(125px,34vw,150px)}
-  .actions button{padding:8px 5px;font-size:.72rem}
+@media(max-width:380px){
+  h1{font-size:1.08rem}
+  .canvas-wrap{height:112px}
+  .panel h2{font-size:.84rem}
+  .actions button{padding:7px 8px;font-size:.74rem}
 }
 
 .start-screen,.result-screen{text-align:center;max-width:620px;margin:6vh auto 24px;padding:clamp(24px,5vw,48px)}
@@ -107,7 +105,6 @@ footer{text-align:center;color:#8090a3;font-size:.78rem;padding:0 16px 20px}
   <h1>ずけいをまねしてかこう！</h1>
   <p class="sub">おてほんをよくみて、したにかいてみよう</p>
 </header>
-
 <main>
   <section id="startScreen" class="panel start-screen">
     <div class="start-mark">✏️</div>
@@ -149,7 +146,6 @@ footer{text-align:center;color:#8090a3;font-size:.78rem;padding:0 16px 20px}
       <div class="panel">
         <h2>おてほんと くらべてみよう</h2>
         <p class="compare-note">青がおてほん、オレンジがじぶんの線です。重ねて、形や大きさ、位置を見てみよう。</p>
-
         <div class="compare-grid">
           <div class="compare-card">
             <h3>おてほんと じぶんの線を かさねる</h3>
@@ -160,7 +156,6 @@ footer{text-align:center;color:#8090a3;font-size:.78rem;padding:0 16px 20px}
             <canvas id="mine" class="compare-canvas"></canvas>
           </div>
         </div>
-
         <div class="legend">
           <span><i class="dot" style="background:#3478c8"></i>おてほん</span>
           <span><i class="dot" style="background:#ed8a32"></i>じぶん</span>
@@ -179,20 +174,11 @@ footer{text-align:center;color:#8090a3;font-size:.78rem;padding:0 16px 20px}
     <button class="primary start-button" id="restartButton">もういちどチャレンジ</button>
   </section>
 </main>
-
 <footer>指やタッチペン、マウスで描けます。</footer>
 
 <script>
 (() => {
-const names={
-  circle:"まる",
-  cross:"ばつ",
-  plus:"じゅうじ",
-  triangle:"さんかく",
-  square:"しかく",
-  line:"よこぼう"
-};
-
+const names={circle:"まる",cross:"ばつ",plus:"じゅうじ",triangle:"さんかく",square:"しかく",line:"よこぼう"};
 const types=Object.keys(names);
 const sample=document.getElementById('sample');
 const draw=document.getElementById('draw');
@@ -381,31 +367,13 @@ function newQuestion(){
 
   question++;
   const type=types[Math.floor(Math.random()*types.length)];
-
   const sizes=[.20,.30,.40];
   const size=sizes[Math.floor(Math.random()*sizes.length)];
 
-  // 向きは90度単位
-  const rightAngles=[
-    0,
-    Math.PI/2,
-    Math.PI,
-    Math.PI*1.5
-  ];
+  const rightAngles=[0,Math.PI/2,Math.PI,Math.PI*1.5];
+  const angle=type==='circle'?0:rightAngles[Math.floor(Math.random()*rightAngles.length)];
 
-  const angle=type==='circle'
-    ?0
-    :rightAngles[Math.floor(Math.random()*rightAngles.length)];
-
-  target={
-    type,
-    x:.5,
-    y:.5,
-    size,
-    ratio:1,
-    angle
-  };
-
+  target={type,x:.5,y:.5,size,ratio:1,angle};
   strokes=[];
   current=null;
 
@@ -422,12 +390,10 @@ function newQuestion(){
 
 function begin(e){
   if(!document.getElementById('comparison').classList.contains('hidden'))return;
-
   e.preventDefault();
   drawing=true;
   draw.setPointerCapture?.(e.pointerId);
   current=[];
-
   const p=fitBoardPoint(draw,e);
   current.push(p);
   strokes.push(current);
@@ -436,7 +402,6 @@ function begin(e){
 
 function move(e){
   if(!drawing||!current)return;
-
   e.preventDefault();
   const p=fitBoardPoint(draw,e);
   current.push(p);
@@ -466,7 +431,6 @@ document.getElementById('clear').onclick=()=>{
 function comparisonCanvas(canvas,mode){
   const ctx=canvas.getContext('2d');
   const {w,h}=setupCanvas(canvas,ctx);
-
   ctx.clearRect(0,0,w,h);
   drawGuide(ctx,w,h);
 
@@ -482,7 +446,6 @@ function makeScoreCanvas(kind){
   const c=document.createElement('canvas');
   c.width=256;
   c.height=256;
-
   const ctx=c.getContext('2d');
 
   if(kind==='target'){
@@ -506,19 +469,12 @@ function similarityScore(){
 
   const a=makeScoreCanvas('target');
   const b=makeScoreCanvas('draw');
+  const W=256,H=256,r=6;
 
-  const W=256;
-  const H=256;
-  const r=6;
-
-  let na=0;
-  let nb=0;
-  let hitA=0;
-  let hitB=0;
+  let na=0,nb=0,hitA=0,hitB=0;
 
   for(let i=0;i<a.length;i++)if(a[i])na++;
   for(let i=0;i<b.length;i++)if(b[i])nb++;
-
   if(!na||!nb)return 0;
 
   for(let y=0;y<H;y++){
@@ -527,41 +483,31 @@ function similarityScore(){
 
       if(a[i]){
         let found=false;
-
         for(let dy=-r;dy<=r&&!found;dy++){
           for(let dx=-r;dx<=r;dx++){
             if(dx*dx+dy*dy>r*r)continue;
-
-            const xx=x+dx;
-            const yy=y+dy;
-
+            const xx=x+dx,yy=y+dy;
             if(xx>=0&&xx<W&&yy>=0&&yy<H&&b[yy*W+xx]){
               found=true;
               break;
             }
           }
         }
-
         if(found)hitA++;
       }
 
       if(b[i]){
         let found=false;
-
         for(let dy=-r;dy<=r&&!found;dy++){
           for(let dx=-r;dx<=r;dx++){
             if(dx*dx+dy*dy>r*r)continue;
-
-            const xx=x+dx;
-            const yy=y+dy;
-
+            const xx=x+dx,yy=y+dy;
             if(xx>=0&&xx<W&&yy>=0&&yy<H&&a[yy*W+xx]){
               found=true;
               break;
             }
           }
         }
-
         if(found)hitB++;
       }
     }
@@ -570,21 +516,13 @@ function similarityScore(){
   const precision=hitB/nb;
   const recall=hitA/na;
   const total=precision+recall;
-
   if(!Number.isFinite(total)||total===0)return 0;
 
   const score=100*(2*precision*recall/total);
-
-  return Number.isFinite(score)
-    ?Math.max(0,Math.min(100,Math.round(score)))
-    :0;
+  return Number.isFinite(score)?Math.max(0,Math.min(100,Math.round(score))):0;
 }
 
-/* BGM */
-let musicContext=null;
-let musicTimer=null;
-let musicOn=false;
-let musicStep=0;
+let musicContext=null,musicTimer=null,musicOn=false,musicStep=0;
 
 const melody=[
   523.25,659.25,783.99,659.25,
@@ -596,36 +534,25 @@ const melody=[
 function playMusicNote(freq,duration,when,volume,type='sine'){
   const osc=musicContext.createOscillator();
   const gain=musicContext.createGain();
-
   osc.type=type;
   osc.frequency.setValueAtTime(freq,when);
   gain.gain.setValueAtTime(.0001,when);
   gain.gain.exponentialRampToValueAtTime(volume,when+.035);
   gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
-
   osc.connect(gain);
   gain.connect(musicContext.destination);
-
   osc.start(when);
   osc.stop(when+duration+.03);
 }
 
 function musicTick(){
   if(!musicOn||!musicContext)return;
-
   const now=musicContext.currentTime;
   const note=melody[musicStep%melody.length];
 
   playMusicNote(note,.27,now,.045,'sine');
-
-  if(musicStep%2===0){
-    playMusicNote(note/2,.34,now,.025,'triangle');
-  }
-
-  if(musicStep%4===0){
-    playMusicNote(130.81,.12,now,.018,'sine');
-  }
-
+  if(musicStep%2===0)playMusicNote(note/2,.34,now,.025,'triangle');
+  if(musicStep%4===0)playMusicNote(130.81,.12,now,.018,'sine');
   musicStep++;
 }
 
@@ -634,23 +561,14 @@ async function setMusic(on){
     if(on){
       const AudioCtx=window.AudioContext||window.webkitAudioContext;
       if(!AudioCtx)return;
-
-      if(!musicContext){
-        musicContext=new AudioCtx();
-      }
-
-      if(musicContext.state==='suspended'){
-        await musicContext.resume();
-      }
-
+      if(!musicContext)musicContext=new AudioCtx();
+      if(musicContext.state==='suspended')await musicContext.resume();
       musicOn=true;
       musicTick();
-
       if(musicTimer)clearInterval(musicTimer);
       musicTimer=setInterval(musicTick,310);
     }else{
       musicOn=false;
-
       if(musicTimer)clearInterval(musicTimer);
       musicTimer=null;
     }
@@ -659,12 +577,10 @@ async function setMusic(on){
   }
 }
 
-// BGMはスタートボタンを押したタイミングで再生
 function playResultSound(correct){
   try{
     const AudioCtx=window.AudioContext||window.webkitAudioContext;
     if(!AudioCtx)return;
-
     const ac=new AudioCtx();
     const now=ac.currentTime;
     const notes=correct?[659,880,1047]:[220,165];
@@ -672,17 +588,13 @@ function playResultSound(correct){
     notes.forEach((freq,i)=>{
       const osc=ac.createOscillator();
       const gain=ac.createGain();
-
       osc.type=correct?'sine':'triangle';
       osc.frequency.value=freq;
-
       gain.gain.setValueAtTime(.0001,now+i*.16);
       gain.gain.exponentialRampToValueAtTime(.11,now+i*.16+.025);
       gain.gain.exponentialRampToValueAtTime(.0001,now+i*.16+.22);
-
       osc.connect(gain);
       gain.connect(ac.destination);
-
       osc.start(now+i*.16);
       osc.stop(now+i*.16+.24);
     });
@@ -693,14 +605,11 @@ function playResultSound(correct){
 
 function done(){
   if(questionLocked)return;
-
   questionLocked=true;
   document.getElementById('done').disabled=true;
 
   currentScore=similarityScore();
-
   const correct=currentScore>=70;
-
   roundScores[question-1]=currentScore;
   totalScore=roundScores.reduce((sum,value)=>sum+(value||0),0);
 
@@ -709,17 +618,9 @@ function done(){
   document.getElementById('workControls').classList.add('hidden');
 
   const feedback=document.getElementById('feedback');
+  feedback.textContent=`今回の点数は ${currentScore}点！ ${correct?'せいかい！ よくできたね！':'もうすこし！ おてほんをよくみてみよう。'}`;
 
-  feedback.textContent=
-    `今回の点数は ${currentScore}点！ ${
-      correct
-        ?'せいかい！ よくできたね！'
-        :'もうすこし！ おてほんをよくみてみよう。'
-    }`;
-
-  document.getElementById('autoNextMessage').textContent=
-    '3びょうごに つぎの もんだいへ すすむよ！';
-
+  document.getElementById('autoNextMessage').textContent='3びょうごに つぎの もんだいへ すすむよ！';
   playResultSound(correct);
 
   comparisonCanvas(document.getElementById('overlay'),'overlay');
@@ -727,12 +628,8 @@ function done(){
 
   advanceTimer=setTimeout(()=>{
     advanceTimer=null;
-
-    if(question>=5){
-      finishGame();
-    }else{
-      newQuestion();
-    }
+    if(question>=5)finishGame();
+    else newQuestion();
   },3000);
 }
 
@@ -741,19 +638,14 @@ document.getElementById('done').onclick=done;
 function finishGame(){
   document.getElementById('gameScreen').classList.add('hidden');
   document.getElementById('resultScreen').classList.remove('hidden');
-
   totalScore=roundScores.reduce((sum,value)=>sum+(value||0),0);
-
   document.getElementById('totalScore').textContent=totalScore;
 
   document.getElementById('resultMessage').textContent=
-    totalScore>=450
-      ?'すごい！ とってもじょうず！'
-      :totalScore>=350
-        ?'よくがんばったね！'
-        :totalScore>=250
-          ?'いいちょうし！ つぎもチャレンジ！'
-          :'さいごまでよくがんばったね！';
+    totalScore>=450?'すごい！ とってもじょうず！':
+    totalScore>=350?'よくがんばったね！':
+    totalScore>=250?'いいちょうし！ つぎもチャレンジ！':
+    'さいごまでよくがんばったね！';
 
   document.getElementById('scoreList').innerHTML=
     roundScores.map((v,i)=>
@@ -778,16 +670,11 @@ function startGame(){
 document.getElementById('startButton').onclick=startGame;
 document.getElementById('restartButton').onclick=startGame;
 
-/* 画面サイズ変更時に描画を更新 */
 let resizeTimer;
-
 window.addEventListener('resize',()=>{
   clearTimeout(resizeTimer);
-
   resizeTimer=setTimeout(()=>{
-    if(document.getElementById('gameScreen').classList.contains('hidden')){
-      return;
-    }
+    if(document.getElementById('gameScreen').classList.contains('hidden'))return;
 
     if(document.getElementById('comparison').classList.contains('hidden')){
       renderSample();
