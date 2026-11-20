@@ -480,33 +480,11 @@ body {
 }
 
 
-/* Sound control: one master volume for music and all effects */
-.sound-control{
-  flex:0 0 auto;display:flex;align-items:center;justify-content:center;
-  gap:8px;min-height:22px;margin:0 auto;color:#7d879b;
-  font-size:clamp(11px,1.6vh,14px);font-weight:700;line-height:1;
-}
-.sound-control input[type="range"]{
-  width:clamp(90px,20vw,150px);height:18px;margin:0;accent-color:#efa33f;
-  cursor:pointer;touch-action:pan-x;
-}
-#volumeValue{min-width:32px;text-align:right;font-variant-numeric:tabular-nums}
-@media(max-width:600px){
-  .sound-control{gap:6px;min-height:18px;font-size:11px}
-  .sound-control input[type="range"]{width:clamp(82px,24vw,120px);height:16px}
-}
-
 </style>
 </head>
 <body>
 <main class="app">
   <h1>順番をおぼえよう！</h1>
-  <div class="sound-control" aria-label="音量調整">
-    <span aria-hidden="true">🔊</span>
-    <label for="masterVolume">音量</label>
-    <input id="masterVolume" type="range" min="0" max="100" value="55" aria-label="ゲーム全体の音量">
-    <span id="volumeValue">55%</span>
-  </div>
 
   <section id="home">
     <div class="notice">👀 よく見ておぼえてね！<br>あとから同じ順番にタップしよう。</div>
@@ -535,7 +513,6 @@ body {
     <div class="actions">
       <button class="secondary" id="homeBtn">最初にもどる</button>
     </div>
-    <div class="notice" id="instruction">よく見ておぼえてね！</div>
     <div class="heading" id="phaseTitle">よく見ておぼえてね！</div>
     <div class="timer-wrap" id="timerWrap">
       <div class="timer-track"><div class="timer-bar" id="timerBar"></div></div>
@@ -544,7 +521,6 @@ body {
     <div class="stage" id="memoryStage"></div>
     <div id="answerArea" class="hidden">
       <div class="slots" id="slots"></div>
-      <p class="timer-label answer-hint">覚えた順番に選んでね。入れた絵をタップすると取り消せるよ。</p>
       <div class="options" id="options"></div>
       <div class="answer-controls">
         <button class="secondary" id="undoBtn" type="button" disabled>ひとつもどす</button>
@@ -604,19 +580,11 @@ function ensureAudio(){
   if(!audioContext){
     audioContext = new AudioCtx();
     masterGain = audioContext.createGain();
-    masterGain.gain.value = Number($("masterVolume")?.value ?? 55) / 100;
+    masterGain.gain.value = 0.55;
     masterGain.connect(audioContext.destination);
   }
   if(audioContext.state === "suspended") audioContext.resume();
   return true;
-}
-function setMasterVolume(value){
-  const v = Math.max(0, Math.min(100, Number(value))) / 100;
-  if(masterGain && audioContext){
-    masterGain.gain.setTargetAtTime(v, audioContext.currentTime, 0.025);
-  }
-  const label = $("volumeValue");
-  if(label) label.textContent = Math.round(v*100) + "%";
 }
 function tone(freq, duration, type="sine", volume=0.2, delay=0, endFreq=null){
   if(!ensureAudio()) return;
@@ -696,7 +664,6 @@ function startGame(){stopTimers();startMusic();count=Number($("level").value);ro
 function startRound(){
   stopTimers();round++;chosen=[];sequence=randomSequence(count);phase="memorize";
   $("progress").textContent=`${round}問目 / ${total}問`;
-  $("instruction").innerHTML="👀 よく見ておぼえてね！";
   $("phaseTitle").textContent="よく見ておぼえてね！";
   $("memoryStage").classList.remove("hidden");$("answerArea").classList.add("hidden");
   $("feedback").classList.add("hidden");$("timerWrap").classList.remove("hidden");
@@ -706,7 +673,7 @@ function startRound(){
 }
 function updateTimer(sec){$("timerBar").style.width=Math.max(0,sec/5*100)+"%";$("timerLabel").textContent=`あと${Math.ceil(sec)}秒`}
 function beginAnswer(){
-  phase="answer";$("instruction").textContent="今度は順番にタップしよう！";
+  phase="answer";
   $("phaseTitle").textContent="覚えた順番に選んでね！";
   $("memoryStage").classList.add("hidden");$("timerWrap").classList.add("hidden");$("answerArea").classList.remove("hidden");
   $("slots").style.setProperty("--count",count);
@@ -757,7 +724,6 @@ function judge(){
     box.innerHTML="おしい！正しい順番はこちらだよ。<div class='answer-row'>"+sequence.map(id=>`<div class="answer-chip">${icon(id)}</div>`).join("")+"</div>";
   }
   box.classList.remove("hidden");
-  $("instruction").textContent=correct?"せいかい！":"正しい順番を見てみよう！";
   nextTimer=setTimeout(()=>{if(round<total)startRound();else finish()},2200);
 }
 function finish(){
@@ -771,8 +737,6 @@ $("undoBtn").addEventListener("click",()=>{if(chosen.length)removeChoice(chosen.
 $("checkBtn").addEventListener("click",()=>{if(phase==="answer"&&chosen.length===count)judge()});
 $("homeBtn").addEventListener("click",goHome);
 $("resultHomeBtn").addEventListener("click",goHome);
-$("masterVolume").addEventListener("input",e=>setMasterVolume(e.target.value));
-setMasterVolume($("masterVolume").value);
 $("sample1").innerHTML=icon("apple");$("sample2").innerHTML=icon("dog");$("sample3").innerHTML=icon("car");
 </script>
 </body>
