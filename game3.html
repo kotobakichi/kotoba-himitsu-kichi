@@ -368,6 +368,18 @@ h2 {
   margin: 14px 0;
 }
 
+/* BGM切り替えボタン */
+.music-button {
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #fff2d8;
+  color: #9a6a20;
+  padding: 8px 11px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
 /* スマートフォン：最初の画面を縦画面内に収める */
 
 @media (max-width: 600px) {
@@ -478,6 +490,11 @@ h2 {
   body.game-active .back-button {
     padding: 6px 11px;
     font-size: 13px;
+  }
+
+  body.game-active .music-button {
+    padding: 6px 9px;
+    font-size: 12px;
   }
 
   body.game-active .status {
@@ -651,7 +668,10 @@ h2 {
 
   <div class="game-top">
     <div class="game-label">はんたいむきゲーム</div>
-    <button class="back-button" onclick="backToStart()">← もどる</button>
+    <div style="display:flex;align-items:center;gap:6px">
+      <button class="music-button" id="musicToggle" type="button" onclick="toggleMusic()">♪ 音楽 ON</button>
+      <button class="back-button" onclick="backToStart()">← もどる</button>
+    </div>
   </div>
 
   <div class="status">
@@ -777,6 +797,98 @@ let questionStart = 0;
 let acceptingAnswer = false;
 let questionDuration = 2000;
 
+// 明るく弾むオリジナルBGM（Web Audioで生成）
+let audioContext = null;
+let bgmInterval = null;
+let musicEnabled = true;
+
+const melodyNotes = [
+  [659.25, 0], [783.99, 0.32], [880.00, 0.64], [783.99, 0.96],
+  [659.25, 1.28], [523.25, 1.60], [587.33, 1.92], [659.25, 2.24],
+  [783.99, 2.56], [880.00, 2.88], [1046.50, 3.20], [880.00, 3.52],
+  [783.99, 3.84], [659.25, 4.16], [587.33, 4.48], [523.25, 4.80]
+];
+
+function playTone(frequency, startTime, duration, type, volume) {
+  if (!audioContext) return;
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, startTime);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.025);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+  oscillator.start(startTime);
+  oscillator.stop(startTime + duration + 0.03);
+}
+
+function playBgmPhrase() {
+  if (!audioContext || !musicEnabled) return;
+  const start = audioContext.currentTime + 0.05;
+
+  // 軽やかな高音のメロディ
+  melodyNotes.forEach(([frequency, offset]) => {
+    playTone(frequency, start + offset, 0.25, "triangle", 0.045);
+  });
+
+  // 明るい和音と低音の伴奏
+  const chords = [
+    { time: 0, notes: [261.63, 329.63, 392.00], bass: 130.81 },
+    { time: 1.28, notes: [349.23, 440.00, 523.25], bass: 174.61 },
+    { time: 2.56, notes: [392.00, 493.88, 587.33], bass: 196.00 },
+    { time: 3.84, notes: [329.63, 392.00, 493.88], bass: 164.81 }
+  ];
+
+  chords.forEach(chord => {
+    playTone(chord.bass, start + chord.time, 0.48, "sine", 0.035);
+    chord.notes.forEach((frequency, index) => {
+      playTone(frequency, start + chord.time + index * 0.035, 0.32, "sine", 0.012);
+    });
+  });
+}
+
+async function startBgm() {
+  if (!musicEnabled) return;
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    if (!audioContext) audioContext = new AudioContextClass();
+    if (audioContext.state === "suspended") await audioContext.resume();
+    stopBgmTimer();
+    playBgmPhrase();
+    bgmInterval = setInterval(playBgmPhrase, 5120);
+  } catch (error) {
+    // 音声に対応していない環境でもゲームは通常どおり遊べる
+  }
+}
+
+function stopBgmTimer() {
+  if (bgmInterval) {
+    clearInterval(bgmInterval);
+    bgmInterval = null;
+  }
+}
+
+function stopBgm() {
+  stopBgmTimer();
+  if (audioContext && audioContext.state === "running") {
+    audioContext.suspend().catch(() => {});
+  }
+}
+
+function toggleMusic() {
+  musicEnabled = !musicEnabled;
+  const button = document.getElementById("musicToggle");
+  if (button) button.textContent = musicEnabled ? "♪ 音楽 ON" : "♪ 音楽 OFF";
+  if (musicEnabled && document.getElementById("gameScreen").classList.contains("active")) {
+    startBgm();
+  } else {
+    stopBgm();
+  }
+}
+
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(screen => {
     screen.classList.remove("active");
@@ -813,6 +925,7 @@ function startGame(level) {
   document.getElementById("progressBar").style.width = "0%";
 
   showScreen("gameScreen");
+  if (musicEnabled) startBgm();
   nextQuestion();
 }
 
@@ -910,6 +1023,7 @@ function answer(selected) {
 function finishGame() {
   clearTimers();
   acceptingAnswer = false;
+  stopBgm();
 
   document.getElementById("progressBar").style.width = "100%";
   document.getElementById("finalCorrect").textContent = correct;
@@ -937,6 +1051,7 @@ function finishGame() {
 function backToStart() {
   clearTimers();
   acceptingAnswer = false;
+  stopBgm();
   showScreen("startScreen");
 }
 </script>
