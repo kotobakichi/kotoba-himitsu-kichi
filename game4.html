@@ -118,8 +118,9 @@ main {
   width: 100%;
   height: clamp(180px, 31vh, 280px);
   position: relative;
-  border: 2px dashed #cbd8e8;
-  border-radius: 13px;
+  /* 外側の長方形の枠は表示せず、正方形のマスだけを残す */
+  border: 0;
+  border-radius: 0;
   overflow: hidden;
   background: #fff;
   touch-action: none;
@@ -294,7 +295,7 @@ footer {
 
   /* 見本と描画欄の高さを同じにする */
   #workArea > .panel .canvas-wrap {
-    height: 220px;
+    height: 300px;
   }
 
   .actions {
@@ -348,13 +349,13 @@ footer {
 /* 小さいスマートフォン */
 @media (max-width: 380px) {
   #workArea > .panel .canvas-wrap {
-    height: 205px;
+    height: 280px;
   }
 }
 
 @media (max-height: 700px) and (max-width: 699px) {
   #workArea > .panel .canvas-wrap {
-    height: 200px;
+    height: 270px;
   }
 }
 
@@ -613,7 +614,8 @@ function clearCanvas(canvas, ctx) {
 }
 
 function boardRect(w, h) {
-  const side = Math.min(w, h) * .78;
+  /* 描画エリアいっぱいに近い大きな正方形のマス */
+  const side = Math.min(w, h) * .92;
 
   return {
     left: (w - side) / 2,
@@ -815,7 +817,8 @@ function newQuestion() {
 
   const type = types[Math.floor(Math.random() * types.length)];
 
-  const sizes = [.20, .30, .40];
+  /* 図形は「少し小さめ」と「大きめ」の2段階 */
+  const sizes = [.42, .58];
   const size = sizes[Math.floor(Math.random() * sizes.length)];
 
   const rightAngles = [
