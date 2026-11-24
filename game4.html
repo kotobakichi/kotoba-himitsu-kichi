@@ -58,12 +58,6 @@ h1 {
   color: var(--navy);
 }
 
-.sub {
-  margin: 3px 0;
-  color: #61758d;
-  font-size: .92rem;
-}
-
 main {
   max-width: 1100px;
   margin: auto;
@@ -73,36 +67,14 @@ main {
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
   margin: 0 0 12px;
-}
-
-.topbar-tools {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  flex-shrink: 0;
-}
-
-.topbar-tools button {
-  padding: 8px 12px;
-  font-size: .85rem;
-  white-space: nowrap;
 }
 
 .progress {
   font-weight: 700;
   color: var(--navy);
-}
-
-.pill {
-  background: #e2edff;
-  color: #285b9c;
-  border-radius: 99px;
-  padding: 7px 12px;
-  font-size: .85rem;
-  font-weight: 700;
 }
 
 .panels {
@@ -145,12 +117,35 @@ canvas {
   touch-action: none;
 }
 
-.actions {
+/* 描画エリアとボタンを横並びにする */
+.draw-area-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 94px;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+}
+
+.draw-area-row .canvas-wrap {
+  min-width: 0;
+}
+
+.draw-side-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: stretch;
   justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 10px;
+  min-width: 0;
+}
+
+.draw-side-actions button {
+  width: 100%;
+  padding: 11px 5px;
+  font-size: .82rem;
+  line-height: 1.35;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 .primary {
@@ -240,7 +235,6 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: center;
-  justify-self: center;
   min-width: 150px;
   padding: 9px 28px;
   border-radius: 16px;
@@ -259,6 +253,7 @@ footer {
   padding: 0 16px 20px;
 }
 
+/* PC・タブレット */
 @media (min-width: 700px) {
   .panels {
     grid-template-columns: 1fr 1fr;
@@ -266,6 +261,15 @@ footer {
 
   .canvas-wrap {
     height: clamp(260px, 48vh, 430px);
+  }
+
+  .draw-area-row {
+    grid-template-columns: minmax(0, 1fr) 100px;
+  }
+
+  .draw-side-actions button {
+    font-size: .9rem;
+    padding: 13px 6px;
   }
 
   .compare-grid {
@@ -287,6 +291,7 @@ footer {
   }
 }
 
+/* スマートフォン */
 @media (max-width: 699px) {
   header {
     padding: 2px 8px 0;
@@ -302,26 +307,12 @@ footer {
   }
 
   .topbar {
-    justify-content: space-between;
-    flex-wrap: nowrap;
+    justify-content: flex-start;
     margin-bottom: 4px;
-    gap: 5px;
   }
 
   .progress {
-    font-size: .9rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .topbar-tools {
-    gap: 5px;
-  }
-
-  .topbar-tools button {
-    padding: 7px 9px;
-    font-size: .76rem;
-    border-radius: 11px;
+    font-size: .95rem;
   }
 
   .panels {
@@ -339,10 +330,30 @@ footer {
     margin: 0 0 4px;
   }
 
+  /* 見本と描画エリアの高さをそろえる */
   #workArea > .panel .canvas-wrap {
     height: 250px;
   }
 
+  /* 描画枠の右側にボタンを縦配置 */
+  .draw-area-row {
+    grid-template-columns: minmax(0, 1fr) 88px;
+    gap: 7px;
+    align-items: center;
+  }
+
+  .draw-side-actions {
+    gap: 10px;
+  }
+
+  .draw-side-actions button {
+    padding: 12px 4px;
+    font-size: .78rem;
+    border-radius: 12px;
+    line-height: 1.4;
+  }
+
+  /* できたボタン */
   #workControls {
     position: sticky;
     bottom: 0;
@@ -396,9 +407,20 @@ footer {
   }
 }
 
+/* 小さいスマートフォン */
 @media (max-width: 380px) {
   #workArea > .panel .canvas-wrap {
     height: 230px;
+  }
+
+  .draw-area-row {
+    grid-template-columns: minmax(0, 1fr) 78px;
+    gap: 5px;
+  }
+
+  .draw-side-actions button {
+    font-size: .72rem;
+    padding: 10px 3px;
   }
 }
 
@@ -408,6 +430,7 @@ footer {
   }
 }
 
+/* スタート・結果画面 */
 .start-screen,
 .result-screen {
   text-align: center;
@@ -496,96 +519,109 @@ footer {
 
 <main>
 
-<section id="startScreen" class="panel start-screen">
-  <div class="start-mark">✏️</div>
-  <h2>ずけいをまねしてかこう！</h2>
-  <p>おてほんをよく見て、同じようにかいてみよう。</p>
-  <p class="start-rule">ぜんぶで5もん！ 1もん100点、500点まん点だよ。</p>
-  <button class="primary start-button" id="startButton">
-    ゲームスタート！
-  </button>
-</section>
+  <!-- スタート画面 -->
+  <section id="startScreen" class="panel start-screen">
+    <div class="start-mark">✏️</div>
+    <h2>ずけいをまねしてかこう！</h2>
+    <p>おてほんをよく見て、同じようにかいてみよう。</p>
+    <p class="start-rule">ぜんぶで5もん！ 1もん100点、500点まん点だよ。</p>
+    <button class="primary start-button" id="startButton">
+      ゲームスタート！
+    </button>
+  </section>
 
-<section id="gameScreen" class="hidden">
+  <!-- ゲーム画面 -->
+  <section id="gameScreen" class="hidden">
 
-  <div class="topbar">
-    <span class="progress" id="progress">もんだい 1</span>
-    <div class="topbar-tools">
-      <button class="secondary" id="undo">ひとつもどる</button>
-      <button class="warn" id="clear">ぜんぶけす</button>
+    <div class="topbar">
+      <span class="progress" id="progress">もんだい 1</span>
     </div>
-  </div>
 
-  <section class="panels" id="workArea">
+    <section class="panels" id="workArea">
 
-    <div class="panel">
-      <h2>① おてほん</h2>
-      <div class="canvas-wrap">
-        <canvas id="sample"></canvas>
+      <!-- 見本 -->
+      <div class="panel">
+        <h2>① おてほん</h2>
+        <div class="canvas-wrap">
+          <canvas id="sample"></canvas>
+        </div>
       </div>
+
+      <!-- 描画エリア -->
+      <div class="panel">
+        <h2>② わくの中にかこう</h2>
+
+        <div class="draw-area-row">
+
+          <div class="canvas-wrap">
+            <canvas id="draw"></canvas>
+          </div>
+
+          <!-- 描画エリア右側のボタン -->
+          <div class="draw-side-actions">
+            <button class="secondary" id="undo">ひとつもどる</button>
+            <button class="warn" id="clear">ぜんぶけす</button>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <div class="controls" id="workControls">
+      <button class="primary" id="done">できた！ OK</button>
     </div>
 
-    <div class="panel">
-      <h2>② わくの中にかこう</h2>
-      <div class="canvas-wrap">
-        <canvas id="draw"></canvas>
+    <p class="feedback" id="feedback" aria-live="polite">
+      ゆっくり かいてみよう！
+    </p>
+
+    <!-- 比較画面 -->
+    <section id="comparison" class="hidden">
+      <div class="panel">
+        <h2>おてほんと くらべてみよう</h2>
+
+        <div class="compare-grid">
+
+          <div class="compare-card">
+            <h3>おてほんと じぶんの線を かさねる</h3>
+            <canvas id="overlay" class="compare-canvas"></canvas>
+          </div>
+
+          <div class="score-next-wrap">
+            <div id="scoreDisplay" class="score-display" aria-live="polite">0点！</div>
+            <button class="primary next-question-button" id="nextQuestionButton">つぎの もんだいへ</button>
+          </div>
+
+          <div class="compare-card">
+            <h3>じぶんが かいた図</h3>
+            <canvas id="mine" class="compare-canvas"></canvas>
+          </div>
+
+        </div>
       </div>
-    </div>
+    </section>
 
   </section>
 
-  <div class="controls" id="workControls">
-    <button class="primary" id="done">できた！ OK</button>
-  </div>
+  <!-- 結果画面 -->
+  <section id="resultScreen" class="panel result-screen hidden">
+    <div class="start-mark">🏆</div>
+    <h2>チャレンジしゅうりょう！</h2>
 
-  <p class="feedback" id="feedback" aria-live="polite">
-    ゆっくり かいてみよう！
-  </p>
+    <p class="result-total">
+      <span id="totalScore">0</span>
+      <small> / 500 点</small>
+    </p>
 
-  <section id="comparison" class="hidden">
-    <div class="panel">
-      <h2>おてほんと くらべてみよう</h2>
+    <p id="resultMessage">よくがんばったね！</p>
 
-      <div class="compare-grid">
+    <div id="scoreList" class="score-list"></div>
 
-        <div class="compare-card">
-          <h3>おてほんと じぶんの線を かさねる</h3>
-          <canvas id="overlay" class="compare-canvas"></canvas>
-        </div>
-
-        <div class="score-next-wrap">
-          <div id="scoreDisplay" class="score-display" aria-live="polite">0点！</div>
-          <button class="primary next-question-button" id="nextQuestionButton">つぎの もんだいへ</button>
-        </div>
-
-        <div class="compare-card">
-          <h3>じぶんが かいた図</h3>
-          <canvas id="mine" class="compare-canvas"></canvas>
-        </div>
-
-      </div>
-    </div>
+    <button class="primary start-button" id="restartButton">
+      もういちどチャレンジ
+    </button>
   </section>
-
-</section>
-
-<section id="resultScreen" class="panel result-screen hidden">
-  <div class="start-mark">🏆</div>
-  <h2>チャレンジしゅうりょう！</h2>
-
-  <p class="result-total">
-    <span id="totalScore">0</span>
-    <small> / 500 点</small>
-  </p>
-
-  <p id="resultMessage">よくがんばったね！</p>
-
-  <div id="scoreList" class="score-list"></div>
-
-  <button class="primary start-button" id="restartButton">
-    もういちどチャレンジ
-  </button>
-</section>
 
 </main>
 
@@ -924,11 +960,13 @@ draw.addEventListener("pointerup", end);
 draw.addEventListener("pointercancel", end);
 
 document.getElementById("undo").onclick = () => {
+  if (questionLocked) return;
   strokes.pop();
   renderDraw();
 };
 
 document.getElementById("clear").onclick = () => {
+  if (questionLocked) return;
   strokes = [];
   renderDraw();
 };
