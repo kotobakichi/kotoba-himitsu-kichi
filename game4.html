@@ -117,7 +117,7 @@ canvas {
   touch-action: none;
 }
 
-/* 描画枠は全幅のまま維持する */
+/* 描画枠は全幅のまま維持 */
 .draw-area-row {
   position: relative;
   width: 100%;
@@ -127,25 +127,25 @@ canvas {
   width: 100%;
 }
 
-/* ボタンだけを描画枠の右側に配置 */
+/* ボタンだけを右側に縦配置 */
 .draw-side-actions {
   position: absolute;
-  right: 5px;
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
+  align-items: center;
   gap: 10px;
-  width: 105px;
+  width: 76px;
   z-index: 5;
 }
 
 .draw-side-actions button {
-  width: 100%;
-  padding: 10px 5px;
-  font-size: .78rem;
+  width: 76px;
+  min-height: 58px;
+  padding: 8px 3px;
+  font-size: .76rem;
   line-height: 1.35;
   white-space: normal;
   word-break: keep-all;
@@ -267,12 +267,13 @@ footer {
   }
 
   .draw-side-actions {
-    width: 100px;
+    width: 76px;
   }
 
   .draw-side-actions button {
-    font-size: .9rem;
-    padding: 13px 6px;
+    width: 76px;
+    font-size: .76rem;
+    padding: 8px 3px;
   }
 
   .compare-grid {
@@ -333,12 +334,12 @@ footer {
     margin: 0 0 4px;
   }
 
-  /* 見本と書く枠の高さ・横幅を同じにする */
+  /* 見本と書く枠の高さは同じ */
   #workArea > .panel .canvas-wrap {
     height: 250px;
   }
 
-  /* 描画枠は縮めず、ボタンだけ右側に重ねて配置 */
+  /* 描画枠の位置・幅は変更しない */
   .draw-area-row {
     position: relative;
     display: block;
@@ -350,24 +351,26 @@ footer {
     height: 250px;
   }
 
+  /* ボタンだけ小さくして右側に配置 */
   .draw-side-actions {
     position: absolute;
-    right: 5px;
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 105px;
+    width: 76px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 10px;
     z-index: 5;
   }
 
   .draw-side-actions button {
-    width: 100%;
-    padding: 10px 4px;
-    font-size: .76rem;
+    width: 76px;
+    min-height: 58px;
+    padding: 8px 3px;
+    font-size: .72rem;
     line-height: 1.35;
-    border-radius: 12px;
     white-space: normal;
   }
 
@@ -436,13 +439,14 @@ footer {
   }
 
   .draw-side-actions {
-    width: 90px;
-    right: 4px;
+    width: 68px;
+    right: 0;
   }
 
   .draw-side-actions button {
-    font-size: .7rem;
-    padding: 9px 3px;
+    width: 68px;
+    font-size: .68rem;
+    padding: 8px 3px;
   }
 }
 
@@ -583,10 +587,10 @@ footer {
             <canvas id="draw"></canvas>
           </div>
 
-          <!-- ボタンだけを右側に配置 -->
+          <!-- 右側のボタン -->
           <div class="draw-side-actions">
-            <button class="secondary" id="undo">ひとつもどる</button>
-            <button class="warn" id="clear">ぜんぶけす</button>
+            <button class="secondary" id="undo">ひとつ<br>もどる</button>
+            <button class="warn" id="clear">ぜんぶ<br>けす</button>
           </div>
 
         </div>
