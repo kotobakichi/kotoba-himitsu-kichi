@@ -117,32 +117,35 @@ canvas {
   touch-action: none;
 }
 
-/* 描画エリアとボタンを横並びにする */
+/* 描画枠は全幅のまま維持する */
 .draw-area-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 94px;
-  align-items: center;
-  gap: 9px;
+  position: relative;
   width: 100%;
 }
 
 .draw-area-row .canvas-wrap {
-  min-width: 0;
+  width: 100%;
 }
 
+/* ボタンだけを描画枠の右側に配置 */
 .draw-side-actions {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
   gap: 10px;
-  min-width: 0;
+  width: 105px;
+  z-index: 5;
 }
 
 .draw-side-actions button {
   width: 100%;
-  padding: 11px 5px;
-  font-size: .82rem;
+  padding: 10px 5px;
+  font-size: .78rem;
   line-height: 1.35;
   white-space: normal;
   word-break: keep-all;
@@ -263,8 +266,8 @@ footer {
     height: clamp(260px, 48vh, 430px);
   }
 
-  .draw-area-row {
-    grid-template-columns: minmax(0, 1fr) 100px;
+  .draw-side-actions {
+    width: 100px;
   }
 
   .draw-side-actions button {
@@ -330,27 +333,42 @@ footer {
     margin: 0 0 4px;
   }
 
-  /* 見本と描画エリアの高さをそろえる */
+  /* 見本と書く枠の高さ・横幅を同じにする */
   #workArea > .panel .canvas-wrap {
     height: 250px;
   }
 
-  /* 描画枠の右側にボタンを縦配置 */
+  /* 描画枠は縮めず、ボタンだけ右側に重ねて配置 */
   .draw-area-row {
-    grid-template-columns: minmax(0, 1fr) 88px;
-    gap: 7px;
-    align-items: center;
+    position: relative;
+    display: block;
+    width: 100%;
+  }
+
+  .draw-area-row .canvas-wrap {
+    width: 100%;
+    height: 250px;
   }
 
   .draw-side-actions {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 105px;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
+    z-index: 5;
   }
 
   .draw-side-actions button {
-    padding: 12px 4px;
-    font-size: .78rem;
+    width: 100%;
+    padding: 10px 4px;
+    font-size: .76rem;
+    line-height: 1.35;
     border-radius: 12px;
-    line-height: 1.4;
+    white-space: normal;
   }
 
   /* できたボタン */
@@ -413,19 +431,27 @@ footer {
     height: 230px;
   }
 
-  .draw-area-row {
-    grid-template-columns: minmax(0, 1fr) 78px;
-    gap: 5px;
+  .draw-area-row .canvas-wrap {
+    height: 230px;
+  }
+
+  .draw-side-actions {
+    width: 90px;
+    right: 4px;
   }
 
   .draw-side-actions button {
-    font-size: .72rem;
-    padding: 10px 3px;
+    font-size: .7rem;
+    padding: 9px 3px;
   }
 }
 
 @media (max-height: 700px) and (max-width: 699px) {
   #workArea > .panel .canvas-wrap {
+    height: 220px;
+  }
+
+  .draw-area-row .canvas-wrap {
     height: 220px;
   }
 }
@@ -557,7 +583,7 @@ footer {
             <canvas id="draw"></canvas>
           </div>
 
-          <!-- 描画エリア右側のボタン -->
+          <!-- ボタンだけを右側に配置 -->
           <div class="draw-side-actions">
             <button class="secondary" id="undo">ひとつもどる</button>
             <button class="warn" id="clear">ぜんぶけす</button>
