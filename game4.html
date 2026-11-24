@@ -172,7 +172,6 @@ canvas {
   color: var(--navy);
 }
 
-
 .hidden {
   display: none !important;
 }
@@ -210,16 +209,20 @@ canvas {
   border-radius: 10px;
 }
 
-.next-question-wrap {
+/* 点数と次へボタン */
+.score-next-wrap {
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin: 18px auto 4px;
+  gap: 10px;
+  min-width: 0;
 }
 
 .next-question-button {
-  min-width: 210px;
-  padding: 13px 24px;
+  min-width: 150px;
+  padding: 13px 18px;
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 .score-display {
@@ -238,8 +241,6 @@ canvas {
   margin: 0;
 }
 
-
-
 footer {
   text-align: center;
   color: #8090a3;
@@ -257,7 +258,6 @@ footer {
     height: clamp(260px, 48vh, 430px);
   }
 
-  /* タブレット・PCは「重ね合わせ／点数／自分の図」を横一列に配置 */
   .compare-grid {
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
@@ -287,7 +287,6 @@ footer {
     font-size: 1.08rem;
     margin: 0;
   }
-
 
   main {
     padding: 2px 7px 76px;
@@ -330,7 +329,7 @@ footer {
     font-size: .78rem;
   }
 
-  /* 「できた！」を画面下に固定し、Safariの下部バーに隠れにくくする */
+  /* 「できた！」を画面下に固定 */
   #workControls {
     position: sticky;
     bottom: 0;
@@ -357,6 +356,27 @@ footer {
     grid-template-columns: 1fr;
     gap: 7px;
     margin-top: 7px;
+  }
+
+  /* 点数と「つぎへ」をスマホでも横並びにする */
+  .score-next-wrap {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .score-display {
+    flex: 1;
+    min-width: 0;
+    padding: 9px 8px;
+    font-size: clamp(1.65rem, 7vw, 2.2rem);
+    white-space: nowrap;
+  }
+
+  .next-question-button {
+    flex: 0 0 43%;
+    min-width: 0;
+    padding: 12px 6px;
+    font-size: clamp(.82rem, 3.5vw, 1rem);
   }
 
   .compare-canvas {
@@ -530,7 +550,10 @@ footer {
             <canvas id="overlay" class="compare-canvas"></canvas>
           </div>
 
-          <div id="scoreDisplay" class="score-display" aria-live="polite">0点！</div>
+          <div class="score-next-wrap">
+            <div id="scoreDisplay" class="score-display" aria-live="polite">0点！</div>
+            <button class="primary next-question-button" id="nextQuestionButton">つぎの もんだいへ</button>
+          </div>
 
           <div class="compare-card">
             <h3>じぶんが かいた図</h3>
@@ -538,12 +561,7 @@ footer {
           </div>
 
         </div>
-
-        <div class="next-question-wrap">
-          <button class="primary next-question-button" id="nextQuestionButton">つぎの もんだいへ</button>
-        </div>
       </div>
-
     </section>
 
   </section>
@@ -1200,15 +1218,12 @@ function done() {
   document.getElementById("workArea").classList.add("hidden");
   document.getElementById("workControls").classList.add("hidden");
 
-  // 点数は2つの図のちょうど間に大きく表示
   document.getElementById("scoreDisplay").textContent =
     `${currentScore}点！`;
 
-  // 次の問題へ進む操作は子ども自身が行う
   document.getElementById("nextQuestionButton").textContent =
     question >= 5 ? "けっかを みる" : "つぎの もんだいへ";
 
-  // 描画画面用の案内文は答え合わせ中には表示しない
   document.getElementById("feedback").textContent = "";
 
   playResultSound(correct);
@@ -1222,7 +1237,6 @@ function done() {
     document.getElementById("mine"),
     "mine"
   );
-
 }
 
 function goToNextQuestion() {
